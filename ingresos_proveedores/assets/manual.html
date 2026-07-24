@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<style>
+    body { font-family: Arial, sans-serif; font-size: 13px; color: #333; line-height: 1.5; margin: 10px; }
+    h1 { color: #1565C0; border-bottom: 2px solid #1565C0; padding-bottom: 6px; font-size: 18px; }
+    h2 { color: #1976D2; margin-top: 20px; font-size: 15px; }
+    h3 { color: #424242; font-size: 13px; margin-top: 12px; }
+    .nota { background: #E3F2FD; border-left: 4px solid #1976D2; padding: 8px 12px; margin: 10px 0; font-size: 12px; }
+    .aviso { background: #FFF3E0; border-left: 4px solid #F57C00; padding: 8px 12px; margin: 10px 0; font-size: 12px; }
+    ul { margin: 6px 0; padding-left: 20px; }
+    li { margin: 3px 0; }
+    .campo { font-family: monospace; background: #f5f5f5; padding: 1px 4px; border-radius: 3px; }
+    table { border-collapse: collapse; width: 100%; margin: 8px 0; font-size: 12px; }
+    th { background: #1976D2; color: white; padding: 6px 10px; text-align: left; }
+    td { border: 1px solid #ddd; padding: 5px 10px; }
+    tr:nth-child(even) { background: #f9f9f9; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- SECCION: GENERAL -->
+<!-- ============================================================ -->
+<a name="general"></a>
+<h1>Manual de Uso - Registro de Ingreso de Mercadería</h1>
+
+<p>Esta aplicación permite registrar el ingreso de mercadería en el depósito, asociando proveedores, remitos y recepciones previstas del sistema WMS.</p>
+
+<h2>Flujo General del Proceso</h2>
+<p>El proceso consta de 3 pasos:</p>
+<ol>
+    <li><b>Paso 1 - Selección de Recepciones Previstas:</b> Se buscan y seleccionan las recepciones previstas del WMS.</li>
+    <li><b>Paso 2 - Ingreso de Remitos:</b> Se ingresan los datos de los remitos (número, fecha, bultos, unidades, valor declarado).</li>
+    <li><b>Paso 3 - Confirmación y Registro:</b> Se verifica el resumen y se confirma el registro del ingreso.</li>
+</ol>
+
+<div class="nota">
+    <b>Nota:</b> Las recepciones previstas se obtienen del sistema WMS (SQL Server). Los ingresos se guardan en la base de datos local (MySQL).
+</div>
+
+<h2>Requisitos</h2>
+<ul>
+    <li>Conectividad al servidor WMS (SQL Server).</li>
+    <li>Conectividad al servidor MySQL para el registro local.</li>
+    <li>Acceso a las impresoras configuradas para la impresión de remitos y etiquetas.</li>
+</ul>
+
+<!-- ============================================================ -->
+<!-- SECCION: PASO 1 - SELECCION -->
+<!-- ============================================================ -->
+<a name="paso1"></a>
+<h1>Paso 1: Selección de Recepciones Previstas</h1>
+
+<h2>Buscar Recepciones</h2>
+<p>Desde el campo <span class="campo">Buscar RP</span> se pueden buscar recepciones de tres formas:</p>
+<ul>
+    <li><b>Por texto libre:</b> Ingresar un ID de recepción, código de proveedor o razón social. Se busca con coincidencia parcial.</li>
+    <li><b>Por múltiples IDs:</b> Ingresar varios IDs separados por espacio (ej: <span class="campo">1447522 1447521</span>). Se buscan todas las recepciones que contengan esos números.</li>
+    <li><b>Por filtro de destino:</b> Utilizar los filtros desplegables en la cabecera de la grilla para filtrar por Clase, Razón Social, Sucursal Destino o Nombre Destino.</li>
+</ul>
+
+<h2>Filtros de la Grilla</h2>
+<p>La grilla dispone de filtros en la fila superior:</p>
+<table>
+    <tr><th>Columna</th><th>Tipo de Filtro</th><th>Descripción</th></tr>
+    <tr><td>Clase</td><td>Desplegable</td><td>Filtra por tipo de clase de recepción (ej: RCOC, RCFI)</td></tr>
+    <tr><td>Razón Social</td><td>Desplegable</td><td>Filtra por proveedor</td></tr>
+    <tr><td>Sucursal Destino</td><td>Desplegable</td><td>Filtra por sucursal destino</td></tr>
+    <tr><td>Nombre Destino</td><td>Desplegable</td><td>Filtra por nombre del destino</td></tr>
+</table>
+
+<h2>Seleccionar Recepciones</h2>
+<ul>
+    <li>Hacer clic en el checkbox de la columna <span class="campo">Sel</span> para marcar/desmarcar una recepción.</li>
+    <li><b>Todas las recepciones seleccionadas deben pertenecer al mismo destino.</b> Si se intenta marcar una con destino diferente, se muestra un aviso.</li>
+    <li>El botón <span class="campo">Ver</span> muestra el detalle de materiales de cada recepción.</li>
+</ul>
+
+<h2>Resumen de Selección</h2>
+<p>Al seleccionar recepciones, se muestra un cuadro de resumen con:</p>
+<ul>
+    <li><b>Recepciones:</b> Cantidad total de recepciones marcadas.</li>
+    <li><b>Destinos:</b> Cantidad de destinos distintos.</li>
+    <li><b>SKU:</b> Cantidad de materiales distintos (sumando todas las recepciones seleccionadas).</li>
+    <li><b>Previstas:</b> Total de unidades previstas.</li>
+    <li><b>Recepcionadas:</b> Total de unidades recepcionadas.</li>
+</ul>
+
+<div class="aviso">
+    <b>Importante:</b> Las cantidades del resumen se calculan consultando los materiales de cada recepción seleccionada. Si hay muchas recepciones seleccionadas, puede tardar unos segundos.
+</div>
+
+<h2>Ver Materiales de una Recepción</h2>
+<p>Al hacer clic en el botón <span class="campo">Ver</span> de una fila, se abre un diálogo con:</p>
+<ul>
+    <li><b>Material:</b> ID del material en el WMS.</li>
+    <li><b>Material ERP:</b> Código del material en el sistema ERP (campo DatosPrivados1).</li>
+    <li><b>Descripción:</b> Descripción del material.</li>
+    <li><b>Unid. Previstas:</b> Cantidad de unidades previstas.</li>
+    <li><b>Recepcionadas:</b> Cantidad de unidades recepcionadas.</li>
+</ul>
+<p>El diálogo incluye un campo de filtro y un pie con los totales de la recepción.</p>
+
+<!-- ============================================================ -->
+<!-- SECCION: PASO 2 - REMITOS -->
+<!-- ============================================================ -->
+<a name="paso2"></a>
+<h1>Paso 2: Ingreso de Remitos</h1>
+
+<h2>Datos del Proveedor</h2>
+<p>En la parte superior se muestra la información del proveedor seleccionado en el Paso 1 (código, razón social).</p>
+
+<h2>Agregar un Remito</h2>
+<p>Completar los campos obligatorios:</p>
+<table>
+    <tr><th>Campo</th><th>Descripción</th></tr>
+    <tr><td><span class="campo">N° Remito</span></td><td>Número del remito. Se valida que no esté duplicado para el mismo proveedor.</td></tr>
+    <tr><td><span class="campo">Fecha</span></td><td>Fecha del remito (formato dd/MM/yyyy).</td></tr>
+    <tr><td><span class="campo">Bultos</span></td><td>Cantidad de bultos.</td></tr>
+    <tr><td><span class="campo">Unidades</span></td><td>Cantidad de unidades.</td></tr>
+    <tr><td><span class="campo">Valor Declarado Unit.</span></td><td>Valor declarado por unidad. Se carga automáticamente desde la configuración de impresión.</td></tr>
+</table>
+
+<div class="nota">
+    <b>Nota:</b> El valor declarado total se calcula automáticamente: Unidades × Valor Unitario.
+</div>
+
+<h2>Asociar Recepciones al Remito</h2>
+<ul>
+    <li>Seleccionar una o más recepciones previstas de la lista desplegable.</li>
+    <li>Cada recepción solo puede asociarse a un solo remito.</li>
+    <li>Las recepciones ya asociadas a otros remitos aparecen deshabilitadas.</li>
+</ul>
+
+<h2>Grilla de Remitos Ingresados</h2>
+<p>Los remitos agregados se muestran en la grilla inferior con las columnas:</p>
+<ul>
+    <li>N° Remito, Fecha, Bultos, Unidades, Valor Declarado, Recepciones Previstas, Destino.</li>
+</ul>
+<p>Se pueden eliminar remitos con el botón <span class="campo">Eliminar</span> de cada fila.</p>
+
+<h2>Acciones Disponibles</h2>
+<ul>
+    <li><span class="campo">← Volver a Selección:</span> Regresa al Paso 1 para agregar más recepciones.</li>
+    <li><span class="campo">Continuar al Registro →:</span> Avanza al Paso 3 para confirmar y registrar.</li>
+</ul>
+
+<!-- ============================================================ -->
+<!-- SECCION: PASO 3 - REGISTRO -->
+<!-- ============================================================ -->
+<a name="paso3"></a>
+<h1>Paso 3: Confirmación y Registro</h1>
+
+<h2>Resumen del Ingreso</h2>
+<p>Se muestra un resumen completo del ingreso a registrar:</p>
+<ul>
+    <li><b>Proveedor:</b> Código y razón social.</li>
+    <li><b>Fecha de Ingreso CD:</b> Fecha que se registrará en el sistema.</li>
+    <li><b>Grilla de Remitos:</b> N° Remito, Fecha, Bultos, Unidades, Valor Declarado, Recepciones, Destino.</li>
+</ul>
+
+<h2>Confirmar y Registrar</h2>
+<p>Al hacer clic en <span class="campo">Confirmar y Registrar</span>:</p>
+<ol>
+    <li>Se guarda el ingreso en la base de datos MySQL.</li>
+    <li>Se asocian los remitos y recepciones.</li>
+    <li>Se ofrece la opción de imprimir los remitos y las etiquetas.</li>
+</ol>
+
+<div class="aviso">
+    <b>Precaución:</b> Una vez registrado, el ingreso no se puede modificar desde esta pantalla. Para anular, usar la opción de Consulta.
+</div>
+
+<h2>Impresión</h2>
+<p>Después del registro, se puede imprimir:</p>
+<ul>
+    <li><b>Remitos:</b> Comprobante del remito con datos del proveedor, destino, bultos, unidades y valor declarado.</li>
+    <li><b>Etiquetas:</b> Etiquetas para los bultos con información del remito y destino.</li>
+</ul>
+<p>La configuración de impresión (impresora, copias, formato) se gestiona desde <span class="campo">Archivo → Impresiones</span>.</p>
+
+<!-- ============================================================ -->
+<!-- SECCION: CONSULTA -->
+<!-- ============================================================ -->
+<a name="consulta"></a>
+<h1>Consulta de Ingresos Realizados</h1>
+
+<h2>Acceso</h2>
+<p>Menú <span class="campo">Consultas / Ajustar → Ver Ingresos Realizados</span>.</p>
+
+<h2>Búsqueda</h2>
+<p>Se pueden buscar ingresos por:</p>
+<ul>
+    <li>ID de Ingreso</li>
+    <li>Número de Proveedor</li>
+    <li>Razón Social del Proveedor</li>
+</ul>
+
+<h2>Grilla de Resultados</h2>
+<p>Muestra los ingresos encontrados con:</p>
+<ul>
+    <li>ID Ingreso, Fecha, Proveedor, Razón Social, Remitos.</li>
+</ul>
+<p>La grilla incluye filtros desplegables en la cabecera para refinar la búsqueda.</p>
+
+<h2>Detalle de un Ingreso</h2>
+<p>Al seleccionar un ingreso, se muestra el detalle:</p>
+<ul>
+    <li>Los remitos asociados con sus recepciones.</li>
+    <li>Cantidades y valores declarados.</li>
+</ul>
+
+<h2>Anular Ingreso</h2>
+<p>Desde la consulta se puede anular un ingreso ingresando la clave de anulación configurada. La anulación es permanente.</p>
+
+<!-- ============================================================ -->
+<!-- SECCION: CONFIGURACION -->
+<!-- ============================================================ -->
+<a name="configuracion"></a>
+<h1>Configuración del Sistema</h1>
+
+<h2>Acceso</h2>
+<p>Menú <span class="campo">Archivo → Configuración</span>.</p>
+
+<h2>Conexiones</h2>
+<table>
+    <tr><th>Sección</th><th>Parámetros</th></tr>
+    <tr><td>SQL Server (WMS)</td><td>Servidor, Base de datos, Usuario, Contraseña. Se usa para leer recepciones previstas.</td></tr>
+    <tr><td>MySQL (Local)</td><td>Servidor, Puerto, Base de datos, Usuario, Contraseña. Se usa para guardar ingresos.</td></tr>
+</table>
+
+<h2>Impresoras</h2>
+<p>Configuración de impresión por perfil de trabajo:</p>
+<ul>
+    <li><b>Impresora de Remitos:</b> Impresora y formato del comprobante de remito.</li>
+    <li><b>Impresora de Etiquetas:</b> Impresora, tipo de etiqueta y disposición.</li>
+    <li><b>Scanner:</b> Dispositivo de escaneo de código de barras.</li>
+</ul>
+
+<h2>Impresión</h2>
+<p>Menú <span class="campo">Archivo → Impresiones</span>. Configura:</p>
+<ul>
+    <li>Datos del remitente (empresa, dirección, CUIT, teléfono).</li>
+    <li>Prefijo y número próximo de remito.</li>
+    <li>Sucursales excluidas del filtro de destino.</li>
+    <li>Importe unitario del valor declarado (se carga automáticamente en el Paso 2).</li>
+</ul>
+
+</body>
+</html>

@@ -1,0 +1,98 @@
+Objetivo general:
+Diseña una aplicación de escritorio en python que permita registrar el ingreso
+de mercadería a nuestro depósito. 
+La misma debe estar bien modularizada y con buena experiencia de usuario.
+Cada ingreso debe asociarse a un único proveedor, y deberá generarse
+un "Id de Ingreso unico"
+Cada ingreso puede incluir uno o mas remitos y cada remito puede estar vinculado
+a una o más órdenes de compra de ese mismo proveedor, esas ordenes de compra 
+ya han sido generadas previamente en el sistema WMS como recepciones previstas.
+
+Ciclo de la aplicacion:
+
+Acción 1
+Mostrar la grilla de proveedores, con los filtros suficientes para
+seleccionar el proveedor buscado (solo uno).
+La grilla deberá tener:
+Numero de Proveedor (NumProveedor)
+Razon Social (Descripcion)
+Domicilio (Domicilio)
+Codigo Postal (CodigoPostal)
+Ciudad (Ciudad)
+Provincia (Distrito)
+Ver Consulta 1.
+
+Acción 2
+Permitir el ingreso de los remitos del proveedor.
+Numero de remito
+Fecha del remito
+Cantidad de bultos
+Dar la oportunidad de scanear el remito
+Validar que el remito no se registre más de una vez, para un mismo proveedor.
+Recepciones previstas asociadas, puede ser mas de una.
+(Permitir la consulta de las recepciones previstas de ese proveedor, 
+con donde se debe mostrar:
+Nro Recepcion Prevista (IDRecepcion)
+Clase (Descripcion)
+Fecha recepción (FechaPrevista)
+Destino (sucursaldestino)
+Ver consulta 2, que se debe agreggar el Where para filtrar por el proveedor seleccionado)
+) 
+Si el usuario la ingresa directamente validar la misma, que exista
+y pertenezca al proveedor seleccionado
+Las recepciones previstas asociadas a un remito tienen que ser del mismo destino.
+
+
+Acción 3
+Registrar un nuevo ingreso de mercadería, incluyendo:
+Id de ingreso
+Fecha de ingreso
+Proveedor asociado al ingreso (redundar la razón social)
+Datos de los remitos asociados al ingreso
+Cantidad de bultos de cada remito
+Recepciones previstas asociadas a cada remito.
+
+
+Consulta 1
+SELECT
+  NumProveedor
+, Descripcion
+, Domicilio
+, CodigoPostal
+, Ciudad
+, Distrito
+FROM dbo.Proveedores WITH (NOLOCK)
+where NumProveedor like 'PCU%'
+
+Consulta 2
+
+Requisitos específicos:
+El listado de proveedores se obtiene de una base de datos SQLServer.
+Las recepciones previstas se obtiene de la misma base SQLServer.
+La aplicación hace sus registros en una base de datos MySQL.
+La aplicacion deberá tener una funcionalidad para configurar la conexión
+tanto a SQL Server, a MySQL, la conexión a la impresora de remitos, 
+impresora de etiquetas y scaner.
+Esta funcionalidad debe estar protegida por contraseña.
+
+Usuario de acceso:
+SELECT [IdUsuario]
+      ,[IdRelacion]
+      ,[Apellido]
+      ,[Nombres]
+      ,[DescripcionCorta]
+      ,[Clave]
+      ,[Telefono]
+      ,[Celular]
+      ,[Email]
+      ,[CambioPasswordFechaHora]
+      ,[DebeCambiarPassword]
+      ,[RegistrarProductividad]
+      ,[RegistrarUsoGUI]
+      ,[ModuloIngresoAutomaticoRF]
+      ,[DomainController]
+      ,[StatusRegistro]
+      ,[UltimaActualizacionUsuario]
+      ,[UltimaActualizacionFecha]
+  FROM [SecUsuarios] WITH (NOLOCK)
+		

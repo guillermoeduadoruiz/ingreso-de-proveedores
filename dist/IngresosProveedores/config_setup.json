@@ -1,0 +1,73 @@
+{
+  "clave_anulacion": "pepe",
+  "sqlserver": {
+    "server": "192.168.223.113",
+    "database": "CSWMS",
+    "username": "u_logimedia_app",
+    "password": "$ENC$Z0FBQUFBQnFZMmRiQ20teVZVWEFaOXF1OHlPVFp5QVRtVVJkTHdyNVVWOXdoV1dIbF9IYkprNmhlOW5MQlQxaFFxWGNGLWdkcnh2QVpxcEE5c0JpSURMd0s0VlFVckc2Z0E9PQ==",
+    "trusted": false
+  },
+  "mysql": {
+    "host": "192.168.220.160",
+    "port": 3306,
+    "database": "CUSPIDE_LOG_P",
+    "username": "U_ CUSPIDE_ADM",
+    "password": "$ENC$Z0FBQUFBQnFZMmRiZVlkeXEwQ2p3MlgxSjFlQmk3cHJNVGhrNnZ0Y3pnOXFOUlhtazRHSXBaaU5DMFJPUXd2bkwtUDdVeWFfdnZYVFlTTjJMeWlHV2htLXZHeW8zT0NVOVE9PQ=="
+  },
+  "impresoras": {
+    "configs": {
+      "WorkConfig": {
+        "impresora_remitos": "MyPrinter",
+        "tamanio_papel_remitos": "A4",
+        "orientacion_remitos": "Vertical",
+        "copias_remitos": 5,
+        "bandeja_remitos": "Automática",
+        "margen_superior_remitos": 10.0,
+        "margen_inferior_remitos": 10.0,
+        "margen_izquierdo_remitos": 10.0,
+        "margen_derecho_remitos": 10.0,
+        "impresora_etiquetas": "",
+        "tipo_etiqueta": "",
+        "ancho_etiqueta": 100.0,
+        "alto_etiqueta": 50.0,
+        "columnas_etiqueta": 2,
+        "filas_etiqueta": 5,
+        "tamanio_papel_etiquetas": "A4",
+        "bandeja_etiquetas": "Automática",
+        "scanner": ""
+      },
+      "desarrollo": {
+        "impresora_remitos": "Microsoft Print to PDF",
+        "tamanio_papel_remitos": "A4",
+        "orientacion_remitos": "Vertical",
+        "copias_remitos": 1,
+        "bandeja_remitos": "Automática",
+        "margen_superior_remitos": 10.0,
+        "margen_inferior_remitos": 10.0,
+        "margen_izquierdo_remitos": 10.0,
+        "margen_derecho_remitos": 10.0,
+        "impresora_etiquetas": "Microsoft Print to PDF",
+        "tipo_etiqueta": "2 x 1 (99.1 x 42.3 mm)",
+        "ancho_etiqueta": 100.0,
+        "alto_etiqueta": 50.0,
+        "columnas_etiqueta": 1,
+        "filas_etiqueta": 5,
+        "tamanio_papel_etiquetas": "Custom",
+        "bandeja_etiquetas": "Automática",
+        "scanner": ""
+      }
+    },
+    "activa": "desarrollo"
+  },
+  "impresion": {
+    "remitente_nombre": "CUSPIDE LIBROS SAU",
+    "remitente_direccion": "AGUSTIN MAGALDI 2135",
+    "remitente_ciudad": "CABA",
+    "remitente_cuit": "20-99999999.2",
+    "remitente_telefono": "11 57535287",
+    "prox_numero_remito": 27,
+    "prefijo_remito": "R-",
+    "sucursales_excluidas": "CCU9999029",
+    "importe_unitario_valor_declarado": 20000.0
+  }
+}
