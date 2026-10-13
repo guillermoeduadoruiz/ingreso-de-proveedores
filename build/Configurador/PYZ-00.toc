@@ -233,6 +233,12 @@
    'proveedores\\.venv\\Lib\\site-packages\\cryptography\\utils.py',
    'PYMODULE'),
   ('csv', 'C:\\Program Files\\Python313\\Lib\\csv.py', 'PYMODULE'),
+  ('ctypes',
+   'C:\\Program Files\\Python313\\Lib\\ctypes\\__init__.py',
+   'PYMODULE'),
+  ('ctypes._endian',
+   'C:\\Program Files\\Python313\\Lib\\ctypes\\_endian.py',
+   'PYMODULE'),
   ('database',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\ingresos_proveedores\\database\\__init__.py',
@@ -538,6 +544,7 @@
   ('quopri', 'C:\\Program Files\\Python313\\Lib\\quopri.py', 'PYMODULE'),
   ('random', 'C:\\Program Files\\Python313\\Lib\\random.py', 'PYMODULE'),
   ('selectors', 'C:\\Program Files\\Python313\\Lib\\selectors.py', 'PYMODULE'),
+  ('shlex', 'C:\\Program Files\\Python313\\Lib\\shlex.py', 'PYMODULE'),
   ('shutil', 'C:\\Program Files\\Python313\\Lib\\shutil.py', 'PYMODULE'),
   ('signal', 'C:\\Program Files\\Python313\\Lib\\signal.py', 'PYMODULE'),
   ('socket', 'C:\\Program Files\\Python313\\Lib\\socket.py', 'PYMODULE'),
@@ -583,6 +590,9 @@
   ('utils.system_info',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\ingresos_proveedores\\utils\\system_info.py',
+   'PYMODULE'),
+  ('webbrowser',
+   'C:\\Program Files\\Python313\\Lib\\webbrowser.py',
    'PYMODULE'),
   ('win32com',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '

@@ -816,6 +816,10 @@
    'proveedores\\.venv\\Lib\\site-packages\\et_xmlfile\\xmlfile.py',
    'PYMODULE'),
   ('fileinput', 'C:\\Program Files\\Python313\\Lib\\fileinput.py', 'PYMODULE'),
+  ('fitz',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\fitz\\__init__.py',
+   'PYMODULE'),
   ('fnmatch', 'C:\\Program Files\\Python313\\Lib\\fnmatch.py', 'PYMODULE'),
   ('fractions', 'C:\\Program Files\\Python313\\Lib\\fractions.py', 'PYMODULE'),
   ('ftplib', 'C:\\Program Files\\Python313\\Lib\\ftplib.py', 'PYMODULE'),
@@ -923,6 +927,102 @@
    'PYMODULE'),
   ('logging',
    'C:\\Program Files\\Python313\\Lib\\logging\\__init__.py',
+   'PYMODULE'),
+  ('lxml',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\__init__.py',
+   'PYMODULE'),
+  ('lxml.ElementInclude',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\ElementInclude.py',
+   'PYMODULE'),
+  ('lxml.cssselect',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\cssselect.py',
+   'PYMODULE'),
+  ('lxml.doctestcompare',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\doctestcompare.py',
+   'PYMODULE'),
+  ('lxml.html',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\html\\__init__.py',
+   'PYMODULE'),
+  ('lxml.html.ElementSoup',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\html\\ElementSoup.py',
+   'PYMODULE'),
+  ('lxml.html._diffcommand',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\html\\_diffcommand.py',
+   'PYMODULE'),
+  ('lxml.html._html5builder',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\html\\_html5builder.py',
+   'PYMODULE'),
+  ('lxml.html._setmixin',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\html\\_setmixin.py',
+   'PYMODULE'),
+  ('lxml.html.builder',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\html\\builder.py',
+   'PYMODULE'),
+  ('lxml.html.clean',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\html\\clean.py',
+   'PYMODULE'),
+  ('lxml.html.defs',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\html\\defs.py',
+   'PYMODULE'),
+  ('lxml.html.formfill',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\html\\formfill.py',
+   'PYMODULE'),
+  ('lxml.html.html5parser',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\html\\html5parser.py',
+   'PYMODULE'),
+  ('lxml.html.soupparser',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\html\\soupparser.py',
+   'PYMODULE'),
+  ('lxml.html.usedoctest',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\html\\usedoctest.py',
+   'PYMODULE'),
+  ('lxml.includes',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\includes\\__init__.py',
+   'PYMODULE'),
+  ('lxml.includes.extlibs',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\includes\\extlibs\\__init__.py',
+   'PYMODULE'),
+  ('lxml.includes.libexslt',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\includes\\libexslt\\__init__.py',
+   'PYMODULE'),
+  ('lxml.includes.libxml',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\includes\\libxml\\__init__.py',
+   'PYMODULE'),
+  ('lxml.includes.libxslt',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\includes\\libxslt\\__init__.py',
+   'PYMODULE'),
+  ('lxml.isoschematron',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\isoschematron\\__init__.py',
+   'PYMODULE'),
+  ('lxml.pyclasslookup',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\pyclasslookup.py',
+   'PYMODULE'),
+  ('lxml.usedoctest',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\usedoctest.py',
    'PYMODULE'),
   ('lzma', 'C:\\Program Files\\Python313\\Lib\\lzma.py', 'PYMODULE'),
   ('mimetypes', 'C:\\Program Files\\Python313\\Lib\\mimetypes.py', 'PYMODULE'),
@@ -2273,6 +2373,7 @@
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\openpyxl\\xml\\functions.py',
    'PYMODULE'),
+  ('optparse', 'C:\\Program Files\\Python313\\Lib\\optparse.py', 'PYMODULE'),
   ('pathlib',
    'C:\\Program Files\\Python313\\Lib\\pathlib\\__init__.py',
    'PYMODULE'),
@@ -2296,6 +2397,58 @@
    'PYMODULE'),
   ('pydoc_data.topics',
    'C:\\Program Files\\Python313\\Lib\\pydoc_data\\topics.py',
+   'PYMODULE'),
+  ('pymupdf',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\pymupdf\\__init__.py',
+   'PYMODULE'),
+  ('pymupdf._apply_pages',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\pymupdf\\_apply_pages.py',
+   'PYMODULE'),
+  ('pymupdf._build',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\pymupdf\\_build.py',
+   'PYMODULE'),
+  ('pymupdf._table_headers',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\pymupdf\\_table_headers.py',
+   'PYMODULE'),
+  ('pymupdf._table_refine',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\pymupdf\\_table_refine.py',
+   'PYMODULE'),
+  ('pymupdf._table_spans',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\pymupdf\\_table_spans.py',
+   'PYMODULE'),
+  ('pymupdf._table_union',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\pymupdf\\_table_union.py',
+   'PYMODULE'),
+  ('pymupdf._wxcolors',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\pymupdf\\_wxcolors.py',
+   'PYMODULE'),
+  ('pymupdf.extra',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\pymupdf\\extra.py',
+   'PYMODULE'),
+  ('pymupdf.mupdf',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\pymupdf\\mupdf.py',
+   'PYMODULE'),
+  ('pymupdf.pymupdf',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\pymupdf\\pymupdf.py',
+   'PYMODULE'),
+  ('pymupdf.table',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\pymupdf\\table.py',
+   'PYMODULE'),
+  ('pymupdf.utils',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\pymupdf\\utils.py',
    'PYMODULE'),
   ('pymysql',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
@@ -2947,6 +3100,10 @@
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\ingresos_proveedores\\servicios\\__init__.py',
    'PYMODULE'),
+  ('servicios.dp_generator',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\ingresos_proveedores\\servicios\\dp_generator.py',
+   'PYMODULE'),
   ('servicios.generador_id',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\ingresos_proveedores\\servicios\\generador_id.py',
@@ -2999,6 +3156,10 @@
    'PYMODULE'),
   ('tty', 'C:\\Program Files\\Python313\\Lib\\tty.py', 'PYMODULE'),
   ('typing', 'C:\\Program Files\\Python313\\Lib\\typing.py', 'PYMODULE'),
+  ('typing_extensions',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\typing_extensions.py',
+   'PYMODULE'),
   ('ui',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\ingresos_proveedores\\ui\\__init__.py',
@@ -3006,6 +3167,10 @@
   ('ui.config_impresion_dialog',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\ingresos_proveedores\\ui\\config_impresion_dialog.py',
+   'PYMODULE'),
+  ('ui.consulta_destinatarios',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\ingresos_proveedores\\ui\\consulta_destinatarios.py',
    'PYMODULE'),
   ('ui.consulta_ingresos',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
@@ -3030,6 +3195,10 @@
   ('ui.login_dialog',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\ingresos_proveedores\\ui\\login_dialog.py',
+   'PYMODULE'),
+  ('ui.mateti',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\ingresos_proveedores\\ui\\mateti.py',
    'PYMODULE'),
   ('ui.registro_ingreso',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '

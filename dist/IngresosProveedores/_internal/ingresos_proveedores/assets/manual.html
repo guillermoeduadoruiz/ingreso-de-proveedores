@@ -60,6 +60,7 @@
     <li><b>Por múltiples IDs:</b> Ingresar varios IDs separados por espacio (ej: <span class="campo">1447522 1447521</span>). Se buscan todas las recepciones que contengan esos números.</li>
     <li><b>Por filtro de destino:</b> Utilizar los filtros desplegables en la cabecera de la grilla para filtrar por Clase, Razón Social, Sucursal Destino o Nombre Destino.</li>
 </ul>
+<p>Desde el campo <span class="campo">Material</span> se puede buscar recepciones que contengan un material determinado (código de material o SKU). Se busca con coincidencia parcial y puede combinarse con el texto de <span class="campo">Buscar RP</span> y con el período de fecha.</p>
 
 <h2>Filtros de la Grilla</h2>
 <p>La grilla dispone de filtros en la fila superior:</p>
@@ -116,7 +117,7 @@
 <p>Completar los campos obligatorios:</p>
 <table>
     <tr><th>Campo</th><th>Descripción</th></tr>
-    <tr><td><span class="campo">N° Remito</span></td><td>Número del remito. Se valida que no esté duplicado para el mismo proveedor.</td></tr>
+    <tr><td><span class="campo">N° Remito</span></td><td>Número del remito (numérico de hasta 12 dígitos, se completa con ceros a la izquierda). Se valida que no esté duplicado para el mismo proveedor.</td></tr>
     <tr><td><span class="campo">Fecha</span></td><td>Fecha del remito (formato dd/MM/yyyy).</td></tr>
     <tr><td><span class="campo">Bultos</span></td><td>Cantidad de bultos.</td></tr>
     <tr><td><span class="campo">Unidades</span></td><td>Cantidad de unidades.</td></tr>
@@ -243,7 +244,7 @@
 <p>Menú <span class="campo">Archivo → Impresiones</span>. Configura:</p>
 <ul>
     <li>Datos del remitente (empresa, dirección, CUIT, teléfono).</li>
-    <li>Prefijo y número próximo de remito.</li>
+    <li>Punto de venta exclusivo de la aplicación y número próximo de remito. El número generado tiene el formato <span class="campo">PV - Número</span> (ej: <span class="campo">00002 - 00003344</span>) y la aplicación lo incrementa automáticamente al emitir.</li>
     <li>Sucursales excluidas del filtro de destino.</li>
     <li>Importe unitario del valor declarado (se carga automáticamente en el Paso 2).</li>
 </ul>

@@ -54,6 +54,10 @@
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\bin\\Qt5Network.dll',
    'BINARY'),
+  ('PyQt5\\Qt5\\bin\\Qt5PrintSupport.dll',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\bin\\Qt5PrintSupport.dll',
+   'BINARY'),
   ('PyQt5\\Qt5\\bin\\Qt5Qml.dll',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\bin\\Qt5Qml.dll',
@@ -165,6 +169,10 @@
   ('PyQt5\\Qt5\\plugins\\platformthemes\\qxdgdesktopportal.dll',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\plugins\\platformthemes\\qxdgdesktopportal.dll',
+   'BINARY'),
+  ('PyQt5\\Qt5\\plugins\\printsupport\\windowsprintersupport.dll',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\plugins\\printsupport\\windowsprintersupport.dll',
    'BINARY'),
   ('PyQt5\\Qt5\\plugins\\styles\\qwindowsvistastyle.dll',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
@@ -478,6 +486,10 @@
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\QtGui.pyd',
    'EXTENSION'),
+  ('PyQt5\\QtPrintSupport.pyd',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\QtPrintSupport.pyd',
+   'EXTENSION'),
   ('PyQt5\\QtWidgets.pyd',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\QtWidgets.pyd',
@@ -603,6 +615,70 @@
   ('libssl-3.dll',
    'C:\\Program Files\\Python313\\DLLs\\libssl-3.dll',
    'BINARY'),
+  ('lxml\\_elementpath.cp313-win_amd64.pyd',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\_elementpath.cp313-win_amd64.pyd',
+   'EXTENSION'),
+  ('lxml\\builder.cp313-win_amd64.pyd',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\builder.cp313-win_amd64.pyd',
+   'EXTENSION'),
+  ('lxml\\etree.cp313-win_amd64.pyd',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\etree.cp313-win_amd64.pyd',
+   'EXTENSION'),
+  ('lxml\\html\\_difflib.cp313-win_amd64.pyd',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\html\\_difflib.cp313-win_amd64.pyd',
+   'EXTENSION'),
+  ('lxml\\html\\diff.cp313-win_amd64.pyd',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\html\\diff.cp313-win_amd64.pyd',
+   'EXTENSION'),
+  ('lxml\\isoschematron\\resources\\rng\\iso-schematron.rng',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\isoschematron\\resources\\rng\\iso-schematron.rng',
+   'DATA'),
+  ('lxml\\isoschematron\\resources\\xsl\\RNG2Schtrn.xsl',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\isoschematron\\resources\\xsl\\RNG2Schtrn.xsl',
+   'DATA'),
+  ('lxml\\isoschematron\\resources\\xsl\\XSD2Schtrn.xsl',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\isoschematron\\resources\\xsl\\XSD2Schtrn.xsl',
+   'DATA'),
+  ('lxml\\isoschematron\\resources\\xsl\\iso-schematron-xslt1\\iso_abstract_expand.xsl',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\isoschematron\\resources\\xsl\\iso-schematron-xslt1\\iso_abstract_expand.xsl',
+   'DATA'),
+  ('lxml\\isoschematron\\resources\\xsl\\iso-schematron-xslt1\\iso_dsdl_include.xsl',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\isoschematron\\resources\\xsl\\iso-schematron-xslt1\\iso_dsdl_include.xsl',
+   'DATA'),
+  ('lxml\\isoschematron\\resources\\xsl\\iso-schematron-xslt1\\iso_schematron_message.xsl',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\isoschematron\\resources\\xsl\\iso-schematron-xslt1\\iso_schematron_message.xsl',
+   'DATA'),
+  ('lxml\\isoschematron\\resources\\xsl\\iso-schematron-xslt1\\iso_schematron_skeleton_for_xslt1.xsl',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\isoschematron\\resources\\xsl\\iso-schematron-xslt1\\iso_schematron_skeleton_for_xslt1.xsl',
+   'DATA'),
+  ('lxml\\isoschematron\\resources\\xsl\\iso-schematron-xslt1\\iso_svrl_for_xslt1.xsl',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\isoschematron\\resources\\xsl\\iso-schematron-xslt1\\iso_svrl_for_xslt1.xsl',
+   'DATA'),
+  ('lxml\\isoschematron\\resources\\xsl\\iso-schematron-xslt1\\readme.txt',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\isoschematron\\resources\\xsl\\iso-schematron-xslt1\\readme.txt',
+   'DATA'),
+  ('lxml\\objectify.cp313-win_amd64.pyd',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\objectify.cp313-win_amd64.pyd',
+   'EXTENSION'),
+  ('lxml\\sax.cp313-win_amd64.pyd',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\sax.cp313-win_amd64.pyd',
+   'EXTENSION'),
   ('numpy-2.5.1.dist-info\\DELVEWHEEL',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\DELVEWHEEL',
@@ -758,6 +834,18 @@
   ('pyexpat.pyd',
    'C:\\Program Files\\Python313\\DLLs\\pyexpat.pyd',
    'EXTENSION'),
+  ('pymupdf\\_extra.pyd',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\pymupdf\\_extra.pyd',
+   'EXTENSION'),
+  ('pymupdf\\_mupdf.pyd',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\pymupdf\\_mupdf.pyd',
+   'EXTENSION'),
+  ('pymupdf\\mupdfcpp64.dll',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\pymupdf\\mupdfcpp64.dll',
+   'BINARY'),
   ('pyodbc.cp313-win_amd64.pyd',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\pyodbc.cp313-win_amd64.pyd',
