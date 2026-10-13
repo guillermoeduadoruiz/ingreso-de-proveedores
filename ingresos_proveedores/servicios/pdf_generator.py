@@ -1,3 +1,4 @@
+import io
 import os
 import re
 import time
@@ -74,7 +75,9 @@ def generar_remito(
     remitente: ConfigImpresion,
     cfg: ConfigImpresoras,
     num_remito: str,
-) -> str:
+    to_bytes: bool = False,
+) -> str | bytes:
+    _buf = io.BytesIO() if to_bytes else None
     filename = f'{ingreso.id_ingreso}_{destino.get("sucursal", "") or destino.get("destino", "")}.pdf'
     filepath = os.path.join(_dir_remitos(), filename)
     tmp_path = os.path.join(
@@ -107,7 +110,7 @@ def generar_remito(
         c.setFont(font, size)
         c.drawRightString(_mm(x_right_mm), y, text)
 
-    c = canvas.Canvas(tmp_path, pagesize=A4)
+    c = canvas.Canvas(_buf if to_bytes else tmp_path, pagesize=A4)
 
     # ── POSITIONS (mm from top-left, derived from 300 dpi preimpreso scan) ──
     # FECHA
@@ -269,6 +272,9 @@ def generar_remito(
 
     c.save()
 
+    if to_bytes:
+        return _buf.getvalue()
+
     try:
         os.replace(tmp_path, filepath)
     except OSError:
@@ -292,7 +298,8 @@ def generar_etiquetas(
     cfg: ConfigImpresoras,
     remitente: ConfigImpresion,
     num_remito: str = '',
-) -> str:
+    to_bytes: bool = False,
+) -> str | bytes:
     # (2026-09-23) El PDF replica la etiqueta DP: mismas dimensiones (una
     # etiqueta de ETQ_ANCHO_MM x ETQ_ALTO_MM por página, sin márgenes de hoja
     # ni grilla) y la MISMA estructura, porque dibuja los elementos que arma
@@ -352,13 +359,14 @@ def generar_etiquetas(
         qr_data += f'RP: {rps}\n'
         qr_data += f'Remitente: {remitente.remitente_nombre}'
 
+    _buf_etq = io.BytesIO() if to_bytes else None
     filename = f'{ingreso.id_ingreso}_{destino["sucursal"]}_etiquetas.pdf'
     filepath = os.path.join(_dir_etiquetas(), filename)
     tmp_path = os.path.join(
         _dir_etiquetas(), f'.tmp_{ingreso.id_ingreso}_{int(time.time() * 1000)}_etiquetas.pdf'
     )
 
-    c = canvas.Canvas(tmp_path, pagesize=(page_w, page_h))
+    c = canvas.Canvas(_buf_etq if to_bytes else tmp_path, pagesize=(page_w, page_h))
 
     def _mm_de_dots(d: int) -> float:
         return d * 25.4 / DPI
@@ -399,6 +407,9 @@ def generar_etiquetas(
         c.showPage()
 
     c.save()
+
+    if to_bytes:
+        return _buf_etq.getvalue()
 
     try:
         os.replace(tmp_path, filepath)
@@ -462,7 +473,7 @@ def _dibujar_etiqueta_mateti(c, mat, x0, y_top, etq_w, etq_h):
     c.drawCentredString(cx, y, texto)
 
 
-def generar_pdf_etiquetas_mateti(materiales: list[dict], cfg) -> str | None:
+def generar_pdf_etiquetas_mateti(materiales: list[dict], cfg, to_bytes: bool = False) -> str | bytes | None:
     """Genera un PDF con etiquetas de codigo de barras para materiales MATETI.
 
     Soporta multiples columnas por pagina. El ancho de pagina se calcula
@@ -495,9 +506,10 @@ def generar_pdf_etiquetas_mateti(materiales: list[dict], cfg) -> str | None:
         pw = ml + cols * etq_w + (cols - 1) * sep + mr
         ph = mt + num_filas * etq_h + max(0, num_filas - 1) * sep_filas + mb
 
+        _buf_mat = io.BytesIO() if to_bytes else None
         filename = f'mateti_{datetime.now().strftime("%Y%m%d-%H%M%S")}.pdf'
         filepath = os.path.join(_dir_etiquetas(), filename)
-        c = canvas.Canvas(filepath, pagesize=(pw, ph))
+        c = canvas.Canvas(_buf_mat if to_bytes else filepath, pagesize=(pw, ph))
 
         for i, mat in enumerate(pendientes):
             col_idx = i % cols
@@ -508,6 +520,8 @@ def generar_pdf_etiquetas_mateti(materiales: list[dict], cfg) -> str | None:
 
         c.showPage()
         c.save()
+        if to_bytes:
+            return _buf_mat.getvalue()
         return filepath
     except Exception:
         return None

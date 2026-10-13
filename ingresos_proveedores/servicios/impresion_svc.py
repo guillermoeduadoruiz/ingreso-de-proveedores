@@ -96,11 +96,18 @@ class ImpresionService:
         if os.path.exists(filepath):
             os.startfile(filepath)
 
-    def _imprimir_pdf_qt(self, filepath: str, printer_name: str) -> bool:
-        """Imprime el PDF sin depender del visor de PDF instalado en el equipo.
+    def _printer_is_available(self, printer_name: str) -> bool:
+        if not printer_name:
+            return False
+        try:
+            from PyQt5.QtPrintSupport import QPrinterInfo
+            return any(p.printerName() == printer_name
+                       for p in QPrinterInfo.availablePrinters())
+        except Exception:
+            return False
 
-        Renderiza cada página con PyMuPDF y la envía a la impresora vía QPrinter.
-        """
+    def _imprimir_pdf_qt(self, pdf_source, printer_name: str) -> bool:
+        """Imprime directamente vía QPrinter. pdf_source puede ser bytes o ruta."""
         import pymupdf
         from PyQt5.QtCore import Qt, QRect
         from PyQt5.QtGui import QImage, QPainter
@@ -115,10 +122,16 @@ class ImpresionService:
 
         printer = QPrinter(info, QPrinter.HighResolution)
         printer.setFullPage(True)
-        printer.setDocName(os.path.basename(filepath))
+
+        if isinstance(pdf_source, (bytes, bytearray)):
+            doc_ctx = pymupdf.open(stream=pdf_source, filetype='pdf')
+            printer.setDocName('documento')
+        else:
+            doc_ctx = pymupdf.open(pdf_source)
+            printer.setDocName(os.path.basename(pdf_source))
 
         dpi = 300
-        with pymupdf.open(filepath) as doc:
+        with doc_ctx as doc:
             if doc.page_count == 0:
                 return False
             painter = QPainter()
@@ -138,7 +151,17 @@ class ImpresionService:
                 painter.end()
         return True
 
-    def _imprimir_pdf(self, filepath: str, printer_name: str):
+    def _imprimir_directo(self, pdf_bytes: bytes, printer_name: str) -> bool:
+        try:
+            return self._imprimir_pdf_qt(pdf_bytes, printer_name)
+        except Exception:
+            return False
+
+    def _procesar_pdf(self, filepath: str, printer_name: str):
+        """Fallback: imprime o abre un PDF ya guardado en disco."""
+        if not printer_name:
+            self._abrir_pdf(filepath)
+            return
         try:
             if self._imprimir_pdf_qt(filepath, printer_name):
                 return
@@ -146,18 +169,9 @@ class ImpresionService:
             pass
         try:
             import win32api
-            win32api.ShellExecute(
-                0, "printto", filepath,
-                f'"{printer_name}"', None, 0,
-            )
+            win32api.ShellExecute(0, 'printto', filepath, f'"{printer_name}"', None, 0)
         except Exception:
             self._abrir_pdf(filepath)
-
-    def _procesar_pdf(self, filepath: str, printer_name: str):
-        if not printer_name:
-            self._abrir_pdf(filepath)
-        else:
-            self._imprimir_pdf(filepath, printer_name)
 
     def generar_remito(self, ingreso: Ingreso, destino: dict, impresora_override: str = '',
                        reimprimir: bool = False) -> str | None:
@@ -166,18 +180,20 @@ class ImpresionService:
         if not printer:
             return None
         try:
-            remito_str = self._obtener_o_generar_num_remito(
-                ingreso, destino, reimprimir
-            )
-            filepath = pdf_remito(
-                ingreso, destino,
-                self._cm.impresion, cfg,
-                remito_str,
-            )
+            remito_str = self._obtener_o_generar_num_remito(ingreso, destino, reimprimir)
             copias = cfg.copias_remitos or 1
-            for _ in range(copias):
-                self._procesar_pdf(filepath, printer)
-            return filepath
+            if self._printer_is_available(printer):
+                pdf_bytes = pdf_remito(ingreso, destino, self._cm.impresion, cfg, remito_str, to_bytes=True)
+                for _ in range(copias):
+                    if not self._imprimir_directo(pdf_bytes, printer):
+                        filepath = pdf_remito(ingreso, destino, self._cm.impresion, cfg, remito_str)
+                        self._abrir_pdf(filepath)
+                        return filepath
+                return ':ok:'
+            else:
+                filepath = pdf_remito(ingreso, destino, self._cm.impresion, cfg, remito_str)
+                self._abrir_pdf(filepath)
+                return filepath
         except Exception:
             return None
 
@@ -193,17 +209,21 @@ class ImpresionService:
         if not printer:
             return None
         try:
-            num_remito = self._obtener_o_generar_num_remito(
-                ingreso, destino, reimprimir
-            )
+            num_remito = self._obtener_o_generar_num_remito(ingreso, destino, reimprimir)
             if self._usar_direct_protocol(printer):
-                cant = imprimir_etiquetas_dp(
-                    ingreso, destino, cfg, self._cm.impresion, printer, num_remito
-                )
+                cant = imprimir_etiquetas_dp(ingreso, destino, cfg, self._cm.impresion, printer, num_remito)
                 return f'DP:{printer}:{cant}'
-            filepath = pdf_etiquetas(ingreso, destino, cfg, self._cm.impresion, num_remito)
-            self._procesar_pdf(filepath, printer)
-            return filepath
+            if self._printer_is_available(printer):
+                pdf_bytes = pdf_etiquetas(ingreso, destino, cfg, self._cm.impresion, num_remito, to_bytes=True)
+                if not self._imprimir_directo(pdf_bytes, printer):
+                    filepath = pdf_etiquetas(ingreso, destino, cfg, self._cm.impresion, num_remito)
+                    self._abrir_pdf(filepath)
+                    return filepath
+                return ':ok:'
+            else:
+                filepath = pdf_etiquetas(ingreso, destino, cfg, self._cm.impresion, num_remito)
+                self._abrir_pdf(filepath)
+                return filepath
         except Exception:
             return None
 
@@ -255,9 +275,23 @@ class ImpresionService:
 
     def imprimir_etiquetas_mateti(self, materiales: list[dict]) -> str | None:
         cfg = self._cm.impresoras
-        filepath = generar_pdf_etiquetas_mateti(materiales, cfg)
-        if not filepath:
-            return None
         printer = cfg.impresora_etiquetas_mateti or cfg.impresora_etiquetas
-        self._procesar_pdf(filepath, printer)
-        return filepath
+        try:
+            if self._printer_is_available(printer):
+                pdf_bytes = generar_pdf_etiquetas_mateti(materiales, cfg, to_bytes=True)
+                if not pdf_bytes:
+                    return None
+                if not self._imprimir_directo(pdf_bytes, printer):
+                    filepath = generar_pdf_etiquetas_mateti(materiales, cfg)
+                    if filepath:
+                        self._abrir_pdf(filepath)
+                    return filepath
+                return ':ok:'
+            else:
+                filepath = generar_pdf_etiquetas_mateti(materiales, cfg)
+                if not filepath:
+                    return None
+                self._abrir_pdf(filepath)
+                return filepath
+        except Exception:
+            return None
