@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QFont
-from database.conexiones import ConfigSQLServer
+from database.conexiones import ConfigSQLServer, build_connection_str
 
 
 class LoginDialog(QDialog):
@@ -193,22 +193,14 @@ class LoginDialog(QDialog):
             # MD5 requerido por el WMS (Cygnus) — no se puede cambiar sin modificar el sistema externo
             clave_hash = hashlib.md5((usuario + password).encode('utf-8')).hexdigest().upper()
 
-            if self._config.trusted:
-                conn_str = (
-                    f'DRIVER={{ODBC Driver 17 for SQL Server}};'
-                    f'SERVER={self._config.server};'
-                    f'DATABASE={self._config.database};'
-                    f'Trusted_Connection=yes;'
-                )
-            else:
-                conn_str = (
-                    f'DRIVER={{ODBC Driver 17 for SQL Server}};'
-                    f'SERVER={self._config.server};'
-                    f'DATABASE={self._config.database};'
-                    f'UID={self._config.username};'
-                    f'PWD={self._config.password};'
-                )
-
+            conn_str = build_connection_str(
+                server=self._config.server,
+                database=self._config.database,
+                trusted=self._config.trusted,
+                username=self._config.username,
+                password=self._config.password,
+                driver=self._config.driver,
+            )
             conn = pyodbc.connect(conn_str, timeout=5)
             cursor = conn.cursor()
             cursor.execute('''

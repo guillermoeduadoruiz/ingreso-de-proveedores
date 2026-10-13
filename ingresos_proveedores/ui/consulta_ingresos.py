@@ -15,9 +15,10 @@ from servicios.impresion_svc import ImpresionService
 
 
 class ConsultaIngresosWidget(QWidget):
+    ESTADOS_REMITO = {1: 'Emitido', 2: 'En Muelle', 3: 'Despachado'}
     COL_RECEPCIONES = 5
-    COL_NAMES = ['ID Ingreso', 'Fecha', 'Proveedor', 'Razón Social', 'Remitos']
-    COL_FILTRO = {0: 'text', 1: 'text', 2: 'text', 3: 'text', 4: 'combo'}
+    COL_NAMES = ['ID Ingreso', 'Fecha', 'Proveedor', 'Razón Social', 'Remitos', 'Remito Generado']
+    COL_FILTRO = {0: 'text', 1: 'text', 2: 'text', 3: 'text', 4: 'combo', 5: 'text'}
 
     def __init__(self, ingreso_svc: IngresoService, clave_anulacion: str = '',
                  sqlserver_config: ConfigSQLServer | None = None,
@@ -35,11 +36,12 @@ class ConsultaIngresosWidget(QWidget):
         self._on_volver_callback = None
         self._expanded_rows: set[int] = set()
         self._default_row_heights: dict[int, int] = {}
-        self._filtros: dict[int, str] = {0: '', 1: '', 2: '', 3: '', 4: ''}
+        self._filtros: dict[int, str] = {0: '', 1: '', 2: '', 3: '', 4: '', 5: ''}
         self._fecha_desde: QDate | None = None
         self._fecha_hasta: QDate | None = None
         self._sort_col: int | None = None
         self._sort_asc: bool = True
+        self._remitos_generados_map: dict[str, list[dict]] = {}
         self._setup_ui()
 
     def _setup_ui(self):
@@ -83,9 +85,10 @@ class ConsultaIngresosWidget(QWidget):
         layout.addLayout(fecha_layout)
 
         self.tabla_ingresos = QTableWidget()
-        self.tabla_ingresos.setColumnCount(5)
+        self.tabla_ingresos.setColumnCount(6)
         self.tabla_ingresos.setHorizontalHeaderLabels(self.COL_NAMES)
         self.tabla_ingresos.setSelectionBehavior(QTableWidget.SelectRows)
+        self.tabla_ingresos.setSelectionMode(QAbstractItemView.ExtendedSelection)
         self.tabla_ingresos.setEditTriggers(QTableWidget.NoEditTriggers)
         self.tabla_ingresos.setAlternatingRowColors(True)
         self.tabla_ingresos.verticalHeader().setVisible(False)
@@ -101,6 +104,10 @@ class ConsultaIngresosWidget(QWidget):
 
         self.lbl_detalle_proveedor = QLabel('')
         det_layout.addWidget(self.lbl_detalle_proveedor)
+
+        self.lbl_remitos_generados = QLabel('')
+        self.lbl_remitos_generados.setStyleSheet('font-size: 12px; color: #4CAF50; font-weight: bold;')
+        det_layout.addWidget(self.lbl_remitos_generados)
 
         self.tabla_remitos = QTableWidget()
         self.tabla_remitos.setColumnCount(6)
@@ -132,7 +139,7 @@ class ConsultaIngresosWidget(QWidget):
         self.btn_reimprimir_etiquetas.setObjectName('btnPrimary')
         self.btn_reimprimir_etiquetas.setEnabled(False)
         acc_layout.addWidget(self.btn_reimprimir_etiquetas)
-        self.btn_eliminar = QPushButton('Eliminar Ingreso')
+        self.btn_eliminar = QPushButton('Eliminar Ingreso(s)')
         self.btn_eliminar.setObjectName('btnDanger')
         self.btn_eliminar.setEnabled(False)
         if not self._clave_anulacion:
@@ -166,6 +173,9 @@ class ConsultaIngresosWidget(QWidget):
     def _cargar_ingresos(self):
         try:
             self._ingresos = self._svc.obtener_ingresos_recientes()
+            self._remitos_generados_map = self._svc.obtener_remitos_generados_por_ingresos(
+                [i['id_ingreso'] for i in self._ingresos]
+            )
             self._aplicar_filtros_y_orden()
             self._limpiar_detalle()
         except Exception as e:
@@ -184,6 +194,9 @@ class ConsultaIngresosWidget(QWidget):
                 or filtro in i.get('razon_social', '').lower()
                 or filtro in i.get('num_proveedor', '').lower()
             ]
+            self._remitos_generados_map = self._svc.obtener_remitos_generados_por_ingresos(
+                [i['id_ingreso'] for i in self._ingresos]
+            )
             self._aplicar_filtros_y_orden()
             self._limpiar_detalle()
         except Exception as e:
@@ -234,6 +247,11 @@ class ConsultaIngresosWidget(QWidget):
                 filtrados = [i for i in filtrados if val_lower in i.get('razon_social', '').lower()]
             elif col == 4:
                 filtrados = [i for i in filtrados if val == str(i.get('cantidad_remitos', 0))]
+            elif col == 5:
+                filtrados = [
+                    i for i in filtrados
+                    if val_lower in self._nums_generados(i['id_ingreso']).lower()
+                ]
 
         if self._sort_col is not None:
             col = self._sort_col
@@ -245,6 +263,11 @@ class ConsultaIngresosWidget(QWidget):
                 )
             elif col == 4:
                 filtrados.sort(key=lambda i: i.get('cantidad_remitos', 0), reverse=reverse)
+            elif col == 5:
+                filtrados.sort(
+                    key=lambda i: self._nums_generados(i['id_ingreso']).lower(),
+                    reverse=reverse
+                )
             else:
                 key_map = {0: 'id_ingreso', 2: 'num_proveedor', 3: 'razon_social'}
                 attr = key_map.get(col, 'id_ingreso')
@@ -253,6 +276,13 @@ class ConsultaIngresosWidget(QWidget):
         self._ingresos_filtrados = filtrados
         self._poblar_tabla_ingresos()
         self._actualizar_resumen()
+
+    def _nums_generados(self, id_ingreso: str) -> str:
+        nums = [
+            g.get('num_remito') or ''
+            for g in self._remitos_generados_map.get(id_ingreso, [])
+        ]
+        return ', '.join(n for n in nums if n)
 
     def _poblar_tabla_ingresos(self):
         self.tabla_ingresos.blockSignals(True)
@@ -286,6 +316,13 @@ class ConsultaIngresosWidget(QWidget):
                     cbo.setCurrentIndex(idx)
                 cbo.currentTextChanged.connect(lambda text, c=4: self._on_filtro_changed(c, text))
                 self.tabla_ingresos.setCellWidget(0, col, cbo)
+            elif col == 5:
+                w = QLineEdit()
+                w.setPlaceholderText('Filtrar remito...')
+                w.setText(self._filtros[5])
+                w.setClearButtonEnabled(True)
+                w.textChanged.connect(lambda text, c=5: self._on_filtro_changed(c, text))
+                self.tabla_ingresos.setCellWidget(0, col, w)
         self.tabla_ingresos.setRowHeight(0, 40)
 
         for i, ing in enumerate(datos):
@@ -316,6 +353,11 @@ class ConsultaIngresosWidget(QWidget):
             item_rem.setData(Qt.UserRole, cant)
             item_rem.setTextAlignment(Qt.AlignCenter)
             self.tabla_ingresos.setItem(row, 4, item_rem)
+
+            nums_gen = self._nums_generados(ing['id_ingreso'])
+            item_gen = QTableWidgetItem(nums_gen)
+            item_gen.setData(Qt.UserRole, nums_gen.lower())
+            self.tabla_ingresos.setItem(row, 5, item_gen)
 
         self.tabla_ingresos.blockSignals(False)
         header = self.tabla_ingresos.horizontalHeader()
@@ -400,6 +442,7 @@ class ConsultaIngresosWidget(QWidget):
         self._default_row_heights.clear()
         self.lbl_detalle_id.setText('')
         self.lbl_detalle_proveedor.setText('')
+        self.lbl_remitos_generados.setText('')
         self.tabla_remitos.setRowCount(0)
 
     def _on_fecha_rango_changed(self):
@@ -445,7 +488,7 @@ class ConsultaIngresosWidget(QWidget):
             ws.title = 'Ingresos'
 
             encabezados = ['ID Ingreso', 'Fecha', 'Proveedor', 'Razón Social',
-                           'Remitos', 'Bultos', 'Recepción / Destino']
+                           'Remitos', 'Remito Generado', 'Bultos', 'Recepción / Destino']
             e_enc = Font(bold=True, color='FFFFFF', size=10)
             r_enc = PatternFill(start_color='1565C0', end_color='1565C0', fill_type='solid')
 
@@ -487,11 +530,12 @@ class ConsultaIngresosWidget(QWidget):
                 ws.cell(row=row, column=4, value=ing.get('razon_social', '')).font = e_ing
                 ws.cell(row=row, column=5, value=len(remitos)).font = e_ing
                 ws.cell(row=row, column=5).alignment = Alignment(horizontal='center')
-                ws.cell(row=row, column=6, value=total_bultos).font = e_ing
-                ws.cell(row=row, column=6).alignment = Alignment(horizontal='center')
+                ws.cell(row=row, column=6, value=self._nums_generados(id_ing)).font = e_ing
+                ws.cell(row=row, column=7, value=total_bultos).font = e_ing
+                ws.cell(row=row, column=7).alignment = Alignment(horizontal='center')
                 remitos_nums = ', '.join(r.get('num_remito', '') for r in remitos)
-                ws.cell(row=row, column=7, value=f'Remitos: {remitos_nums}').font = e_ing
-                for col in range(1, 8):
+                ws.cell(row=row, column=8, value=f'Remitos: {remitos_nums}').font = e_ing
+                for col in range(1, 9):
                     ws.cell(row=row, column=col).fill = r_ing
                     ws.cell(row=row, column=col).border = b_ing
                 row += 1
@@ -539,22 +583,22 @@ class ConsultaIngresosWidget(QWidget):
                     detalle_parts.append(f'{info["bultos"]} bultos')
                     detalle_txt = ' — '.join(detalle_parts)
 
-                    ws.cell(row=row, column=7, value=f'▸ {destino_txt}').font = e_dst
-                    for col in range(1, 8):
+                    ws.cell(row=row, column=8, value=f'▸ {destino_txt}').font = e_dst
+                    for col in range(1, 9):
                         ws.cell(row=row, column=col).fill = r_dst
                         ws.cell(row=row, column=col).border = b_dst
                     row += 1
 
-                    ws.cell(row=row, column=7, value=f'   {detalle_txt}').font = e_rp
-                    for col in range(1, 8):
+                    ws.cell(row=row, column=8, value=f'   {detalle_txt}').font = e_rp
+                    for col in range(1, 9):
                         ws.cell(row=row, column=col).border = b_rp
                     row += 1
 
                     for rp_info in info['rps']:
                         rp_id = rp_info['id']
                         rp_linea = f'     • {rp_id}'
-                        ws.cell(row=row, column=7, value=rp_linea).font = e_rp
-                        for col in range(1, 8):
+                        ws.cell(row=row, column=8, value=rp_linea).font = e_rp
+                        for col in range(1, 9):
                             ws.cell(row=row, column=col).border = b_rp
                         row += 1
 
@@ -565,8 +609,9 @@ class ConsultaIngresosWidget(QWidget):
             ws.column_dimensions['C'].width = 14
             ws.column_dimensions['D'].width = 32
             ws.column_dimensions['E'].width = 10
-            ws.column_dimensions['F'].width = 9
-            ws.column_dimensions['G'].width = 65
+            ws.column_dimensions['F'].width = 20
+            ws.column_dimensions['G'].width = 9
+            ws.column_dimensions['H'].width = 65
             ws.auto_filter.ref = ws.dimensions
             ws.freeze_panes = 'A2'
             wb.save(path)
@@ -616,6 +661,18 @@ class ConsultaIngresosWidget(QWidget):
                 self.lbl_detalle_proveedor.setText(
                     f'Proveedor: {ingreso.get("num_proveedor", "")} - {ingreso.get("razon_social", "")}'
                 )
+            generados = self._svc.obtener_remitos_generados(id_ingreso)
+            if generados:
+                partes = []
+                for g in generados:
+                    num = g.get('num_remito') or ''
+                    est = self.ESTADOS_REMITO.get(int(g.get('estado') or 1), 'Emitido')
+                    partes.append(f'{num} ({est})' if num else est)
+                self.lbl_remitos_generados.setText(
+                    'Remitos generados: ' + ', '.join(partes)
+                )
+            else:
+                self.lbl_remitos_generados.setText('')
             self._expanded_rows.clear()
             self._default_row_heights.clear()
             self._poblar_tabla_remitos()
@@ -674,21 +731,31 @@ class ConsultaIngresosWidget(QWidget):
             self._expanded_rows.add(row)
 
     def _eliminar_ingreso(self):
-        rows = self.tabla_ingresos.selectedIndexes()
-        if not rows:
+        filas = sorted({
+            idx.row() for idx in self.tabla_ingresos.selectedIndexes()
+            if 0 <= idx.row() - 1 < len(self._ingresos_filtrados)
+        })
+        if not filas:
             return
-        row = rows[0].row()
-        if row < 1 or row - 1 >= len(self._ingresos_filtrados):
-            return
-        ingreso = self._ingresos_filtrados[row - 1]
-        id_ingreso = ingreso['id_ingreso']
-        proveedor = ingreso.get('razon_social', ingreso.get('num_proveedor', ''))
+        ingresos = [self._ingresos_filtrados[r - 1] for r in filas]
+
+        if len(ingresos) == 1:
+            ing = ingresos[0]
+            detalle = (
+                f'ID: {ing["id_ingreso"]}\n'
+                f'Proveedor: {ing.get("razon_social", ing.get("num_proveedor", ""))}'
+            )
+        else:
+            lineas = '\n'.join(
+                f'• {i["id_ingreso"]} - {i.get("razon_social", i.get("num_proveedor", ""))}'
+                for i in ingresos
+            )
+            detalle = f'Se eliminarán los siguientes {len(ingresos)} ingresos:\n\n{lineas}'
 
         reply = QMessageBox.question(
             self, 'Confirmar Eliminación',
-            f'¿Está seguro de eliminar el ingreso?\n\n'
-            f'ID: {id_ingreso}\n'
-            f'Proveedor: {proveedor}\n\n'
+            f'¿Está seguro de eliminar el/los ingreso(s)?\n\n'
+            f'{detalle}\n\n'
             f'Esta acción no se puede deshacer.',
             QMessageBox.Yes | QMessageBox.No, QMessageBox.No
         )
@@ -713,15 +780,26 @@ class ConsultaIngresosWidget(QWidget):
             )
             return
 
-        try:
-            self._svc.eliminar_ingreso(id_ingreso)
+        eliminados = []
+        errores = []
+        for ing in ingresos:
+            try:
+                self._svc.eliminar_ingreso(ing['id_ingreso'])
+                eliminados.append(ing['id_ingreso'])
+            except Exception as e:
+                errores.append(f'{ing["id_ingreso"]}: {e}')
+
+        if eliminados:
             QMessageBox.information(
-                self, 'Eliminado',
-                f'El ingreso {id_ingreso} fue eliminado exitosamente.'
+                self, 'Eliminados',
+                'Se eliminaron exitosamente:\n' + '\n'.join(eliminados)
             )
-            self._cargar_ingresos()
-        except Exception as e:
-            QMessageBox.critical(self, 'Error', f'Error al eliminar el ingreso:\n{e}')
+        if errores:
+            QMessageBox.critical(
+                self, 'Error',
+                'No se pudieron eliminar:\n' + '\n'.join(errores)
+            )
+        self._cargar_ingresos()
 
     def _reimprimir(self, tipo: str):
         if not self._imp_svc:
@@ -750,9 +828,13 @@ class ConsultaIngresosWidget(QWidget):
 
         try:
             if tipo == 'remitos':
-                exitos, errores = self._imp_svc.imprimir_remitos(ingreso, impresora)
+                exitos, errores = self._imp_svc.imprimir_remitos(
+                    ingreso, impresora, reimprimir=True
+                )
             else:
-                exitos, errores = self._imp_svc.imprimir_etiquetas(ingreso, impresora)
+                exitos, errores = self._imp_svc.imprimir_etiquetas(
+                    ingreso, impresora, reimprimir=True
+                )
             if errores:
                 QMessageBox.warning(
                     self, 'Reimpresión',

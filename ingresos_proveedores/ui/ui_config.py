@@ -1,3 +1,4 @@
+import webbrowser
 from PyQt5.QtWidgets import (
     QDialog, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit,
     QPushButton, QGroupBox, QTabWidget, QWidget, QCheckBox,
@@ -5,7 +6,10 @@ from PyQt5.QtWidgets import (
     QMessageBox, QFormLayout, QGridLayout, QInputDialog, QSizePolicy,
 )
 from PyQt5.QtCore import Qt
-from database.conexiones import ConfigSQLServer, ConfigMySQL, ConfigImpresoras
+from database.conexiones import (
+    ConfigSQLServer, ConfigMySQL, ConfigImpresoras,
+    get_available_drivers, get_driver_download_url, build_connection_str,
+)
 from config.config_manager import ConfigManager
 from utils.system_info import listar_impresoras, listar_scanners, verificar_impresora
 
@@ -78,7 +82,19 @@ class ConfigDialog(QDialog):
         self.txt_ss_pass.setEchoMode(QLineEdit.Password)
         layout.addRow('Contraseña:', self.txt_ss_pass)
 
+        driver_row = QHBoxLayout()
+        self.cbo_ss_driver = QComboBox()
+        self.cbo_ss_driver.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+        self.cbo_ss_driver.setToolTip('Driver ODBC para SQL Server instalado en el sistema')
+        driver_row.addWidget(self.cbo_ss_driver, 1)
+        btn_install_driver = QPushButton('Instalar Driver')
+        btn_install_driver.setObjectName('btnWarning')
+        btn_install_driver.clicked.connect(self._instalar_driver_odbc)
+        driver_row.addWidget(btn_install_driver)
+        layout.addRow('Driver ODBC:', driver_row)
+
         self.lbl_ss_estado = QLabel('')
+        self.lbl_ss_estado.setWordWrap(True)
         layout.addRow('', self.lbl_ss_estado)
 
         self.chk_ss_trusted.toggled.connect(self._toggle_sqlserver_auth)
@@ -278,7 +294,110 @@ class ConfigDialog(QDialog):
         self.cbo_bandeja_etiquetas.setEditable(True)
         ely.addRow('Bandeja:', self.cbo_bandeja_etiquetas)
 
+        marg_grid = QGridLayout()
+        marg_grid.setSpacing(4)
+        self.spn_etq_m_sup = QDoubleSpinBox()
+        self.spn_etq_m_sup.setRange(0, 100)
+        self.spn_etq_m_sup.setSuffix(' mm')
+        self.spn_etq_m_inf = QDoubleSpinBox()
+        self.spn_etq_m_inf.setRange(0, 100)
+        self.spn_etq_m_inf.setSuffix(' mm')
+        self.spn_etq_m_izq = QDoubleSpinBox()
+        self.spn_etq_m_izq.setRange(0, 100)
+        self.spn_etq_m_izq.setSuffix(' mm')
+        self.spn_etq_m_der = QDoubleSpinBox()
+        self.spn_etq_m_der.setRange(0, 100)
+        self.spn_etq_m_der.setSuffix(' mm')
+        self.spn_etq_sep = QDoubleSpinBox()
+        self.spn_etq_sep.setRange(0, 100)
+        self.spn_etq_sep.setSuffix(' mm')
+        marg_grid.addWidget(QLabel('Sup.:'), 0, 0)
+        marg_grid.addWidget(self.spn_etq_m_sup, 0, 1)
+        marg_grid.addWidget(QLabel('Inf.:'), 0, 2)
+        marg_grid.addWidget(self.spn_etq_m_inf, 0, 3)
+        marg_grid.addWidget(QLabel('Izq.:'), 1, 0)
+        marg_grid.addWidget(self.spn_etq_m_izq, 1, 1)
+        marg_grid.addWidget(QLabel('Der.:'), 1, 2)
+        marg_grid.addWidget(self.spn_etq_m_der, 1, 3)
+        marg_grid.addWidget(QLabel('Entre etiquetas:'), 2, 0)
+        marg_grid.addWidget(self.spn_etq_sep, 2, 1)
+        ely.addRow('Márgenes etiqueta:', marg_grid)
+
         layout.addWidget(grp_etiquetas)
+
+        # ---- Etiquetas MATETI ----
+        grp_mateti = QGroupBox('Etiquetas MATETI')
+        mly = QFormLayout(grp_mateti)
+        mly.setSpacing(8)
+
+        imp_row_m = QHBoxLayout()
+        imp_row_m.setSpacing(6)
+        self.cbo_imp_etq_mateti = QComboBox()
+        self.cbo_imp_etq_mateti.setEditable(True)
+        self.cbo_imp_etq_mateti.setPlaceholderText('Nombre de la impresora MATETI')
+        imp_row_m.addWidget(self.cbo_imp_etq_mateti, 1)
+        btn_test_mateti = QPushButton('Probar')
+        btn_test_mateti.setObjectName('btnWarning')
+        btn_test_mateti.setMaximumWidth(90)
+        btn_test_mateti.clicked.connect(self._probar_impresora_mateti)
+        imp_row_m.addWidget(btn_test_mateti)
+        self.lbl_estado_mateti = QLabel('')
+        self.lbl_estado_mateti.setStyleSheet('font-size: 11px;')
+        imp_row_m.addWidget(self.lbl_estado_mateti, 1)
+        mly.addRow('Impresora:', imp_row_m)
+
+        dim_grid_m = QGridLayout()
+        dim_grid_m.setSpacing(4)
+        self.spn_ancho_etq_mateti = QDoubleSpinBox()
+        self.spn_ancho_etq_mateti.setRange(10, 500)
+        self.spn_ancho_etq_mateti.setSuffix(' mm')
+        self.spn_alto_etq_mateti = QDoubleSpinBox()
+        self.spn_alto_etq_mateti.setRange(10, 500)
+        self.spn_alto_etq_mateti.setSuffix(' mm')
+        dim_grid_m.addWidget(QLabel('Ancho:'), 0, 0)
+        dim_grid_m.addWidget(self.spn_ancho_etq_mateti, 0, 1)
+        dim_grid_m.addWidget(QLabel('Alto:'), 0, 2)
+        dim_grid_m.addWidget(self.spn_alto_etq_mateti, 0, 3)
+        mly.addRow('Tamaño etiqueta:', dim_grid_m)
+
+        col_grid_m = QGridLayout()
+        col_grid_m.setSpacing(4)
+        self.spn_columnas_etq_mateti = QSpinBox()
+        self.spn_columnas_etq_mateti.setRange(1, 10)
+        self.spn_sep_etq_mateti = QDoubleSpinBox()
+        self.spn_sep_etq_mateti.setRange(0, 100)
+        self.spn_sep_etq_mateti.setSuffix(' mm')
+        col_grid_m.addWidget(QLabel('Columnas:'), 0, 0)
+        col_grid_m.addWidget(self.spn_columnas_etq_mateti, 0, 1)
+        col_grid_m.addWidget(QLabel('Separación:'), 0, 2)
+        col_grid_m.addWidget(self.spn_sep_etq_mateti, 0, 3)
+        mly.addRow('Distribución:', col_grid_m)
+
+        marg_grid_m = QGridLayout()
+        marg_grid_m.setSpacing(4)
+        self.spn_mateti_m_sup = QDoubleSpinBox()
+        self.spn_mateti_m_sup.setRange(0, 100)
+        self.spn_mateti_m_sup.setSuffix(' mm')
+        self.spn_mateti_m_inf = QDoubleSpinBox()
+        self.spn_mateti_m_inf.setRange(0, 100)
+        self.spn_mateti_m_inf.setSuffix(' mm')
+        self.spn_mateti_m_izq = QDoubleSpinBox()
+        self.spn_mateti_m_izq.setRange(0, 100)
+        self.spn_mateti_m_izq.setSuffix(' mm')
+        self.spn_mateti_m_der = QDoubleSpinBox()
+        self.spn_mateti_m_der.setRange(0, 100)
+        self.spn_mateti_m_der.setSuffix(' mm')
+        marg_grid_m.addWidget(QLabel('Sup.:'), 0, 0)
+        marg_grid_m.addWidget(self.spn_mateti_m_sup, 0, 1)
+        marg_grid_m.addWidget(QLabel('Inf.:'), 0, 2)
+        marg_grid_m.addWidget(self.spn_mateti_m_inf, 0, 3)
+        marg_grid_m.addWidget(QLabel('Izq.:'), 1, 0)
+        marg_grid_m.addWidget(self.spn_mateti_m_izq, 1, 1)
+        marg_grid_m.addWidget(QLabel('Der.:'), 1, 2)
+        marg_grid_m.addWidget(self.spn_mateti_m_der, 1, 3)
+        mly.addRow('Márgenes:', marg_grid_m)
+
+        layout.addWidget(grp_mateti)
 
         # ---- Scanner ----
         grp_scanner = QGroupBox('Scanner')
@@ -296,8 +415,10 @@ class ConfigDialog(QDialog):
         outer.addWidget(scroll)
 
     def _poblar_dispositivos(self):
-        self.cbo_imp_remitos.addItems(listar_impresoras())
-        self.cbo_imp_etiquetas.addItems(listar_impresoras())
+        impresoras = listar_impresoras()
+        self.cbo_imp_remitos.addItems(impresoras)
+        self.cbo_imp_etiquetas.addItems(impresoras)
+        self.cbo_imp_etq_mateti.addItems(impresoras)
         scanners = listar_scanners()
         if scanners:
             self.cbo_scanner.addItems(scanners)
@@ -366,12 +487,31 @@ class ConfigDialog(QDialog):
             self.cbo_bandeja_etiquetas.setCurrentIndex(idx)
         else:
             self.cbo_bandeja_etiquetas.setEditText(cfg.bandeja_etiquetas)
+        self.spn_etq_m_sup.setValue(cfg.margen_superior_etiquetas)
+        self.spn_etq_m_inf.setValue(cfg.margen_inferior_etiquetas)
+        self.spn_etq_m_izq.setValue(cfg.margen_izquierdo_etiquetas)
+        self.spn_etq_m_der.setValue(cfg.margen_derecho_etiquetas)
+        self.spn_etq_sep.setValue(cfg.separacion_etiquetas)
 
         idx = self.cbo_scanner.findText(cfg.scanner)
         if idx >= 0:
             self.cbo_scanner.setCurrentIndex(idx)
         elif cfg.scanner:
             self.cbo_scanner.setEditText(cfg.scanner)
+
+        idx = self.cbo_imp_etq_mateti.findText(cfg.impresora_etiquetas_mateti)
+        if idx >= 0:
+            self.cbo_imp_etq_mateti.setCurrentIndex(idx)
+        elif cfg.impresora_etiquetas_mateti:
+            self.cbo_imp_etq_mateti.setEditText(cfg.impresora_etiquetas_mateti)
+        self.spn_ancho_etq_mateti.setValue(cfg.ancho_etiqueta_mateti)
+        self.spn_alto_etq_mateti.setValue(cfg.alto_etiqueta_mateti)
+        self.spn_columnas_etq_mateti.setValue(cfg.columnas_etiqueta_mateti)
+        self.spn_sep_etq_mateti.setValue(cfg.separacion_etiqueta_mateti)
+        self.spn_mateti_m_sup.setValue(cfg.margen_superior_etiquetas_mateti)
+        self.spn_mateti_m_inf.setValue(cfg.margen_inferior_etiquetas_mateti)
+        self.spn_mateti_m_izq.setValue(cfg.margen_izquierdo_etiquetas_mateti)
+        self.spn_mateti_m_der.setValue(cfg.margen_derecho_etiquetas_mateti)
 
     def _on_config_cambio(self, idx: int):
         if idx < 0:
@@ -463,13 +603,26 @@ class ConfigDialog(QDialog):
         )
         self.lbl_estado_etiquetas.setText(msg)
 
+    def _probar_impresora_mateti(self):
+        nombre = self.cbo_imp_etq_mateti.currentText().strip()
+        ok, msg = verificar_impresora(nombre)
+        self.lbl_estado_mateti.setStyleSheet(
+            f'color: {"green" if ok else "red"}; font-size: 11px; font-weight: bold;'
+        )
+        self.lbl_estado_mateti.setText(msg)
+
     def _cargar_datos(self):
+        self._poblar_drivers_sqlserver()
         cfg = self._cm.sqlserver
         self.txt_ss_server.setText(cfg.server)
         self.txt_ss_database.setText(cfg.database)
         self.chk_ss_trusted.setChecked(cfg.trusted)
         self.txt_ss_user.setText(cfg.username)
         self.txt_ss_pass.setText(cfg.password)
+        if cfg.driver:
+            idx = self.cbo_ss_driver.findText(cfg.driver)
+            if idx >= 0:
+                self.cbo_ss_driver.setCurrentIndex(idx)
 
         cfg = self._cm.mysql
         self.txt_my_host.setText(cfg.host)
@@ -488,10 +641,28 @@ class ConfigDialog(QDialog):
         ok, err = conn.test_connection()
         if ok:
             self.lbl_ss_estado.setStyleSheet('color: green;')
-            self.lbl_ss_estado.setText('Conexión exitosa.')
+            self.lbl_ss_estado.setText(
+                f'Conexión exitosa con {conn._driver or "driver detectado"}.'
+            )
         else:
             self.lbl_ss_estado.setStyleSheet('color: red;')
+            if 'no encontrado' in err or 'No hay drivers' in err:
+                err = (
+                    'Driver ODBC no instalado.\n'
+                    f'Haga clic en "Instalar Driver" o descargue desde:\n'
+                    f'{get_driver_download_url()}'
+                )
             self.lbl_ss_estado.setText(f'Error: {err}')
+
+    def _instalar_driver_odbc(self):
+        url = get_driver_download_url()
+        try:
+            webbrowser.open(url)
+        except Exception:
+            QMessageBox.information(
+                self, 'Descargar Driver ODBC',
+                f'Abra el siguiente enlace en su navegador:\n\n{url}'
+            )
 
     def _probar_mysql(self):
         config = self._get_mysql_config()
@@ -506,13 +677,24 @@ class ConfigDialog(QDialog):
             self.lbl_my_estado.setText(f'Error: {err}')
 
     def _get_sqlserver_config(self) -> ConfigSQLServer:
+        driver = self.cbo_ss_driver.currentText()
+        if driver == 'Automático (detectar)':
+            driver = ''
         return ConfigSQLServer(
             server=self.txt_ss_server.text().strip(),
             database=self.txt_ss_database.text().strip(),
             username=self.txt_ss_user.text().strip(),
             password=self.txt_ss_pass.text().strip(),
             trusted=self.chk_ss_trusted.isChecked(),
+            driver=driver,
         )
+
+    def _poblar_drivers_sqlserver(self):
+        self.cbo_ss_driver.clear()
+        self.cbo_ss_driver.addItem('Automático (detectar)')
+        for d in get_available_drivers():
+            self.cbo_ss_driver.addItem(d)
+        self.cbo_ss_driver.setCurrentIndex(0)
 
     def _get_mysql_config(self) -> ConfigMySQL:
         return ConfigMySQL(
@@ -542,7 +724,21 @@ class ConfigDialog(QDialog):
             filas_etiqueta=self.spn_filas_etiqueta.value(),
             tamanio_papel_etiquetas=self.cbo_papel_etiquetas.currentText(),
             bandeja_etiquetas=self.cbo_bandeja_etiquetas.currentText().strip(),
+            margen_superior_etiquetas=self.spn_etq_m_sup.value(),
+            margen_inferior_etiquetas=self.spn_etq_m_inf.value(),
+            margen_izquierdo_etiquetas=self.spn_etq_m_izq.value(),
+            margen_derecho_etiquetas=self.spn_etq_m_der.value(),
+            separacion_etiquetas=self.spn_etq_sep.value(),
             scanner=self.cbo_scanner.currentText().strip(),
+            impresora_etiquetas_mateti=self.cbo_imp_etq_mateti.currentText().strip(),
+            ancho_etiqueta_mateti=self.spn_ancho_etq_mateti.value(),
+            alto_etiqueta_mateti=self.spn_alto_etq_mateti.value(),
+            columnas_etiqueta_mateti=self.spn_columnas_etq_mateti.value(),
+            separacion_etiqueta_mateti=self.spn_sep_etq_mateti.value(),
+            margen_superior_etiquetas_mateti=self.spn_mateti_m_sup.value(),
+            margen_inferior_etiquetas_mateti=self.spn_mateti_m_inf.value(),
+            margen_izquierdo_etiquetas_mateti=self.spn_mateti_m_izq.value(),
+            margen_derecho_etiquetas_mateti=self.spn_mateti_m_der.value(),
         )
 
     def _guardar(self):

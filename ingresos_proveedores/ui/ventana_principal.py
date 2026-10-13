@@ -16,6 +16,8 @@ from ui.seleccion_proveedor import SeleccionProveedorWidget
 from ui.ingreso_remitos import IngresoRemitosWidget
 from ui.registro_ingreso import RegistroIngresoWidget
 from ui.consulta_ingresos import ConsultaIngresosWidget
+from ui.consulta_destinatarios import ConsultaDestinatariosWidget
+from ui.mateti import MatetiWidget
 from ui.estilos import QSS_GLOBAL
 from ui.login_dialog import LoginDialog
 from ui.ui_config import ConfigDialog
@@ -32,6 +34,8 @@ class VentanaPrincipal(QMainWindow):
     PAG_REMITOS = 1
     PAG_REGISTRO = 2
     PAG_CONSULTA = 3
+    PAG_CONSULTA_DEST = 4
+    PAG_MATETI = 5
 
     def __init__(self, config_manager: ConfigManager):
         super().__init__()
@@ -42,7 +46,7 @@ class VentanaPrincipal(QMainWindow):
 
         self._recepcion_svc = RecepcionService(self._sqlserver_conn)
         self._ingreso_svc = IngresoService(self._mysql_conn)
-        self._impresion_svc = ImpresionService(self._cm)
+        self._impresion_svc = ImpresionService(self._cm, self._ingreso_svc)
 
         self._setup_ui()
         self._recrear_servicios()
@@ -84,10 +88,18 @@ class VentanaPrincipal(QMainWindow):
         acc_salir.triggered.connect(self.close)
         menu_archivo.addAction(acc_salir)
 
+        menu_mateti = menubar.addMenu('MATETI')
+        acc_mateti = QAction('Etiquetas de Materiales', self)
+        acc_mateti.triggered.connect(self._ir_a_mateti)
+        menu_mateti.addAction(acc_mateti)
+
         menu_consulta = menubar.addMenu('Consultas / Ajustar')
         acc_ver_ingresos = QAction('Ver Ingresos Realizados', self)
         acc_ver_ingresos.triggered.connect(self._ir_a_consulta)
         menu_consulta.addAction(acc_ver_ingresos)
+        acc_ver_destinatarios = QAction('Ver Consulta por Destinatario', self)
+        acc_ver_destinatarios.triggered.connect(self._ir_a_consulta_destinatarios)
+        menu_consulta.addAction(acc_ver_destinatarios)
 
         menu_ayuda = menubar.addMenu('Ayuda')
         acc_manual_general = QAction('General', self)
@@ -121,11 +133,15 @@ class VentanaPrincipal(QMainWindow):
             self._ingreso_svc, self._cm.clave_anulacion, self._cm.sqlserver,
             self._impresion_svc,
         )
+        self.pag_consulta_dest = ConsultaDestinatariosWidget(self._ingreso_svc)
+        self.pag_mateti = MatetiWidget(self._sqlserver_conn, self._impresion_svc)
 
         self.stack.addWidget(self.pag_seleccion)
         self.stack.addWidget(self.pag_remitos)
         self.stack.addWidget(self.pag_registro)
         self.stack.addWidget(self.pag_consulta)
+        self.stack.addWidget(self.pag_consulta_dest)
+        self.stack.addWidget(self.pag_mateti)
 
         self.pag_seleccion.set_on_confirmar(self._ir_a_remitos)
         self.pag_seleccion.set_on_volver_sin_cambios(self._volver_a_remitos_sin_cambios)
@@ -135,6 +151,8 @@ class VentanaPrincipal(QMainWindow):
         self.pag_registro.set_on_finalizar(self._finalizar_ingreso)
         self.pag_registro.set_on_cancelar(lambda: self.stack.setCurrentIndex(self.PAG_REMITOS))
         self.pag_consulta.set_on_volver(self._ir_a_seleccion)
+        self.pag_consulta_dest.set_on_volver(self._ir_a_seleccion)
+        self.pag_mateti.set_on_volver(self._ir_a_seleccion)
 
     def _recrear_servicios(self):
         ss_config = self._cm.sqlserver
@@ -154,7 +172,7 @@ class VentanaPrincipal(QMainWindow):
 
         self._recepcion_svc = RecepcionService(self._sqlserver_conn)
         self._ingreso_svc = IngresoService(self._mysql_conn)
-        self._impresion_svc = ImpresionService(self._cm)
+        self._impresion_svc = ImpresionService(self._cm, self._ingreso_svc)
 
         for _ in range(self.stack.count()):
             w = self.stack.widget(0)
@@ -237,6 +255,17 @@ class VentanaPrincipal(QMainWindow):
         self.stack.setCurrentIndex(self.PAG_CONSULTA)
         self.statusBar().showMessage('Consulta de Ingresos Realizados')
 
+    def _ir_a_mateti(self):
+        self.stack.setCurrentIndex(self.PAG_MATETI)
+        self.statusBar().showMessage('MATETI — Etiquetas de Materiales')
+
+    def _ir_a_consulta_destinatarios(self):
+        self._remitos_pendientes = []
+        self._proveedor_pendiente = None
+        self.pag_consulta_dest.cargar_datos()
+        self.stack.setCurrentIndex(self.PAG_CONSULTA_DEST)
+        self.statusBar().showMessage('Consulta por Destinatario')
+
     def _abrir_configuracion(self):
         login_dlg = LoginDialog(self._cm.sqlserver, self)
         if login_dlg.exec_() != LoginDialog.Accepted:
@@ -288,7 +317,7 @@ class VentanaPrincipal(QMainWindow):
         
         layout.addSpacing(5)
         
-        lbl_version = QLabel('Versión 1.0')
+        lbl_version = QLabel('Versión 2.0')
         lbl_version.setStyleSheet('font-size: 12px;')
         lbl_version.setAlignment(Qt.AlignCenter)
         layout.addWidget(lbl_version)

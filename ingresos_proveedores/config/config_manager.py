@@ -153,6 +153,7 @@ class ConfigManager:
                     'username': self.sqlserver.username,
                     'password': encrypt_password(self.sqlserver.password),
                     'trusted': self.sqlserver.trusted,
+                    'driver': self.sqlserver.driver,
                 },
                 'mysql': {
                     'host': self.mysql.host,

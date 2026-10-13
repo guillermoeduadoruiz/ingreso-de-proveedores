@@ -51,6 +51,7 @@ copy "%ROOT%ingresos_proveedores\servicios\recepcion_svc.py" "%DIST%\ingresos_pr
 copy "%ROOT%ingresos_proveedores\servicios\ingreso_svc.py" "%DIST%\ingresos_proveedores\servicios\" >nul
 copy "%ROOT%ingresos_proveedores\servicios\impresion_svc.py" "%DIST%\ingresos_proveedores\servicios\" >nul
 copy "%ROOT%ingresos_proveedores\servicios\pdf_generator.py" "%DIST%\ingresos_proveedores\servicios\" >nul
+copy "%ROOT%ingresos_proveedores\servicios\dp_generator.py" "%DIST%\ingresos_proveedores\servicios\" >nul
 
 copy "%ROOT%ingresos_proveedores\ui\__init__.py" "%DIST%\ingresos_proveedores\ui\" >nul
 copy "%ROOT%ingresos_proveedores\ui\estilos.py" "%DIST%\ingresos_proveedores\ui\" >nul

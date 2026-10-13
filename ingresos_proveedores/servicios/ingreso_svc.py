@@ -15,6 +15,13 @@ class IngresoService:
         if not remitos:
             raise ValueError('No se puede registrar un ingreso sin remitos asociados.')
 
+        for remito in remitos:
+            if self.remito_ya_registrado(remito.num_remito, proveedor.num_proveedor):
+                raise ValueError(
+                    f'El remito N° {remito.num_remito} ya fue registrado '
+                    f'para el proveedor {proveedor.num_proveedor}.'
+                )
+
         id_ingreso = generar_id_ingreso()
         fecha_ingreso = fecha_ingreso or date.today()
 
@@ -29,7 +36,10 @@ class IngresoService:
                     proveedor.num_proveedor, remito.cantidad_unidades,
                     remito.valor_declarado_unitario
                 )
-                for recepcion in remito.recepciones:
+                recepciones_unicas = {
+                    rp.id_recepcion: rp for rp in remito.recepciones
+                }.values()
+                for recepcion in recepciones_unicas:
                     self._mysql.save_remito_recepcion(
                         id_remito, recepcion.id_recepcion,
                         recepcion.sucursal_destino,
@@ -68,6 +78,24 @@ class IngresoService:
 
     def eliminar_ingreso(self, id_ingreso: str):
         self._mysql.delete_ingreso(id_ingreso)
+
+    def guardar_remito_generado(self, id_ingreso: str, num_remito: str, destino: str = ''):
+        self._mysql.save_remito_generado(id_ingreso, num_remito, destino)
+
+    def obtener_remito_generado(self, id_ingreso: str, destino: str = '') -> str | None:
+        return self._mysql.get_remito_generado(id_ingreso, destino)
+
+    def obtener_remitos_generados(self, id_ingreso: str) -> list[dict]:
+        return self._mysql.get_remitos_generados(id_ingreso)
+
+    def obtener_remitos_generados_por_ingresos(self, ids_ingreso: list[str]) -> dict[str, list[dict]]:
+        return self._mysql.get_remitos_generados_por_ingresos(ids_ingreso)
+
+    def obtener_consulta_destinatarios(self, fecha_desde=None, fecha_hasta=None) -> list[dict]:
+        return self._mysql.get_consulta_destinatarios(fecha_desde, fecha_hasta)
+
+    def actualizar_estado_remito_generado(self, id_ingreso: str, destino: str, estado: int) -> int:
+        return self._mysql.update_estado_remito_generado(id_ingreso, destino, estado)
 
     def obtener_ingreso_completo(self, id_ingreso: str) -> Ingreso | None:
         data = self._mysql.get_ingreso_completo(id_ingreso)

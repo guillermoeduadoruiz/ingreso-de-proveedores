@@ -57,7 +57,7 @@ echo ============================================
 echo.
 echo 1. REQUISITOS PREVIOS:
 echo    - ODBC Driver 17 for SQL Server
-echo      (descargar desde Microsoft)
+echo      ^(descargar desde Microsoft^)
 echo.
 echo 2. INSTALACION:
 echo    - Copiar toda esta carpeta a la PC destino

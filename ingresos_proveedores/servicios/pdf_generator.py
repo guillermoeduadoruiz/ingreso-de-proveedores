@@ -1,4 +1,7 @@
 import os
+import re
+import time
+from datetime import datetime
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4, mm
 from reportlab.lib.units import mm as mm_unit
@@ -7,13 +10,18 @@ from reportlab.platypus import (
     SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image,
 )
 from reportlab.pdfgen import canvas
+from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.graphics.barcode.qr import QrCodeWidget
+from reportlab.graphics.barcode import code128 as _bc_code128
 from reportlab.graphics.shapes import Drawing
 from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_RIGHT
 
 from modelos.ingreso import Ingreso
 from database.conexiones import ConfigImpresion, ConfigImpresoras
 from utils.paths import pdfs_dir as _pdfs_dir, assets_dir as _assets_dir
+
+# Cada bulto imprime una única etiqueta física (sin duplicado apilado). El
+# layout de la etiqueta vive en dp_generator (bloque LAYOUT), común a DP y PDF.
 
 
 def _DIR_PDFS():
@@ -47,6 +55,19 @@ def _dir_etiquetas() -> str:
     return p
 
 
+def _fmt_num_remito(num: str) -> str:
+    """Normalize supplier remito number to 99999-99999999 format."""
+    digits = re.sub(r'\D', '', num or '')
+    if not digits:
+        return num or ''
+    right = digits[-8:]
+    head = digits[:-8]
+    if len(head) > 5:
+        head = head[-5:]
+    head = head.zfill(5)
+    return f'{head}-{right}'
+
+
 def generar_remito(
     ingreso: Ingreso,
     destino: dict,
@@ -54,272 +75,214 @@ def generar_remito(
     cfg: ConfigImpresoras,
     num_remito: str,
 ) -> str:
-    filename = f'{num_remito}.pdf'
+    filename = f'{ingreso.id_ingreso}_{destino.get("sucursal", "") or destino.get("destino", "")}.pdf'
     filepath = os.path.join(_dir_remitos(), filename)
-
-    page_w, page_h = A4
-    doc = SimpleDocTemplate(
-        filepath, pagesize=A4,
-        topMargin=_mm(cfg.margen_superior_remitos), bottomMargin=_mm(cfg.margen_inferior_remitos),
-        leftMargin=_mm(cfg.margen_izquierdo_remitos), rightMargin=_mm(cfg.margen_derecho_remitos),
+    tmp_path = os.path.join(
+        _dir_remitos(), f'.tmp_{ingreso.id_ingreso}_{int(time.time() * 1000)}.pdf'
     )
-    styles = getSampleStyleSheet()
-    available_w = page_w - _mm(cfg.margen_izquierdo_remitos + cfg.margen_derecho_remitos)
 
-    s_empresa = ParagraphStyle('Empresa', parent=styles['Normal'], fontSize=14, leading=17,
-                               alignment=TA_CENTER, fontName='Helvetica-Bold')
-    s_datos_empresa = ParagraphStyle('DatosEmpresa', parent=styles['Normal'], fontSize=8, leading=10,
-                                     alignment=TA_CENTER, textColor=colors.HexColor('#444444'))
-    s_remito_num = ParagraphStyle('RemitoNum', parent=styles['Normal'], fontSize=20, leading=24,
-                                  alignment=TA_CENTER, fontName='Helvetica-Bold',
-                                  textColor=colors.HexColor('#1565C0'))
-    s_section = ParagraphStyle('Section', parent=styles['Normal'], fontSize=9, leading=11,
-                               fontName='Helvetica-Bold', textColor=colors.HexColor('#333333'))
-    s_normal = ParagraphStyle('Normal2', parent=styles['Normal'], fontSize=9, leading=12)
-    s_normal_bold = ParagraphStyle('NormalBold', parent=styles['Normal'], fontSize=9, leading=12,
-                                   fontName='Helvetica-Bold')
-    s_small = ParagraphStyle('Small', parent=styles['Normal'], fontSize=7, leading=9,
-                             textColor=colors.HexColor('#666666'))
-    s_firma = ParagraphStyle('Firma', parent=styles['Normal'], fontSize=9, leading=12,
-                             alignment=TA_CENTER)
-    s_firma_label = ParagraphStyle('FirmaLabel', parent=styles['Normal'], fontSize=8, leading=10,
-                                   alignment=TA_CENTER, textColor=colors.HexColor('#666666'))
+    page_w, page_h = A4  # points
 
-    elements = []
+    def _y_top(y_top_mm: float) -> float:
+        """Convert mm-from-top to reportlab y (from bottom of page)."""
+        return page_h - y_top_mm * mm_unit
 
-    # ── ENCABEZADO: Logo + Datos de la empresa ──
-    logo_path = os.path.join(_assets_dir(), 'logo-cuspide.jpg')
-    logo_w = _mm(30)
-    logo_h = _mm(30)
-    if os.path.exists(logo_path):
-        logo_img = Image(logo_path, width=logo_w, height=logo_h)
-        logo_img.hAlign = 'LEFT'
-    else:
-        logo_img = Paragraph('', s_normal)
+    def _fmtv(v: float) -> str:
+        """Format currency $XX.XXX,XX (argentine style)."""
+        if v <= 0:
+            return '-'
+        int_part = int(v)
+        dec_part = round((v - int_part) * 100)
+        s_int = f'{int_part:,}'.replace(',', '.')
+        return f'${s_int},{dec_part:02d}'
 
-    company_col_w = available_w - logo_w - _mm(6)
-    header_data = [
-        [
-            logo_img,
-            Paragraph(
-                f'<b>{remitente.remitente_nombre}</b><br/>'
-                f'{remitente.remitente_direccion} — {remitente.remitente_ciudad}<br/>'
-                f'CUIT: {remitente.remitente_cuit}  |  Tel: {remitente.remitente_telefono}',
-                s_datos_empresa
-            ),
-        ],
-    ]
-    t_header = Table(header_data, colWidths=[logo_w + _mm(4), company_col_w])
-    t_header.setStyle(TableStyle([
-        ('BOX', (0, 0), (-1, -1), 1, colors.HexColor('#1565C0')),
-        ('TOPPADDING', (0, 0), (-1, -1), 4),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
-        ('LEFTPADDING', (0, 0), (0, 0), 4),
-        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
-        ('BACKGROUND', (0, 0), (-1, -1), colors.HexColor('#E3F2FD')),
-    ]))
-    elements.append(t_header)
-    elements.append(Spacer(1, 4 * mm_unit))
+    def _draw_num_right(text: str, x_right_mm: float, y: float,
+                        size: float, max_w_mm: float):
+        """Right-align text auto-reducing the font so it fits in max_w_mm."""
+        font = 'Helvetica'
+        w = stringWidth(text, font, size) / mm_unit
+        while w > max_w_mm and size > 5:
+            size -= 0.5
+            w = stringWidth(text, font, size) / mm_unit
+        c.setFont(font, size)
+        c.drawRightString(_mm(x_right_mm), y, text)
 
-    # ── TITULO REMITO ──
-    elements.append(Paragraph(f'REMITO N° {num_remito}', s_remito_num))
-    elements.append(Spacer(1, 4 * mm_unit))
+    c = canvas.Canvas(tmp_path, pagesize=A4)
 
-    # ── REMITENTE / DESTINATARIO lado a lado ──
-    col_w = available_w / 2 - _mm(2)
-    remitente_data = [
-        [Paragraph('<b>REMITENTE</b>', s_section)],
-        [Paragraph(
-            f'{remitente.remitente_nombre}<br/>'
-            f'{remitente.remitente_direccion}<br/>'
-            f'{remitente.remitente_ciudad}<br/>'
-            f'CUIT: {remitente.remitente_cuit}',
-            s_small
-        )],
-    ]
-    t_rem = Table(remitente_data, colWidths=[col_w])
-    t_rem.setStyle(TableStyle([
-        ('BOX', (0, 0), (-1, -1), 0.5, colors.HexColor('#999999')),
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#E8E8E8')),
-        ('TOPPADDING', (0, 0), (-1, -1), 3),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 3),
-        ('LEFTPADDING', (0, 0), (-1, -1), 6),
-    ]))
+    # ── POSITIONS (mm from top-left, derived from 300 dpi preimpreso scan) ──
+    # FECHA
+    FECHA_X = 142.0
+    FECHA_Y_TOP = 19.5
+    # CLIENTE block
+    CLIENTE_X = 29.6
+    CLIENTE_NOMBRE_Y = 45.0
+    CLIENTE_DOMICILIO_Y = 48.3
+    CLIENTE_CP_CIUDAD_Y = 51.1
+    # PROVEEDOR (razón social) above the items table
+    PROVEEDOR_X = 29.6
+    PROVEEDOR_Y_TOP = 73.0
+    # ITEM table columns (x positions; right-aligned where noted)
+    TBL_X_COD = 25.4      # N° remito (left-aligned)
+    TBL_X_TIT = 51.2      # Fecha remito (left-aligned)
+    TBL_X_EJ_END = 124.9  # Bultos (right-aligned)
+    TBL_X_DESP_END = 145.6  # Unidades (right-aligned)
+    TBL_X_PREC_END = 165.9  # Valor unitario (right-aligned)
+    TBL_X_IMP_END = 193.9  # Valor total (right-aligned)
+    TBL_ROW_Y_TOP = 95.0
+    TBL_ROW_PITCH = 8.0
+    # FLETE line
+    FLETE_X = 53.0
+    FLETE_Y_TOP = 164.4
+    # QR de trazabilidad (esquina inferior izquierda)
+    QR_X = 15.0
+    QR_Y_TOP = 213.0
+    QR_SIZE_MM = 25.0
 
-    # ── Obtener datos del cliente desde las recepciones ──
+    fs_normal = 9
+    fs_small = 8
+
+    # ── 2. FECHA ──
+    c.setFont('Helvetica', fs_normal)
+    c.drawString(_mm(FECHA_X), _y_top(FECHA_Y_TOP),
+                 ingreso.fecha_ingreso.strftime('%d/%m/%Y'))
+
+    # ── 3. CLIENTE ──
     rp_cliente = None
     for rem in destino.get('remitos', []):
         if rem.recepciones:
             rp_cliente = rem.recepciones[0]
             break
 
-    destino_lines = [f'{destino["destino"]}', f'Sucursal: {destino["sucursal"]}']
+    nombre = rp_cliente.nombre_destino if rp_cliente else destino.get('destino', '')
+    c.setFont('Helvetica-Bold', fs_normal)
+    c.drawString(_mm(CLIENTE_X), _y_top(CLIENTE_NOMBRE_Y), nombre)
+
+    domicilio = rp_cliente.domicilio_cliente if rp_cliente else ''
+    c.setFont('Helvetica', fs_normal)
+    c.drawString(_mm(CLIENTE_X), _y_top(CLIENTE_DOMICILIO_Y), domicilio)
+
+    cp_parts: list[str] = []
     if rp_cliente:
-        if rp_cliente.domicilio_cliente:
-            destino_lines.append(f'Dom: {rp_cliente.domicilio_cliente}')
         if rp_cliente.codigo_postal_cliente:
-            destino_lines.append(f'CP: {rp_cliente.codigo_postal_cliente}')
+            cp_parts.append(rp_cliente.codigo_postal_cliente)
         if rp_cliente.ciudad_cliente:
-            destino_lines.append(f'Ciudad: {rp_cliente.ciudad_cliente}')
+            cp_parts.append(rp_cliente.ciudad_cliente)
         if rp_cliente.distrito_cliente:
-            destino_lines.append(f'Distrito: {rp_cliente.distrito_cliente}')
-        if rp_cliente.transporte_descripcion:
-            destino_lines.append(f'Transporte: {rp_cliente.transporte_descripcion}')
-        if rp_cliente.transporte_datos_privados:
-            destino_lines.append(f'Muelle de despacho: {rp_cliente.transporte_datos_privados}')
+            cp_parts.append(rp_cliente.distrito_cliente)
+    c.setFont('Helvetica', fs_normal)
+    c.drawString(_mm(CLIENTE_X), _y_top(CLIENTE_CP_CIUDAD_Y), ' '.join(cp_parts))
 
-    destino_data = [
-        [Paragraph('<b>DESTINATARIO</b>', s_section)],
-        [Paragraph('<br/>'.join(destino_lines), s_small)],
-    ]
-    t_dest = Table(destino_data, colWidths=[col_w])
-    t_dest.setStyle(TableStyle([
-        ('BOX', (0, 0), (-1, -1), 0.5, colors.HexColor('#999999')),
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#E8E8E8')),
-        ('TOPPADDING', (0, 0), (-1, -1), 3),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 3),
-        ('LEFTPADDING', (0, 0), (-1, -1), 6),
-    ]))
+    # ── 3b. PROVEEDOR (razón social) ──
+    c.setFont('Helvetica-Bold', fs_normal)
+    c.drawString(_mm(PROVEEDOR_X), _y_top(PROVEEDOR_Y_TOP),
+                 ingreso.proveedor.descripcion)
 
-    t_lado_a_lado = Table(
-        [[t_rem, t_dest]],
-        colWidths=[col_w + _mm(2), col_w + _mm(2)],
-    )
-    t_lado_a_lado.setStyle(TableStyle([
-        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-        ('LEFTPADDING', (0, 0), (-1, -1), 0),
-        ('RIGHTPADDING', (0, 0), (-1, -1), 0),
-    ]))
-    elements.append(t_lado_a_lado)
-    elements.append(Spacer(1, 4 * mm_unit))
-
-    # ── FECHA E INGRESO ──
-    elements.append(Paragraph(
-        f'<b>Fecha de Ingreso:</b> {ingreso.fecha_ingreso.strftime("%d/%m/%Y")} '
-        f'&nbsp;&nbsp;&nbsp; '
-        f'<b>ID Ingreso:</b> {ingreso.id_ingreso}',
-        s_normal
-    ))
-    elements.append(Spacer(1, 3 * mm_unit))
-
-    # ── RECEPCIONES PREVISTAS ASOCIADAS ──
-    rps = _colectar_rps(destino)
-    if rps:
-        elements.append(Paragraph(f'<b>Recepciones Previstas:</b> {rps}', s_small))
-        elements.append(Spacer(1, 2 * mm_unit))
-
-    # ── PROVEEDOR ──
-    sucursal_corta = destino['sucursal']
-    if sucursal_corta.upper().startswith('CCU'):
-        sucursal_corta = sucursal_corta[3:]
-    elements.append(Paragraph(
-        f'<b>Proveedor:</b> {ingreso.proveedor.num_proveedor} — '
-        f'{ingreso.proveedor.descripcion}  '
-        f'<b>CU:</b> {sucursal_corta}',
-        s_small
-    ))
-    elements.append(Spacer(1, 4 * mm_unit))
-
-    # ── TABLA DE REMITOS ──
+    # ── 4. ITEM ROWS (remitos del ingreso) ──
     remitos_grupo = destino.get('remitos', [])
     total_unidades = sum(rem.cantidad_unidades for rem in remitos_grupo)
-    total_valor_declarado = sum(rem.valor_declarado_total for rem in remitos_grupo)
+    tiene_unidades = total_unidades > 0
 
-    tiene_unidades = any(rem.cantidad_unidades > 0 for rem in remitos_grupo)
+    # Encabezados del cuerpo del remito
+    y_header = TBL_ROW_Y_TOP - TBL_ROW_PITCH
+    c.setFont('Helvetica-Bold', fs_small)
+    c.drawString(_mm(TBL_X_COD), _y_top(y_header), 'Remito proveedor')
+    c.drawString(_mm(TBL_X_TIT), _y_top(y_header), 'Fecha')
+    c.drawRightString(_mm(TBL_X_EJ_END), _y_top(y_header), 'Bultos')
     if tiene_unidades:
-        header_row = ['N° Remito', 'Fecha', 'Bultos', 'Unid.', 'V. Decl. Unit.', 'Total V. Decl.']
-        data_table = [header_row]
-        for rem in remitos_grupo:
-            vd_unit = rem.valor_declarado_unitario
-            vd_total = rem.valor_declarado_total
-            data_table.append([
-                rem.num_remito,
-                rem.fecha_remito.strftime('%d/%m/%Y'),
-                str(rem.cantidad_bultos),
-                str(rem.cantidad_unidades),
-                f'${vd_unit:,.2f}' if vd_unit > 0 else '-',
-                f'${vd_total:,.2f}' if vd_total > 0 else '-',
-            ])
-        total_line = ['TOTAL', '', str(destino['total_bultos']), str(total_unidades),
-                      '', f'${total_valor_declarado:,.2f}' if total_valor_declarado > 0 else '']
-        data_table.append(total_line)
-        col_widths = [_mm(35), _mm(28), _mm(22), _mm(20), _mm(32), _mm(32)]
-        align_right = (2, 3, 4, 5)
+        c.drawRightString(_mm(TBL_X_DESP_END), _y_top(y_header), 'Unidades')
+        c.drawRightString(_mm(TBL_X_PREC_END), _y_top(y_header), 'Valor Unit.')
+        c.drawRightString(_mm(TBL_X_IMP_END), _y_top(y_header), 'Valor Total')
+
+    y_top = TBL_ROW_Y_TOP
+    for rem in remitos_grupo:
+        c.setFont('Helvetica-Bold', 7)
+        c.drawString(_mm(TBL_X_COD), _y_top(y_top), _fmt_num_remito(rem.num_remito))
+
+        c.setFont('Helvetica', fs_small)
+        c.drawString(_mm(TBL_X_TIT), _y_top(y_top),
+                     rem.fecha_remito.strftime('%d/%m/%Y'))
+        c.drawRightString(_mm(TBL_X_EJ_END), _y_top(y_top),
+                          str(rem.cantidad_bultos))
+        if rem.cantidad_unidades > 0:
+            _draw_num_right(str(rem.cantidad_unidades),
+                            TBL_X_DESP_END, _y_top(y_top), fs_small,
+                            TBL_X_PREC_END - TBL_X_DESP_END)
+            _draw_num_right(_fmtv(rem.valor_declarado_unitario),
+                            TBL_X_PREC_END, _y_top(y_top), fs_small,
+                            TBL_X_PREC_END - TBL_X_DESP_END)
+            _draw_num_right(_fmtv(rem.valor_declarado_total),
+                            TBL_X_IMP_END, _y_top(y_top), fs_small,
+                            TBL_X_IMP_END - TBL_X_PREC_END)
+        y_top += TBL_ROW_PITCH
+
+    # ── 5. FLETE PAGO EN DESTINO (value, label is pre-printed) ──
+    flete_text = 'FLETE PAGO EN DESTINO'
+    if rp_cliente and rp_cliente.transporte_descripcion:
+        flete_text = rp_cliente.transporte_descripcion
+    c.setFont('Helvetica-Bold', fs_normal)
+    c.drawString(_mm(FLETE_X), _y_top(FLETE_Y_TOP), flete_text)
+
+    # ── 6. TOTALES (en la zona central libre, tras la última fila) ──
+    total_bultos = destino.get('total_bultos', 0)
+    total_vd = sum(rem.valor_declarado_total for rem in remitos_grupo)
+    c.setFont('Helvetica-Bold', fs_normal)
+    y_tot = TBL_ROW_Y_TOP + (len(remitos_grupo) + 1) * TBL_ROW_PITCH
+    if tiene_unidades:
+        linea_total = f'Total de Unidades: {total_unidades}   Total Bultos: {total_bultos}'
     else:
-        header_row = ['N° Remito', 'Fecha', 'Bultos']
-        data_table = [header_row]
-        for rem in remitos_grupo:
-            data_table.append([
-                rem.num_remito,
-                rem.fecha_remito.strftime('%d/%m/%Y'),
-                str(rem.cantidad_bultos),
-            ])
-        data_table.append(['TOTAL', '', str(destino['total_bultos'])])
-        col_widths = [_mm(50), _mm(40), _mm(35)]
-        align_right = (2,)
+        linea_total = f'Total Bultos: {total_bultos}'
+    c.drawString(_mm(TBL_X_COD), _y_top(y_tot), linea_total)
+    if total_vd > 0:
+        c.drawString(_mm(TBL_X_COD), _y_top(y_tot + TBL_ROW_PITCH),
+                     f'{_fmtv(total_vd)} <<== Total valorizado')
 
-    t_table = Table(data_table, colWidths=col_widths)
-    style_cmds = [
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('FONTSIZE', (0, 0), (-1, -1), 9),
-        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
-        ('BOX', (0, 0), (-1, -1), 0.8, colors.HexColor('#333333')),
-        ('INNERGRID', (0, 0), (-1, -1), 0.4, colors.HexColor('#BBBBBB')),
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#E3F2FD')),
-        ('FONTNAME', (0, -1), (-1, -1), 'Helvetica-Bold'),
-        ('BACKGROUND', (0, -1), (-1, -1), colors.HexColor('#F5F5F5')),
-        ('LINEABOVE', (0, -1), (-1, -1), 1, colors.HexColor('#333333')),
-        ('TOPPADDING', (0, 0), (-1, -1), 5),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 5),
-        ('LEFTPADDING', (0, 0), (-1, -1), 4),
+    # ── 7. QR DE TRAZABILIDAD ──
+    qr_lines = [
+        f'ING: {ingreso.id_ingreso}',
+        f'SUC: {destino.get("sucursal", "") or destino.get("destino", "")}',
+        f'FECHA: {ingreso.fecha_ingreso.strftime("%d/%m/%Y")}',
+        f'PROV: {ingreso.proveedor.descripcion}',
+        f'DEST: {nombre}',
+        f'BULTOS: {total_bultos}',
     ]
-    for ac in align_right:
-        style_cmds.append(('ALIGN', (ac, 0), (ac, -1), 'RIGHT'))
-    style_cmds.append(('ALIGN', (0, 0), (0, -1), 'LEFT'))
-    t_table.setStyle(TableStyle(style_cmds))
-    elements.append(t_table)
+    if total_unidades > 0:
+        qr_lines.append(f'UNIDADES: {total_unidades}')
+    if total_vd > 0:
+        qr_lines.append(f'VALOR DECLARADO: {_fmtv(total_vd)}')
+    if num_remito:
+        qr_lines.append(f'REM: {num_remito}')
+    qr_text = '\n'.join(qr_lines)
+    qr = QrCodeWidget(qr_text)
+    qr.barWidth = _mm(QR_SIZE_MM)
+    qr.barHeight = _mm(QR_SIZE_MM)
+    d = Drawing(_mm(QR_SIZE_MM), _mm(QR_SIZE_MM))
+    d.add(qr)
+    d.drawOn(c, _mm(QR_X), _y_top(QR_Y_TOP + QR_SIZE_MM))
 
-    # ── TOTAL VALOR DECLARADO ──
-    if total_valor_declarado > 0:
-        elements.append(Spacer(1, 4 * mm_unit))
-        s_vd = ParagraphStyle('VD', parent=styles['Normal'], fontSize=12, leading=16,
-                              fontName='Helvetica-Bold', alignment=TA_RIGHT)
-        elements.append(Paragraph(
-            f'TOTAL VALOR DECLARADO: ${total_valor_declarado:,.2f}', s_vd
-        ))
+    # ── 7b. Contenido del QR legible a la derecha ──
+    QR_TEXT_X = QR_X + QR_SIZE_MM + 4.0
+    y_line = QR_Y_TOP + 4.0
+    c.setFont('Helvetica', fs_normal)
+    for line in qr_lines:
+        c.drawString(_mm(QR_TEXT_X), _y_top(y_line), line)
+        y_line += 5.0
 
-    # ── FIRMAS ──
-    elements.append(Spacer(1, 15 * mm_unit))
+    c.save()
 
-    sig_w = available_w / 2 - _mm(10)
-    firmas_data = [
-        [
-            Paragraph('___________________________________', s_firma),
-            Paragraph('___________________________________', s_firma),
-        ],
-        [
-            Paragraph('Firma y Aclaración Remitente', s_firma_label),
-            Paragraph('Firma y Aclaración Recepcionista', s_firma_label),
-        ],
-    ]
-    t_firmas = Table(firmas_data, colWidths=[sig_w, sig_w])
-    t_firmas.setStyle(TableStyle([
-        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('TOPPADDING', (0, 0), (-1, -1), 2),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 2),
-    ]))
-    elements.append(t_firmas)
-
-    # ── PIE ──
-    elements.append(Spacer(1, 8 * mm_unit))
-    s_pie = ParagraphStyle('Pie', parent=styles['Normal'], fontSize=7, leading=9,
-                           alignment=TA_CENTER, textColor=colors.HexColor('#999999'))
-    elements.append(Paragraph(
-        f'{remitente.remitente_nombre} — Documento generado automáticamente — {num_remito}',
-        s_pie
-    ))
-
-    doc.build(elements)
+    try:
+        os.replace(tmp_path, filepath)
+    except OSError:
+        # El archivo destino está en uso (p. ej. abierto en el visor):
+        # se entrega un archivo con nombre único para no pisar el abierto.
+        filepath = os.path.join(
+            _dir_remitos(),
+            f'{ingreso.id_ingreso}_{destino.get("sucursal", "") or destino.get("destino", "")}'
+            f'.{datetime.now().strftime("%Y%m%d-%H%M%S")}.pdf'
+        )
+        try:
+            os.replace(tmp_path, filepath)
+        except OSError:
+            filepath = tmp_path
     return filepath
 
 
@@ -328,19 +291,24 @@ def generar_etiquetas(
     destino: dict,
     cfg: ConfigImpresoras,
     remitente: ConfigImpresion,
+    num_remito: str = '',
 ) -> str:
-    label_w = _mm(cfg.ancho_etiqueta)
-    label_h = _mm(cfg.alto_etiqueta)
-    cols = cfg.columnas_etiqueta
-    rows = cfg.filas_etiqueta
-    labels_per_page = cols * rows
+    # (2026-09-23) El PDF replica la etiqueta DP: mismas dimensiones (una
+    # etiqueta de ETQ_ANCHO_MM x ETQ_ALTO_MM por página, sin márgenes de hoja
+    # ni grilla) y la MISMA estructura, porque dibuja los elementos que arma
+    # `dp_generator.layout_etiqueta` a partir de las constantes de LAYOUT.
+    # Import local: dp_generator importa este módulo (global sería circular).
+    from servicios.dp_generator import (
+        DPI, ETQ_ANCHO_MM, ETQ_ALTO_MM, QR_LADO_MM,
+        layout_etiqueta, parametros_etiqueta,
+    )
+    _, _, marg_t_mm, marg_r_mm = parametros_etiqueta(cfg)
+    page_w = _mm(ETQ_ANCHO_MM)
+    page_h = _mm(ETQ_ALTO_MM)
     total = destino['total_bultos']
-    num_pages = max(1, (total + labels_per_page - 1) // labels_per_page)
-
-    page_w = label_w * cols
-    page_h = label_h * rows
 
     rps = _colectar_rps(destino)
+    rps_codigos = [r.strip() for r in rps.split(',') if r.strip()]
     fecha_str = ingreso.fecha_ingreso.strftime('%d/%m/%Y')
 
     rp_cliente = None
@@ -351,121 +319,188 @@ def generar_etiquetas(
 
     muelle_despacho = rp_cliente.transporte_datos_privados if rp_cliente else ''
 
+    remitos_prov: list[str] = []
+    _vistos_rem_prov: set[str] = set()
+    for rem in destino.get('remitos', []):
+        if rem.num_remito and rem.num_remito not in _vistos_rem_prov:
+            _vistos_rem_prov.add(rem.num_remito)
+            remitos_prov.append(_fmt_num_remito(rem.num_remito))
+    remitos_prov_str = ', '.join(remitos_prov)
+
+    qr_data = ''
+    if muelle_despacho:
+        qr_data = (
+            f'Proveedor: {ingreso.proveedor.descripcion}\n'
+            f'Destino: {destino["destino"]}\n'
+            f'Sucursal: {destino["sucursal"]}\n'
+        )
+        if remitos_prov_str:
+            qr_data += f'Remito Prov: {remitos_prov_str}\n'
+        if rp_cliente:
+            if rp_cliente.domicilio_cliente:
+                qr_data += f'Domicilio: {rp_cliente.domicilio_cliente}\n'
+            if rp_cliente.codigo_postal_cliente:
+                qr_data += f'CP: {rp_cliente.codigo_postal_cliente}\n'
+            if rp_cliente.ciudad_cliente:
+                qr_data += f'Ciudad: {rp_cliente.ciudad_cliente}\n'
+            if rp_cliente.distrito_cliente:
+                qr_data += f'Distrito: {rp_cliente.distrito_cliente}\n'
+            if rp_cliente.transporte_descripcion:
+                qr_data += f'Transporte: {rp_cliente.transporte_descripcion}\n'
+        qr_data += f'Muelle de despacho: {muelle_despacho}\n'
+        qr_data += f'Fecha: {fecha_str}\n'
+        qr_data += f'RP: {rps}\n'
+        qr_data += f'Remitente: {remitente.remitente_nombre}'
+
     filename = f'{ingreso.id_ingreso}_{destino["sucursal"]}_etiquetas.pdf'
     filepath = os.path.join(_dir_etiquetas(), filename)
+    tmp_path = os.path.join(
+        _dir_etiquetas(), f'.tmp_{ingreso.id_ingreso}_{int(time.time() * 1000)}_etiquetas.pdf'
+    )
 
-    c = canvas.Canvas(filepath, pagesize=(page_w, page_h))
-    label_idx = 0
+    c = canvas.Canvas(tmp_path, pagesize=(page_w, page_h))
 
-    for page in range(num_pages):
-        for row in range(rows):
-            for col in range(cols):
-                if label_idx >= total:
-                    continue
-                x = col * label_w
-                y = page_h - (row + 1) * label_h
-                margin = 2
-                font_size = 5
+    def _mm_de_dots(d: int) -> float:
+        return d * 25.4 / DPI
 
-                c.rect(x, y, label_w, label_h, stroke=1, fill=0)
-
-                text_w = label_w * 0.55
-                qr_zone_x = x + text_w
-                qr_zone_w = label_w - text_w
-
-                line = y + label_h - margin - 7
-
-                c.setFont('Helvetica-Bold', 6.5)
-                c.drawString(x + margin, line, ingreso.proveedor.descripcion)
-
-                line -= 7
-                c.setFont('Helvetica-Bold', font_size)
-                c.drawString(x + margin, line, f'Dest: {destino["destino"]}')
-                line -= 6.5
-                c.setFont('Helvetica', font_size)
-                c.drawString(x + margin, line, f'Suc: {destino["sucursal"]}')
-
-                line -= 6.5
-                if rp_cliente:
-                    if rp_cliente.domicilio_cliente:
-                        c.drawString(x + margin, line, f'Dom: {rp_cliente.domicilio_cliente}')
-                        line -= 6.5
-                    if rp_cliente.codigo_postal_cliente or rp_cliente.ciudad_cliente:
-                        parts = []
-                        if rp_cliente.codigo_postal_cliente:
-                            parts.append(f'CP: {rp_cliente.codigo_postal_cliente}')
-                        if rp_cliente.ciudad_cliente:
-                            parts.append(f'Ciudad: {rp_cliente.ciudad_cliente}')
-                        c.drawString(x + margin, line, ' — '.join(parts))
-                        line -= 6.5
-                    if rp_cliente.distrito_cliente:
-                        c.drawString(x + margin, line, f'Distrito: {rp_cliente.distrito_cliente}')
-                        line -= 6.5
-                    if rp_cliente.transporte_descripcion:
-                        c.drawString(x + margin, line, f'Trans: {rp_cliente.transporte_descripcion}')
-                        line -= 6.5
-
-                c.setFont('Helvetica', font_size)
-                if rps:
-                    c.drawString(x + margin, line, f'RP: {rps}')
-                    line -= 6.5
-                c.drawString(x + margin, line, f'Fecha: {fecha_str}')
-
-                line -= 6.5
-                c.setFont('Helvetica-Bold', font_size)
-                c.drawString(x + margin, line, f'Rem: {remitente.remitente_nombre}')
-
-                line -= 6.5
-                c.setFont('Helvetica', 4)
-                c.drawString(x + margin, line, f'{remitente.remitente_direccion} — {remitente.remitente_ciudad}')
-                line -= 5.5
-                c.drawString(x + margin, line, f'CUIT: {remitente.remitente_cuit}')
-
-                if muelle_despacho:
-                    qr_data = (
-                        f'Proveedor: {ingreso.proveedor.descripcion}\n'
-                        f'Destino: {destino["destino"]}\n'
-                        f'Sucursal: {destino["sucursal"]}\n'
-                    )
-                    if rp_cliente:
-                        if rp_cliente.domicilio_cliente:
-                            qr_data += f'Domicilio: {rp_cliente.domicilio_cliente}\n'
-                        if rp_cliente.codigo_postal_cliente:
-                            qr_data += f'CP: {rp_cliente.codigo_postal_cliente}\n'
-                        if rp_cliente.ciudad_cliente:
-                            qr_data += f'Ciudad: {rp_cliente.ciudad_cliente}\n'
-                        if rp_cliente.distrito_cliente:
-                            qr_data += f'Distrito: {rp_cliente.distrito_cliente}\n'
-                        if rp_cliente.transporte_descripcion:
-                            qr_data += f'Transporte: {rp_cliente.transporte_descripcion}\n'
-                    qr_data += f'Muelle de despacho: {muelle_despacho}\n'
-                    qr_data += f'Fecha: {fecha_str}\n'
-                    qr_data += f'RP: {rps}\n'
-                    qr_data += f'Remitente: {remitente.remitente_nombre}'
-
-                    qr_size = qr_zone_w - margin * 2
-                    qr_x = qr_zone_x + (qr_zone_w - qr_size) / 2
-                    qr_y = y + (label_h - qr_size) / 2
-
-                    qr = QrCodeWidget(qr_data)
-                    qr.barWidth = qr_size
-                    qr.barHeight = qr_size
-                    d = Drawing(qr_size, qr_size)
-                    d.add(qr)
-                    d.drawOn(c, qr_x, qr_y)
-
-                    c.setFont('Helvetica', 3.5)
-                    c.drawCentredString(
-                        qr_zone_x + qr_zone_w / 2, qr_y - 4,
-                        f'Muelle: {muelle_despacho}'
-                    )
-
-                c.setFont('Helvetica-Bold', 7)
-                c.drawRightString(x + label_w - margin, y + margin, f'{label_idx + 1}/{total}')
-                label_idx += 1
-        if label_idx >= total:
-            break
+    for idx in range(total):
+        elems = layout_etiqueta(
+            ETQ_ANCHO_MM, ETQ_ALTO_MM, marg_t_mm, marg_r_mm,
+            ingreso.proveedor.descripcion,
+            destino.get('destino', ''),
+            destino.get('sucursal', ''),
+            rp_cliente, fecha_str, remitente,
+            rps_codigos, qr_data, muelle_despacho,
+            idx + 1, total,
+            remitos_prov_str, num_remito,
+        )
+        for e in elems:
+            if e[0] == 'qr':
+                # Esquina superior izquierda en (x, y), lado QR_LADO_MM.
+                _, x, y, data = e
+                lado = _mm(QR_LADO_MM)
+                qr = QrCodeWidget(data)
+                qr.barWidth = lado
+                qr.barHeight = lado
+                d = Drawing(lado, lado)
+                d.add(qr)
+                d.drawOn(c, _mm(_mm_de_dots(x)), page_h - _mm(_mm_de_dots(y)) - lado)
+                continue
+            # Texto: `y` es el borde superior de la línea; la línea base queda
+            # una altura de mayúscula (0.718 em en Helvetica) más abajo.
+            # Helvetica = métricas de Swiss 721, la fuente de la PC42t.
+            _, x, y, texto, pt, bold, _max_por_pt = e
+            c.setFont('Helvetica-Bold' if bold else 'Helvetica', pt)
+            c.drawString(
+                _mm(_mm_de_dots(x)),
+                page_h - _mm(_mm_de_dots(y)) - pt * 0.718,
+                texto,
+            )
         c.showPage()
 
     c.save()
+
+    try:
+        os.replace(tmp_path, filepath)
+    except OSError:
+        # Archivo destino en uso: nombre único para no pisar el PDF abierto.
+        filepath = os.path.join(
+            _dir_etiquetas(),
+            f'{ingreso.id_ingreso}_{destino["sucursal"]}_etiquetas'
+            f'.{datetime.now().strftime("%Y%m%d-%H%M%S")}.pdf'
+        )
+        try:
+            os.replace(tmp_path, filepath)
+        except OSError:
+            filepath = tmp_path
     return filepath
+
+
+def _dibujar_etiqueta_mateti(c, mat, x0, ph, mt, etq_w, etq_h):
+    usable_w = etq_w
+    cx = x0 + usable_w / 2
+    ean = (mat.get('barcode', '') or '').strip()
+    codigo = mat.get('codigo', '')
+    descripcion = mat.get('descripcion', '')
+    um = mat.get('um', '')
+
+    y = ph - mt
+
+    if ean:
+        try:
+            bar_h = min(14.0, etq_h * 0.42) * mm_unit
+            bc = _bc_code128.Code128(ean, barHeight=bar_h, barWidth=0.9)
+            scale = min(1.0, usable_w / bc.width) if bc.width > 0 else 1.0
+            bw = bc.width * scale
+            bh = bc.height * scale
+            bx = x0 + (usable_w - bw) / 2
+            by = y - bh
+            c.saveState()
+            c.translate(bx, by)
+            c.scale(scale, scale)
+            bc.drawOn(c, 0, 0)
+            c.restoreState()
+            y = by - 1.5 * mm_unit
+            c.setFont('Helvetica', 7)
+            c.drawCentredString(cx, y - 7, ean)
+            y -= 7 + 2 * mm_unit
+        except Exception:
+            pass
+
+    fs = 8
+    c.setFont('Helvetica', fs)
+    max_chars = max(1, int(usable_w / (fs * 0.52)))
+    desc = descripcion[:max_chars] + ('...' if len(descripcion) > max_chars else '')
+    y -= fs
+    c.drawCentredString(cx, y, desc)
+    y -= fs * 0.3 + 2 * mm_unit
+
+    c.setFont('Helvetica-Bold', fs)
+    code_um = f'{codigo}   UM: {um}' if um else codigo
+    y -= fs
+    c.drawCentredString(cx, y, code_um)
+
+
+def generar_pdf_etiquetas_mateti(materiales: list[dict], cfg) -> str | None:
+    """Genera un PDF con etiquetas de codigo de barras para materiales MATETI.
+
+    Soporta multiples columnas por pagina. El ancho de pagina se calcula
+    como columnas * ancho_etiqueta + separacion + margenes laterales.
+    """
+    try:
+        etq_w_mm = cfg.ancho_etiqueta_mateti or 100.0
+        etq_h_mm = cfg.alto_etiqueta_mateti or 150.0
+        cols = max(1, cfg.columnas_etiqueta_mateti or 1)
+        sep_mm = cfg.separacion_etiqueta_mateti or 0.0
+        ml = (cfg.margen_izquierdo_etiquetas_mateti or 2.0) * mm_unit
+        mr = (cfg.margen_derecho_etiquetas_mateti or 2.0) * mm_unit
+        mt = (cfg.margen_superior_etiquetas_mateti or 2.0) * mm_unit
+
+        etq_w = etq_w_mm * mm_unit
+        etq_h = etq_h_mm * mm_unit
+        sep = sep_mm * mm_unit
+
+        pw = ml + cols * etq_w + (cols - 1) * sep + mr
+        ph = etq_h + mt + (cfg.margen_inferior_etiquetas_mateti or 2.0) * mm_unit
+
+        filename = f'mateti_{datetime.now().strftime("%Y%m%d-%H%M%S")}.pdf'
+        filepath = os.path.join(_dir_etiquetas(), filename)
+        c = canvas.Canvas(filepath, pagesize=(pw, ph))
+
+        pendientes: list[dict] = []
+        for mat in materiales:
+            cantidad = max(1, int(mat.get('cantidad_etiquetas', 1)))
+            for _ in range(cantidad):
+                pendientes.append(mat)
+
+        for i, mat in enumerate(pendientes):
+            col_idx = i % cols
+            x0 = ml + col_idx * (etq_w + sep)
+            _dibujar_etiqueta_mateti(c, mat, x0, ph, mt, etq_w, etq_h_mm)
+            if col_idx == cols - 1 or i == len(pendientes) - 1:
+                c.showPage()
+
+        c.save()
+        return filepath
+    except Exception:
+        return None

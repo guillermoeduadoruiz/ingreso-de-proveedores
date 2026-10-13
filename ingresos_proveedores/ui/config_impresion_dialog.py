@@ -1,3 +1,5 @@
+from PyQt5.QtCore import QRegExp
+from PyQt5.QtGui import QRegExpValidator
 from PyQt5.QtWidgets import (
     QDialog, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit,
     QPushButton, QSpinBox, QMessageBox,
@@ -73,12 +75,14 @@ class ConfigImpresionDialog(QDialog):
         fl.setSpacing(10)
         fl.setContentsMargins(20, 20, 20, 20)
 
-        self.txt_prefijo_remito = QLineEdit()
-        self.txt_prefijo_remito.setPlaceholderText('R-')
-        fl.addRow('Prefijo:', self.txt_prefijo_remito)
+        self.txt_punto_venta = QLineEdit()
+        self.txt_punto_venta.setPlaceholderText('00002')
+        self.txt_punto_venta.setMaxLength(5)
+        self.txt_punto_venta.setValidator(QRegExpValidator(QRegExp(r'^\d{0,5}$')))
+        fl.addRow('Punto de venta:', self.txt_punto_venta)
 
         self.spn_prox_numero = QSpinBox()
-        self.spn_prox_numero.setRange(1, 9999999)
+        self.spn_prox_numero.setRange(1, 99999999)
         fl.addRow('Próximo número:', self.spn_prox_numero)
 
         self.tabs.addTab(tab, 'Numeración de Remitos')
@@ -132,7 +136,7 @@ class ConfigImpresionDialog(QDialog):
         self.txt_remitente_ciudad.setText(cfg.remitente_ciudad)
         self.txt_remitente_cuit.setText(cfg.remitente_cuit)
         self.txt_remitente_telefono.setText(cfg.remitente_telefono)
-        self.txt_prefijo_remito.setText(cfg.prefijo_remito)
+        self.txt_punto_venta.setText(cfg.punto_venta)
         self.spn_prox_numero.setValue(cfg.prox_numero_remito)
         self.spn_importe_valor_declarado.setValue(cfg.importe_unitario_valor_declarado)
         self.txt_sucursales_excluidas.setPlainText(cfg.sucursales_excluidas)
@@ -144,7 +148,7 @@ class ConfigImpresionDialog(QDialog):
             remitente_ciudad=self.txt_remitente_ciudad.text().strip(),
             remitente_cuit=self.txt_remitente_cuit.text().strip(),
             remitente_telefono=self.txt_remitente_telefono.text().strip(),
-            prefijo_remito=self.txt_prefijo_remito.text().strip(),
+            punto_venta=self.txt_punto_venta.text().strip(),
             prox_numero_remito=self.spn_prox_numero.value(),
             sucursales_excluidas=self.txt_sucursales_excluidas.toPlainText().strip(),
             importe_unitario_valor_declarado=self.spn_importe_valor_declarado.value(),

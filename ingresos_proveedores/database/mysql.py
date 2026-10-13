@@ -104,6 +104,18 @@ class MySQLConnection:
                     UNIQUE KEY uq_remito_recepcion (id_remito, id_recepcion_prevista)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
             ''')
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS ingresoscd_remitos_generados (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    id_ingreso VARCHAR(50) NOT NULL,
+                    num_remito VARCHAR(50) NOT NULL,
+                    destino VARCHAR(200) NOT NULL DEFAULT '',
+                    fecha_generacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    estado INT NOT NULL DEFAULT 1,
+                    FOREIGN KEY (id_ingreso) REFERENCES ingresoscd(id_ingreso) ON DELETE CASCADE,
+                    UNIQUE KEY uq_remito_generado (id_ingreso, destino)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+            ''')
             for col, default in [
                 ('nombre_destino', "''"),
                 ('domicilio_cliente', "''"),
@@ -120,6 +132,13 @@ class MySQLConnection:
                     )
                 except Exception:
                     pass
+            try:
+                cursor.execute(
+                    'ALTER TABLE ingresoscd_remitos_generados '
+                    'ADD COLUMN estado INT NOT NULL DEFAULT 1'
+                )
+            except Exception:
+                pass
 
     def remito_exists(self, num_remito: str, num_proveedor: str) -> bool:
         conn = self.connect()
@@ -167,6 +186,113 @@ class MySQLConnection:
                  domicilio_cliente, codigo_postal_cliente, ciudad_cliente, distrito_cliente,
                  transporte_descripcion, transporte_datos_privados)
             )
+
+    def save_remito_generado(self, id_ingreso: str, num_remito: str, destino: str = ''):
+        conn = self.connect()
+        with conn.cursor() as cursor:
+            cursor.execute(
+                'INSERT INTO ingresoscd_remitos_generados (id_ingreso, num_remito, destino, estado) '
+                'VALUES (%s, %s, %s, 1) '
+                'ON DUPLICATE KEY UPDATE num_remito = VALUES(num_remito)',
+                (id_ingreso, num_remito, destino)
+            )
+
+    def update_estado_remito_generado(self, id_ingreso: str, destino: str, estado: int) -> int:
+        conn = self.connect()
+        with conn.cursor() as cursor:
+            cursor.execute(
+                'UPDATE ingresoscd_remitos_generados '
+                'SET estado = %s WHERE id_ingreso = %s AND destino = %s',
+                (estado, id_ingreso, destino)
+            )
+            return cursor.rowcount
+
+    def get_remito_generado(self, id_ingreso: str, destino: str = '') -> str | None:
+        conn = self.connect()
+        with conn.cursor() as cursor:
+            cursor.execute(
+                'SELECT num_remito FROM ingresoscd_remitos_generados '
+                'WHERE id_ingreso = %s AND destino = %s LIMIT 1',
+                (id_ingreso, destino)
+            )
+            row = cursor.fetchone()
+            return row[0] if row else None
+
+    def get_remitos_generados(self, id_ingreso: str) -> list[dict]:
+        conn = self.connect()
+        with conn.cursor(pymysql.cursors.DictCursor) as cursor:
+            cursor.execute(
+                'SELECT * FROM ingresoscd_remitos_generados WHERE id_ingreso = %s ORDER BY id',
+                (id_ingreso,)
+            )
+            return cursor.fetchall()
+
+    def get_remitos_generados_por_ingresos(self, ids_ingreso: list[str]) -> dict[str, list[dict]]:
+        if not ids_ingreso:
+            return {}
+        conn = self.connect()
+        with conn.cursor(pymysql.cursors.DictCursor) as cursor:
+            fmt = ','.join(['%s'] * len(ids_ingreso))
+            cursor.execute(
+                f'SELECT * FROM ingresoscd_remitos_generados '
+                f'WHERE id_ingreso IN ({fmt}) ORDER BY id',
+                ids_ingreso
+            )
+            rows = cursor.fetchall()
+        result: dict[str, list[dict]] = {}
+        for r in rows:
+            result.setdefault(r['id_ingreso'], []).append(r)
+        return result
+
+    def get_consulta_destinatarios(self, fecha_desde=None, fecha_hasta=None) -> list[dict]:
+        conn = self.connect()
+        sql = '''
+            SELECT g.sucursal_destino,
+                   COALESCE(nd.nombre_destino, '') AS nombre_destino,
+                   g.id_ingreso,
+                   g.num_remito,
+                   g.fecha_generacion,
+                   g.estado,
+                   i.fecha_ingreso,
+                   i.num_proveedor,
+                   i.razon_social,
+                   COALESCE(b.total_bultos, 0) AS total_bultos
+            FROM (
+                SELECT id_ingreso, destino AS sucursal_destino, num_remito, fecha_generacion, estado
+                FROM ingresoscd_remitos_generados
+            ) g
+            INNER JOIN ingresoscd i ON i.id_ingreso = g.id_ingreso
+            LEFT JOIN (
+                SELECT t.sucursal_destino, t.id_ingreso, SUM(t.cantidad_bultos) AS total_bultos
+                FROM (
+                    SELECT r.id_remito, r.id_ingreso, r.cantidad_bultos, rr.sucursal_destino
+                    FROM ingresoscd_remitos r
+                    INNER JOIN ingresoscd_remito_recepciones rr ON rr.id_remito = r.id_remito
+                    GROUP BY r.id_remito, r.id_ingreso, r.cantidad_bultos, rr.sucursal_destino
+                ) t
+                GROUP BY t.sucursal_destino, t.id_ingreso
+            ) b ON b.id_ingreso = g.id_ingreso AND b.sucursal_destino = g.sucursal_destino
+            LEFT JOIN (
+                SELECT sucursal_destino, MAX(nombre_destino) AS nombre_destino
+                FROM ingresoscd_remito_recepciones
+                WHERE nombre_destino IS NOT NULL AND nombre_destino <> ''
+                GROUP BY sucursal_destino
+            ) nd ON nd.sucursal_destino = g.sucursal_destino
+        '''
+        params = []
+        where = []
+        if fecha_desde is not None:
+            where.append('DATE(g.fecha_generacion) >= %s')
+            params.append(fecha_desde)
+        if fecha_hasta is not None:
+            where.append('DATE(g.fecha_generacion) <= %s')
+            params.append(fecha_hasta)
+        if where:
+            sql += ' WHERE ' + ' AND '.join(where)
+        sql += ' ORDER BY g.sucursal_destino, g.num_remito'
+        with conn.cursor(pymysql.cursors.DictCursor) as cursor:
+            cursor.execute(sql, params)
+            return cursor.fetchall()
 
     def get_ingresos_recientes(self, limite: int = 50) -> list[dict]:
         conn = self.connect()

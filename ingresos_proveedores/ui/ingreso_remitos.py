@@ -64,8 +64,8 @@ class IngresoRemitosWidget(QWidget):
         fila1 = QHBoxLayout()
         fila1.addWidget(QLabel('N° Remito:'))
         self.txt_num_remito = QLineEdit()
-        self.txt_num_remito.setPlaceholderText('Ej: 0001-00012345')
-        self.txt_num_remito.setValidator(QRegExpValidator(QRegExp(r'^\d{0,5}-?\d{0,20}$')))
+        self.txt_num_remito.setPlaceholderText('Ej: 123456789012')
+        self.txt_num_remito.setValidator(QRegExpValidator(QRegExp(r'^\d{0,12}$')))
         fila1.addWidget(self.txt_num_remito, 1)
         fila1.addWidget(QLabel('Fecha:'))
         self.dte_fecha = QDateEdit()
@@ -198,11 +198,12 @@ class IngresoRemitosWidget(QWidget):
             self.txt_num_remito.setFocus()
             return
 
-        if not QRegExp(r'^\d{4,5}-\d{1,20}$').exactMatch(num_remito):
+        num_remito = num_remito.zfill(12)
+        if not QRegExp(r'^\d{1,12}$').exactMatch(num_remito):
             QMessageBox.warning(
                 self, 'Formato inválido',
-                'El número de remito debe tener el formato: PPPP-NNNNN\n'
-                'Ejemplo: 0001-00012345'
+                'El número de remito debe ser numérico de hasta 12 dígitos.\n'
+                'Ejemplo: 123456789012'
             )
             self.txt_num_remito.setFocus()
             self.txt_num_remito.selectAll()
@@ -271,10 +272,7 @@ class IngresoRemitosWidget(QWidget):
         solo_digitos = ''.join(c for c in texto if c.isdigit())
         if not solo_digitos:
             return
-        if len(solo_digitos) <= 4:
-            self.txt_num_remito.setText(solo_digitos)
-        else:
-            self.txt_num_remito.setText(f'{solo_digitos[:4]}-{solo_digitos[4:]}')
+        self.txt_num_remito.setText(solo_digitos[:12].zfill(12))
 
     def _actualizar_valor_declarado_label(self):
         unidades = self.spn_unidades.value()

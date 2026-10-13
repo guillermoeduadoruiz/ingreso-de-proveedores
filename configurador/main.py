@@ -7,6 +7,7 @@ if not getattr(sys, 'frozen', False):
 
 import pyodbc
 import pymysql
+import webbrowser
 
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit,
@@ -14,9 +15,13 @@ from PyQt5.QtWidgets import (
     QDoubleSpinBox, QComboBox, QScrollArea, QGridLayout,
     QMessageBox, QTabWidget, QInputDialog, QSizePolicy,
 )
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import QRegExp, Qt
+from PyQt5.QtGui import QRegExpValidator
 
-from database.conexiones import ConfigSQLServer, ConfigMySQL, ConfigImpresoras
+from database.conexiones import (
+    ConfigSQLServer, ConfigMySQL, ConfigImpresoras,
+    get_available_drivers, resolve_driver, get_driver_download_url,
+)
 from database.sqlserver import SQLServerConnection
 from database.mysql import MySQLConnection
 from utils.system_info import listar_impresoras, listar_scanners, verificar_impresora
@@ -80,17 +85,54 @@ class ConfiguradorApp(QWidget):
         layout.addLayout(btn_layout)
 
     def _setup_tab_general(self, tab):
-        layout = QFormLayout(tab)
-        layout.setSpacing(10)
+        layout = QVBoxLayout(tab)
+        layout.setSpacing(12)
+
+        grp_anulacion = QGroupBox('Anulación de Ingresos')
+        al = QFormLayout(grp_anulacion)
+        al.setSpacing(8)
 
         self.txt_clave_anulacion = QLineEdit()
         self.txt_clave_anulacion.setPlaceholderText('Palabra clave para eliminar ingresos')
-        layout.addRow('Clave de Anulación:', self.txt_clave_anulacion)
+        al.addRow('Clave de Anulación:', self.txt_clave_anulacion)
 
         lbl_hint = QLabel('Si se define, aparecerá el botón "Eliminar Ingreso" en Consultas / Ajustar.')
         lbl_hint.setStyleSheet('font-size: 11px; color: #666;')
         lbl_hint.setWordWrap(True)
-        layout.addRow('', lbl_hint)
+        al.addRow('', lbl_hint)
+        layout.addWidget(grp_anulacion)
+
+        grp_num = QGroupBox('Numeración de Remitos')
+        nf = QFormLayout(grp_num)
+        nf.setSpacing(8)
+
+        self.txt_punto_venta = QLineEdit()
+        self.txt_punto_venta.setPlaceholderText('00002')
+        self.txt_punto_venta.setMaxLength(5)
+        self.txt_punto_venta.setValidator(QRegExpValidator(QRegExp(r'^\d{0,5}$')))
+        lbl_pv = QLabel(
+            'Punto de venta exclusivo de esta aplicación.\n'
+            'El número generado tendrá el formato: 00002 - 00003344'
+        )
+        lbl_pv.setStyleSheet('font-size: 11px; color: #666;')
+        lbl_pv.setWordWrap(True)
+        nf.addRow('Punto de venta:', self.txt_punto_venta)
+        nf.addRow('', lbl_pv)
+
+        self.spn_prox_num_remito = QSpinBox()
+        self.spn_prox_num_remito.setRange(1, 99999999)
+        nf.addRow('Próximo número:', self.spn_prox_num_remito)
+
+        lbl_num = QLabel(
+            'Número que recibirá el próximo remito generado.\n'
+            'La aplicación lo incrementa automáticamente al emitir.'
+        )
+        lbl_num.setStyleSheet('font-size: 11px; color: #666;')
+        lbl_num.setWordWrap(True)
+        nf.addRow('', lbl_num)
+        layout.addWidget(grp_num)
+
+        layout.addStretch()
 
     def _setup_tab_sqlserver(self, tab):
         layout = QFormLayout(tab)
@@ -117,17 +159,36 @@ class ConfiguradorApp(QWidget):
 
         self.chk_ss_trusted.toggled.connect(self._toggle_ss_auth)
 
+        driver_row = QHBoxLayout()
+        self.cbo_ss_driver = QComboBox()
+        self.cbo_ss_driver.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+        self.cbo_ss_driver.setToolTip('Driver ODBC para SQL Server instalado en el sistema')
+        driver_row.addWidget(self.cbo_ss_driver, 1)
+        btn_install_driver = QPushButton('Instalar Driver')
+        btn_install_driver.setObjectName('btnWarning')
+        btn_install_driver.clicked.connect(self._instalar_driver_odbc)
+        driver_row.addWidget(btn_install_driver)
+        layout.addRow('Driver ODBC:', driver_row)
+
         btn_test_ss = QPushButton('Probar Conexión SQL Server')
         btn_test_ss.setObjectName('btnPrimary')
         btn_test_ss.clicked.connect(self._probar_sqlserver)
         layout.addRow('', btn_test_ss)
 
         self.lbl_ss_estado = QLabel('')
+        self.lbl_ss_estado.setWordWrap(True)
         layout.addRow('', self.lbl_ss_estado)
 
     def _toggle_ss_auth(self, trusted):
         self.txt_ss_user.setEnabled(not trusted)
         self.txt_ss_pass.setEnabled(not trusted)
+
+    def _poblar_drivers_sqlserver(self):
+        self.cbo_ss_driver.clear()
+        self.cbo_ss_driver.addItem('Automático (detectar)')
+        for d in get_available_drivers():
+            self.cbo_ss_driver.addItem(d)
+        self.cbo_ss_driver.setCurrentIndex(0)
 
     def _setup_tab_mysql(self, tab):
         layout = QFormLayout(tab)
@@ -319,6 +380,35 @@ class ConfiguradorApp(QWidget):
         self.cbo_bandeja_etiquetas.setEditable(True)
         ely.addRow('Bandeja:', self.cbo_bandeja_etiquetas)
 
+        marg_grid = QGridLayout()
+        marg_grid.setSpacing(4)
+        self.spn_etq_m_sup = QDoubleSpinBox()
+        self.spn_etq_m_sup.setRange(0, 100)
+        self.spn_etq_m_sup.setSuffix(' mm')
+        self.spn_etq_m_inf = QDoubleSpinBox()
+        self.spn_etq_m_inf.setRange(0, 100)
+        self.spn_etq_m_inf.setSuffix(' mm')
+        self.spn_etq_m_izq = QDoubleSpinBox()
+        self.spn_etq_m_izq.setRange(0, 100)
+        self.spn_etq_m_izq.setSuffix(' mm')
+        self.spn_etq_m_der = QDoubleSpinBox()
+        self.spn_etq_m_der.setRange(0, 100)
+        self.spn_etq_m_der.setSuffix(' mm')
+        self.spn_etq_sep = QDoubleSpinBox()
+        self.spn_etq_sep.setRange(0, 100)
+        self.spn_etq_sep.setSuffix(' mm')
+        marg_grid.addWidget(QLabel('Sup.:'), 0, 0)
+        marg_grid.addWidget(self.spn_etq_m_sup, 0, 1)
+        marg_grid.addWidget(QLabel('Inf.:'), 0, 2)
+        marg_grid.addWidget(self.spn_etq_m_inf, 0, 3)
+        marg_grid.addWidget(QLabel('Izq.:'), 1, 0)
+        marg_grid.addWidget(self.spn_etq_m_izq, 1, 1)
+        marg_grid.addWidget(QLabel('Der.:'), 1, 2)
+        marg_grid.addWidget(self.spn_etq_m_der, 1, 3)
+        marg_grid.addWidget(QLabel('Entre etiquetas:'), 2, 0)
+        marg_grid.addWidget(self.spn_etq_sep, 2, 1)
+        ely.addRow('Márgenes etiqueta:', marg_grid)
+
         layout.addWidget(grp_etiquetas)
 
         grp_scanner = QGroupBox('Scanner')
@@ -405,6 +495,11 @@ class ConfiguradorApp(QWidget):
             self.cbo_bandeja_etiquetas.setCurrentIndex(idx)
         else:
             self.cbo_bandeja_etiquetas.setEditText(cfg.bandeja_etiquetas)
+        self.spn_etq_m_sup.setValue(cfg.margen_superior_etiquetas)
+        self.spn_etq_m_inf.setValue(cfg.margen_inferior_etiquetas)
+        self.spn_etq_m_izq.setValue(cfg.margen_izquierdo_etiquetas)
+        self.spn_etq_m_der.setValue(cfg.margen_derecho_etiquetas)
+        self.spn_etq_sep.setValue(cfg.separacion_etiquetas)
 
         idx = self.cbo_scanner.findText(cfg.scanner)
         if idx >= 0:
@@ -505,6 +600,9 @@ class ConfiguradorApp(QWidget):
     def _cargar_config(self):
         self._cm.load_config()
         self.txt_clave_anulacion.setText(self._cm.clave_anulacion)
+        self.txt_punto_venta.setText(self._cm.impresion.punto_venta)
+        self.spn_prox_num_remito.setValue(self._cm.impresion.prox_numero_remito)
+        self._poblar_drivers_sqlserver()
 
         ss = self._cm.sqlserver
         self.txt_ss_server.setText(ss.server)
@@ -512,6 +610,10 @@ class ConfiguradorApp(QWidget):
         self.chk_ss_trusted.setChecked(ss.trusted)
         self.txt_ss_user.setText(ss.username)
         self.txt_ss_pass.setText(ss.password)
+        if ss.driver:
+            idx = self.cbo_ss_driver.findText(ss.driver)
+            if idx >= 0:
+                self.cbo_ss_driver.setCurrentIndex(idx)
 
         my = self._cm.mysql
         self.txt_my_host.setText(my.host)
@@ -524,12 +626,16 @@ class ConfiguradorApp(QWidget):
         self._cargar_config_en_formulario(self._cm.impresora_activa)
 
     def _get_ss_config(self) -> dict:
+        driver = self.cbo_ss_driver.currentText()
+        if driver == 'Automático (detectar)':
+            driver = ''
         return {
             'server': self.txt_ss_server.text().strip(),
             'database': self.txt_ss_database.text().strip(),
             'trusted': self.chk_ss_trusted.isChecked(),
             'username': self.txt_ss_user.text().strip(),
             'password': self.txt_ss_pass.text(),
+            'driver': driver,
         }
 
     def _get_my_config(self) -> dict:
@@ -560,6 +666,11 @@ class ConfiguradorApp(QWidget):
             'filas_etiqueta': self.spn_filas_etiqueta.value(),
             'tamanio_papel_etiquetas': self.cbo_papel_etiquetas.currentText(),
             'bandeja_etiquetas': self.cbo_bandeja_etiquetas.currentText().strip(),
+            'margen_superior_etiquetas': self.spn_etq_m_sup.value(),
+            'margen_inferior_etiquetas': self.spn_etq_m_inf.value(),
+            'margen_izquierdo_etiquetas': self.spn_etq_m_izq.value(),
+            'margen_derecho_etiquetas': self.spn_etq_m_der.value(),
+            'separacion_etiquetas': self.spn_etq_sep.value(),
             'scanner': self.cbo_scanner.currentText().strip(),
         }
 
@@ -568,29 +679,59 @@ class ConfiguradorApp(QWidget):
         if not cfg['server'] or not cfg['database']:
             QMessageBox.warning(self, 'Error', 'Complete Servidor y Base de Datos.')
             return
+        from database.conexiones import build_connection_str, test_drivers
+        driver = cfg.get('driver', '')
         try:
-            if cfg['trusted']:
-                conn_str = (
-                    f'DRIVER={{ODBC Driver 17 for SQL Server}};'
-                    f'SERVER={cfg["server"]};'
-                    f'DATABASE={cfg["database"]};'
-                    f'Trusted_Connection=yes;'
-                )
-            else:
-                conn_str = (
-                    f'DRIVER={{ODBC Driver 17 for SQL Server}};'
-                    f'SERVER={cfg["server"]};'
-                    f'DATABASE={cfg["database"]};'
-                    f'UID={cfg["username"]};'
-                    f'PWD={cfg["password"]};'
-                )
+            conn_str = build_connection_str(
+                server=cfg['server'],
+                database=cfg['database'],
+                trusted=cfg['trusted'],
+                username=cfg['username'],
+                password=cfg['password'],
+                driver=driver,
+            )
             conn = pyodbc.connect(conn_str, timeout=5)
             conn.close()
             self.lbl_ss_estado.setStyleSheet('color: green; font-weight: bold;')
-            self.lbl_ss_estado.setText('Conexión exitosa.')
+            self.lbl_ss_estado.setText(
+                f'Conexión exitosa con {self._get_driver_display(driver)}.'
+            )
+        except RuntimeError as e:
+            if 'no encontrado' in str(e):
+                ok, err, good_driver = test_drivers(
+                    server=cfg['server'], database=cfg['database'],
+                    trusted=cfg['trusted'], username=cfg['username'], password=cfg['password'],
+                )
+                if ok:
+                    self.cbo_ss_driver.setCurrentText(good_driver)
+                    self.lbl_ss_estado.setStyleSheet('color: green; font-weight: bold;')
+                    self.lbl_ss_estado.setText(f'Conexión exitosa con {good_driver}.')
+                    return
+            self.lbl_ss_estado.setStyleSheet('color: red; font-weight: bold;')
+            self.lbl_ss_estado.setText(str(e))
         except Exception as e:
             self.lbl_ss_estado.setStyleSheet('color: red; font-weight: bold;')
-            self.lbl_ss_estado.setText(f'Error: {str(e)[:80]}')
+            msg = str(e)
+            if 'IM002' in msg:
+                msg = (
+                    'Driver ODBC no instalado.\n'
+                    f'Haga clic en "Instalar Driver" o descargue desde:\n'
+                    f'{get_driver_download_url()}'
+                )
+            self.lbl_ss_estado.setText(msg)
+
+    def _get_driver_display(self, driver: str) -> str:
+        return driver if driver else 'driver detectado automáticamente'
+
+    def _instalar_driver_odbc(self):
+        url = get_driver_download_url()
+        try:
+            webbrowser.open(url)
+        except Exception:
+            QMessageBox.information(
+                self, 'Descargar Driver ODBC',
+                f'Abra el siguiente enlace en su navegador:\n\n{url}'
+            )
 
     def _probar_mysql(self):
         cfg = self._get_my_config()
@@ -686,8 +827,11 @@ class ConfiguradorApp(QWidget):
             return
 
         self._cm.clave_anulacion = self.txt_clave_anulacion.text().strip()
+        self._cm.impresion.punto_venta = self.txt_punto_venta.text().strip()
+        self._cm.impresion.prox_numero_remito = self.spn_prox_num_remito.value()
         self._cm.save_sqlserver_config(ConfigSQLServer(**ss))
         self._cm.save_mysql_config(ConfigMySQL(**my))
+        self._cm.save_impresion_config(self._cm.impresion)
         self._guardar_config_actual_en_cm()
 
         QMessageBox.information(

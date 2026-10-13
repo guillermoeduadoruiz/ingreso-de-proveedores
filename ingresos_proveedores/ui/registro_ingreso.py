@@ -24,6 +24,7 @@ class RegistroIngresoWidget(QWidget):
         self._remitos: list[Remito] = []
         self._on_finalizar_callback = None
         self._on_cancelar_callback = None
+        self._registrando = False
         self._expanded_rows: set[int] = set()
         self._default_row_heights: dict[int, int] = {}
         self._setup_ui()
@@ -84,6 +85,7 @@ class RegistroIngresoWidget(QWidget):
         self.tabla_remitos.cellClicked.connect(self._on_cell_clicked)
 
     def set_datos(self, proveedor: Proveedor, remitos: list[Remito], fecha_ingreso_cd=None):
+        self._registrando = False
         self._proveedor = proveedor
         self._remitos = remitos
         self._fecha_ingreso_cd = fecha_ingreso_cd or date.today()
@@ -148,6 +150,8 @@ class RegistroIngresoWidget(QWidget):
             self._expanded_rows.add(row)
 
     def _confirmar(self):
+        if self._registrando:
+            return
         if not self._proveedor or not self._remitos:
             QMessageBox.warning(
                 self, 'Sin datos',
@@ -155,6 +159,9 @@ class RegistroIngresoWidget(QWidget):
                 'Vuelva al paso anterior y verifique la información.'
             )
             return
+
+        self._registrando = True
+        self.btn_confirmar.setEnabled(False)
 
         total_bultos = sum(r.cantidad_bultos for r in self._remitos)
         msg = (
@@ -168,6 +175,8 @@ class RegistroIngresoWidget(QWidget):
             QMessageBox.Yes | QMessageBox.No, QMessageBox.No
         )
         if reply != QMessageBox.Yes:
+            self._registrando = False
+            self.btn_confirmar.setEnabled(True)
             return
 
         try:
@@ -195,6 +204,8 @@ class RegistroIngresoWidget(QWidget):
                 self._on_finalizar_callback(ingreso)
 
         except Exception as e:
+            self._registrando = False
+            self.btn_confirmar.setEnabled(True)
             QMessageBox.critical(
                 self, 'Error',
                 f'Error al registrar el ingreso:\n{e}'

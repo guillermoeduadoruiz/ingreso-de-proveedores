@@ -12,10 +12,16 @@ from ui.dialogo_materiales import DialogoMateriales
 
 class SeleccionProveedorWidget(QWidget):
     COL_RP = [
-        'Sel', 'IDRecepcion', 'Clase', 'Fecha Prevista',
+        'Sel', 'Recepcion', 'Clase', 'Fecha',
         'Proveedor', 'Razon Social',
-        'Sucursal Destino', 'Nombre Destino', 'Ver',
+        'Destino', 'Nombre Destino', 'Estado', 'Ver',
     ]
+
+    ESTADOS_RECEPCION = {
+        'B': 'Tratada',
+        'A': 'Sin Tratar',
+        'C': 'Completa',
+    }
 
     HEADER_ALIGN = Qt.AlignCenter
 
@@ -58,10 +64,16 @@ class SeleccionProveedorWidget(QWidget):
         self.txt_filtro = QLineEdit()
         self.txt_filtro.setPlaceholderText('ID Recepción, código de proveedor o razón social (separar múltiples RP con espacio)')
         self.txt_filtro.setMinimumWidth(300)
+        filtro_layout.addWidget(self.txt_filtro, 1)
+        filtro_layout.addSpacing(10)
+        filtro_layout.addWidget(QLabel('Material:'))
+        self.txt_filtro_material = QLineEdit()
+        self.txt_filtro_material.setPlaceholderText('Código de material (SKU)')
+        self.txt_filtro_material.setMinimumWidth(140)
+        filtro_layout.addWidget(self.txt_filtro_material)
         self.btn_buscar = QPushButton('Buscar')
         self.btn_buscar.setObjectName('btnPrimary')
         self.btn_limpiar = QPushButton('Limpiar')
-        filtro_layout.addWidget(self.txt_filtro, 1)
         filtro_layout.addWidget(self.btn_buscar)
         filtro_layout.addWidget(self.btn_limpiar)
         filtro_layout.addSpacing(20)
@@ -90,14 +102,18 @@ class SeleccionProveedorWidget(QWidget):
         self.grp_resumen_seleccion = QGroupBox('Resumen de Selección')
         resumen_layout = QHBoxLayout(self.grp_resumen_seleccion)
         self.lbl_resumen_recepciones = QLabel('Recepciones: 0')
-        self.lbl_resumen_destinos = QLabel('Destinos: 0')
-        self.lbl_resumen_skus = QLabel('SKU: 0')
-        self.lbl_resumen_previstas = QLabel('Previstas: 0')
-        self.lbl_resumen_recepcionadas = QLabel('Recepcionadas: 0')
-        for lbl in (self.lbl_resumen_recepciones, self.lbl_resumen_destinos, self.lbl_resumen_skus, self.lbl_resumen_previstas, self.lbl_resumen_recepcionadas):
+        self.lbl_resumen_skus = QLabel('SKU: —')
+        self.lbl_resumen_previstas = QLabel('Previstas: —')
+        self.lbl_resumen_recepcionadas = QLabel('Recepcionadas: —')
+        for lbl in (self.lbl_resumen_recepciones, self.lbl_resumen_skus, self.lbl_resumen_previstas, self.lbl_resumen_recepcionadas):
             lbl.setStyleSheet('font-size: 12px; font-weight: bold;')
             resumen_layout.addWidget(lbl)
             resumen_layout.addSpacing(20)
+        self.btn_calcular_resumen = QPushButton('Calcular SKU y Unidades')
+        self.btn_calcular_resumen.setObjectName('btnPrimary')
+        self.btn_calcular_resumen.clicked.connect(self._calcular_detalles_resumen)
+        resumen_layout.addWidget(self.btn_calcular_resumen)
+        resumen_layout.addStretch(1)
         self.grp_resumen_seleccion.setVisible(False)
         layout.addWidget(self.grp_resumen_seleccion)
 
@@ -123,6 +139,7 @@ class SeleccionProveedorWidget(QWidget):
         self.btn_buscar.clicked.connect(self._buscar)
         self.btn_limpiar.clicked.connect(self._limpiar)
         self.txt_filtro.returnPressed.connect(self._buscar)
+        self.txt_filtro_material.returnPressed.connect(self._buscar)
         self.cbo_dias.currentIndexChanged.connect(self._buscar)
         self.tabla_rp.cellClicked.connect(self._on_cell_clicked)
         self.btn_confirmar.clicked.connect(self._confirmar)
@@ -149,6 +166,7 @@ class SeleccionProveedorWidget(QWidget):
         self.txt_filtro.setEnabled(False)
         self.btn_buscar.setEnabled(False)
         self.btn_limpiar.setEnabled(False)
+        self.txt_filtro_material.setEnabled(False)
         self.cbo_dias.setEnabled(False)
         self.btn_volver_sin_cambios.setVisible(True)
         self.titulo_lbl.setText(
@@ -174,10 +192,12 @@ class SeleccionProveedorWidget(QWidget):
         self.txt_filtro.setEnabled(True)
         self.btn_buscar.setEnabled(True)
         self.btn_limpiar.setEnabled(True)
+        self.txt_filtro_material.setEnabled(True)
         self.cbo_dias.setEnabled(True)
         self.btn_volver_sin_cambios.setVisible(False)
         self.titulo_lbl.setText('<h2>Paso 1: Seleccionar Recepciones Previstas</h2>')
         self.txt_filtro.clear()
+        self.txt_filtro_material.clear()
         self.cbo_dias.setCurrentIndex(len(self.OPCIONES_DIAS) - 1)
         for col in self.COL_FILTRO:
             self._filtros[col] = ''
@@ -196,8 +216,9 @@ class SeleccionProveedorWidget(QWidget):
         if self._prefiltro_activo:
             return
         filtro = self.txt_filtro.text().strip()
+        material = self.txt_filtro_material.text().strip()
         partes = filtro.split()
-        if len(partes) > 1:
+        if len(partes) > 1 and not material:
             self._buscar_por_ids(partes)
             return
         dias = self.OPCIONES_DIAS[self.cbo_dias.currentIndex()][1]
@@ -206,7 +227,7 @@ class SeleccionProveedorWidget(QWidget):
         if w_nom and w_nom.currentText():
             destino = w_nom.currentText()
         try:
-            self._recepciones_todas = self._svc_recepcion.buscar(filtro, dias, destino)
+            self._recepciones_todas = self._svc_recepcion.buscar(filtro, dias, destino, material)
             self._recepciones_seleccionadas = []
             self._aplicar_filtros()
         except Exception as e:
@@ -322,6 +343,7 @@ class SeleccionProveedorWidget(QWidget):
                 (5, r.razon_social),
                 (6, r.sucursal_destino),
                 (7, r.nombre_destino),
+                (8, self.ESTADOS_RECEPCION.get(r.st_recepcion, r.st_recepcion or '')),
             ]:
                 item = QTableWidgetItem(val)
                 item.setTextAlignment(self.HEADER_ALIGN)
@@ -337,15 +359,22 @@ class SeleccionProveedorWidget(QWidget):
             lay_btn = QHBoxLayout(contenedor_btn)
             lay_btn.setContentsMargins(0, 0, 0, 0)
             lay_btn.addWidget(btn_ver)
-            self.tabla_rp.setCellWidget(row, 8, contenedor_btn)
+            self.tabla_rp.setCellWidget(row, 9, contenedor_btn)
         self.tabla_rp.blockSignals(False)
         header = self.tabla_rp.horizontalHeader()
         header.setSectionResizeMode(0, QHeaderView.Fixed)
         self.tabla_rp.setColumnWidth(0, 30)
+        header.setSectionResizeMode(5, QHeaderView.Fixed)
+        self.tabla_rp.setColumnWidth(5, 300)
+        header.setSectionResizeMode(7, QHeaderView.Fixed)
+        self.tabla_rp.setColumnWidth(7, 340)
         header.setSectionResizeMode(8, QHeaderView.Fixed)
-        self.tabla_rp.setColumnWidth(8, 35)
-        for c in range(1, 8):
-            header.setSectionResizeMode(c, QHeaderView.Stretch)
+        self.tabla_rp.setColumnWidth(8, 90)
+        header.setSectionResizeMode(9, QHeaderView.Fixed)
+        self.tabla_rp.setColumnWidth(9, 24)
+        for c in range(1, 9):
+            if c not in (5, 7):
+                header.setSectionResizeMode(c, QHeaderView.Stretch)
 
     def _on_cell_clicked(self, row, column):
         if column != 0:
@@ -382,6 +411,19 @@ class SeleccionProveedorWidget(QWidget):
 
         if state == Qt.Checked:
             temp = self._recepciones_seleccionadas + [rp]
+            proveedores = {r.id_proveedor for r in temp}
+            if len(proveedores) > 1:
+                item = self.tabla_rp.item(row, 0)
+                if item:
+                    item.setCheckState(Qt.Unchecked)
+                distintos = list({(r.id_proveedor, r.razon_social) for r in temp})
+                detalle = '\n'.join(f'  {p} - {n}' for p, n in distintos)
+                QMessageBox.warning(
+                    self, 'Proveedores Diferentes',
+                    f'Las recepciones previstas seleccionadas tienen diferentes proveedores:\n{detalle}\n\n'
+                    'Todas deben pertenecer al mismo proveedor.'
+                )
+                return
             dests = {r.nombre_destino.strip().lower() for r in temp}
             if len(dests) > 1:
                 item = self.tabla_rp.item(row, 0)
@@ -457,38 +499,62 @@ class SeleccionProveedorWidget(QWidget):
             return
         self.grp_resumen_seleccion.setVisible(True)
         cant = len(self._recepciones_seleccionadas)
-        destinos = {r.nombre_destino.strip().lower() for r in self._recepciones_seleccionadas}
-        total_previstas = 0
-        total_recepcionadas = 0
-        skus = set()
-        for rp in self._recepciones_seleccionadas:
-            try:
-                materiales = self._svc_recepcion.buscar_materiales(rp.id_recepcion)
-            except Exception:
-                continue
-            for m in materiales:
-                try:
-                    total_previstas += float(m.get('CantidadPrevista', 0) or 0)
-                except (ValueError, TypeError):
-                    pass
-                try:
-                    total_recepcionadas += float(m.get('CantidadRecepcionada', 0) or 0)
-                except (ValueError, TypeError):
-                    pass
-                mat = m.get('IDMaterial')
-                if mat:
-                    skus.add(mat)
         self.lbl_resumen_recepciones.setText(f'Recepciones: {cant}')
-        self.lbl_resumen_destinos.setText(f'Destinos: {len(destinos)}')
-        self.lbl_resumen_skus.setText(f'SKU: {len(skus)}')
-        self.lbl_resumen_previstas.setText(f'Previstas: {total_previstas:,.2f}')
-        self.lbl_resumen_recepcionadas.setText(f'Recepcionadas: {total_recepcionadas:,.2f}')
+        self._limpiar_resumen_detalles()
+        self.btn_calcular_resumen.setEnabled(True)
+
+    def _limpiar_resumen_detalles(self):
+        self.lbl_resumen_skus.setText('SKU: —')
+        self.lbl_resumen_previstas.setText('Previstas: —')
+        self.lbl_resumen_recepcionadas.setText('Recepcionadas: —')
+
+    def _calcular_detalles_resumen(self):
+        if not self._recepciones_seleccionadas:
+            return
+        self.btn_calcular_resumen.setEnabled(False)
+        QApplication.setOverrideCursor(Qt.WaitCursor)
+        try:
+            total_previstas = 0
+            total_recepcionadas = 0
+            skus = set()
+            for rp in self._recepciones_seleccionadas:
+                try:
+                    materiales = self._svc_recepcion.buscar_materiales(rp.id_recepcion)
+                except Exception:
+                    continue
+                for m in materiales:
+                    try:
+                        total_previstas += float(m.get('CantidadPrevista', 0) or 0)
+                    except (ValueError, TypeError):
+                        pass
+                    try:
+                        total_recepcionadas += float(m.get('CantidadRecepcionada', 0) or 0)
+                    except (ValueError, TypeError):
+                        pass
+                    mat = m.get('IDMaterial')
+                    if mat:
+                        skus.add(mat)
+            self.lbl_resumen_skus.setText(f'SKU: {len(skus)}')
+            self.lbl_resumen_previstas.setText(f'Previstas: {total_previstas:,.2f}')
+            self.lbl_resumen_recepcionadas.setText(f'Recepcionadas: {total_recepcionadas:,.2f}')
+        finally:
+            QApplication.restoreOverrideCursor()
+            self.btn_calcular_resumen.setEnabled(True)
 
     def _confirmar(self):
         if not self._recepciones_seleccionadas:
             QMessageBox.warning(
                 self, 'Selección Incompleta',
                 'Debe seleccionar al menos una recepción prevista.'
+            )
+            return
+
+        proveedores = {r.id_proveedor for r in self._recepciones_seleccionadas}
+        if len(proveedores) > 1:
+            QMessageBox.warning(
+                self, 'Proveedores Diferentes',
+                'Las recepciones previstas seleccionadas tienen diferentes proveedores.\n'
+                'Todas deben pertenecer al mismo proveedor.'
             )
             return
 

@@ -7,8 +7,10 @@ class RecepcionService:
     def __init__(self, sqlserver: SQLServerConnection):
         self._sqlserver = sqlserver
 
-    def buscar(self, filtro: str = '', dias: int = 365, destino: str = '') -> list[RecepcionPrevista]:
-        rows = self._sqlserver.buscar_recepciones(filtro, dias, destino)
+    def buscar(
+        self, filtro: str = '', dias: int = 365, destino: str = '', material: str = ''
+    ) -> list[RecepcionPrevista]:
+        rows = self._sqlserver.buscar_recepciones(filtro, dias, destino, material)
         return [self._row_to_recepcion(r) for r in rows]
 
     def buscar_por_ids(self, ids: list[str]) -> list[RecepcionPrevista]:
