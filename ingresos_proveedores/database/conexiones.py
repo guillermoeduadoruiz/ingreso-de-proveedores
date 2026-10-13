@@ -165,10 +165,11 @@ class ConfigImpresoras:
     separacion_etiquetas: float = 0.0
 
     impresora_etiquetas_mateti: str = ''
-    ancho_etiqueta_mateti: float = 100.0
-    alto_etiqueta_mateti: float = 150.0
-    columnas_etiqueta_mateti: int = 1
-    separacion_etiqueta_mateti: float = 0.0
+    ancho_etiqueta_mateti: float = 49.0
+    alto_etiqueta_mateti: float = 25.0
+    columnas_etiqueta_mateti: int = 2
+    separacion_etiqueta_mateti: float = 2.0
+    separacion_filas_etiqueta_mateti: float = 2.0
     margen_superior_etiquetas_mateti: float = 2.0
     margen_inferior_etiquetas_mateti: float = 2.0
     margen_izquierdo_etiquetas_mateti: float = 2.0

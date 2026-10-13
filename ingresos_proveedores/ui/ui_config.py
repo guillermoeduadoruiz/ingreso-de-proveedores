@@ -360,18 +360,29 @@ class ConfigDialog(QDialog):
         dim_grid_m.addWidget(self.spn_alto_etq_mateti, 0, 3)
         mly.addRow('Tamaño etiqueta:', dim_grid_m)
 
-        col_grid_m = QGridLayout()
-        col_grid_m.setSpacing(4)
+        col_hbox_m = QHBoxLayout()
+        col_hbox_m.setSpacing(8)
         self.spn_columnas_etq_mateti = QSpinBox()
         self.spn_columnas_etq_mateti.setRange(1, 10)
+        self.spn_columnas_etq_mateti.setMinimumWidth(70)
         self.spn_sep_etq_mateti = QDoubleSpinBox()
         self.spn_sep_etq_mateti.setRange(0, 100)
         self.spn_sep_etq_mateti.setSuffix(' mm')
-        col_grid_m.addWidget(QLabel('Columnas:'), 0, 0)
-        col_grid_m.addWidget(self.spn_columnas_etq_mateti, 0, 1)
-        col_grid_m.addWidget(QLabel('Separación:'), 0, 2)
-        col_grid_m.addWidget(self.spn_sep_etq_mateti, 0, 3)
-        mly.addRow('Distribución:', col_grid_m)
+        self.spn_sep_etq_mateti.setMinimumWidth(100)
+        self.spn_sep_filas_etq_mateti = QDoubleSpinBox()
+        self.spn_sep_filas_etq_mateti.setRange(0, 100)
+        self.spn_sep_filas_etq_mateti.setSuffix(' mm')
+        self.spn_sep_filas_etq_mateti.setMinimumWidth(100)
+        col_hbox_m.addWidget(QLabel('Columnas:'))
+        col_hbox_m.addWidget(self.spn_columnas_etq_mateti)
+        col_hbox_m.addSpacing(12)
+        col_hbox_m.addWidget(QLabel('Sep. columnas:'))
+        col_hbox_m.addWidget(self.spn_sep_etq_mateti)
+        col_hbox_m.addSpacing(12)
+        col_hbox_m.addWidget(QLabel('Sep. filas:'))
+        col_hbox_m.addWidget(self.spn_sep_filas_etq_mateti)
+        col_hbox_m.addStretch()
+        mly.addRow('Distribución:', col_hbox_m)
 
         marg_grid_m = QGridLayout()
         marg_grid_m.setSpacing(4)
@@ -508,6 +519,7 @@ class ConfigDialog(QDialog):
         self.spn_alto_etq_mateti.setValue(cfg.alto_etiqueta_mateti)
         self.spn_columnas_etq_mateti.setValue(cfg.columnas_etiqueta_mateti)
         self.spn_sep_etq_mateti.setValue(cfg.separacion_etiqueta_mateti)
+        self.spn_sep_filas_etq_mateti.setValue(getattr(cfg, 'separacion_filas_etiqueta_mateti', 2.0))
         self.spn_mateti_m_sup.setValue(cfg.margen_superior_etiquetas_mateti)
         self.spn_mateti_m_inf.setValue(cfg.margen_inferior_etiquetas_mateti)
         self.spn_mateti_m_izq.setValue(cfg.margen_izquierdo_etiquetas_mateti)
@@ -735,6 +747,7 @@ class ConfigDialog(QDialog):
             alto_etiqueta_mateti=self.spn_alto_etq_mateti.value(),
             columnas_etiqueta_mateti=self.spn_columnas_etq_mateti.value(),
             separacion_etiqueta_mateti=self.spn_sep_etq_mateti.value(),
+            separacion_filas_etiqueta_mateti=self.spn_sep_filas_etq_mateti.value(),
             margen_superior_etiquetas_mateti=self.spn_mateti_m_sup.value(),
             margen_inferior_etiquetas_mateti=self.spn_mateti_m_inf.value(),
             margen_izquierdo_etiquetas_mateti=self.spn_mateti_m_izq.value(),

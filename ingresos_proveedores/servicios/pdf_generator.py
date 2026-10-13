@@ -416,19 +416,17 @@ def generar_etiquetas(
     return filepath
 
 
-def _dibujar_etiqueta_mateti(c, mat, x0, ph, mt, etq_w, etq_h):
+def _dibujar_etiqueta_mateti(c, mat, x0, y_top, etq_w, etq_h):
     usable_w = etq_w
     cx = x0 + usable_w / 2
     ean = (mat.get('barcode', '') or '').strip()
-    codigo = mat.get('codigo', '')
     descripcion = mat.get('descripcion', '')
-    um = mat.get('um', '')
 
-    y = ph - mt
+    y = y_top
 
     if ean:
         try:
-            bar_h = min(14.0, etq_h * 0.42) * mm_unit
+            bar_h = min(14.0, etq_h * 0.55) * mm_unit
             bc = _bc_code128.Code128(ean, barHeight=bar_h, barWidth=0.9)
             scale = min(1.0, usable_w / bc.width) if bc.width > 0 else 1.0
             bw = bc.width * scale
@@ -443,22 +441,25 @@ def _dibujar_etiqueta_mateti(c, mat, x0, ph, mt, etq_w, etq_h):
             y = by - 1.5 * mm_unit
             c.setFont('Helvetica', 7)
             c.drawCentredString(cx, y - 7, ean)
-            y -= 7 + 2 * mm_unit
+            y -= 7 + 1.5 * mm_unit
         except Exception:
             pass
 
-    fs = 8
+    fs = 6
+    while fs > 4:
+        c.setFont('Helvetica', fs)
+        if c.stringWidth(descripcion, 'Helvetica', fs) <= usable_w:
+            break
+        fs -= 0.5
     c.setFont('Helvetica', fs)
-    max_chars = max(1, int(usable_w / (fs * 0.52)))
-    desc = descripcion[:max_chars] + ('...' if len(descripcion) > max_chars else '')
+    texto = descripcion
+    if c.stringWidth(texto, 'Helvetica', fs) > usable_w:
+        sufijo = '...'
+        while texto and c.stringWidth(texto + sufijo, 'Helvetica', fs) > usable_w:
+            texto = texto[:-1]
+        texto = texto + sufijo
     y -= fs
-    c.drawCentredString(cx, y, desc)
-    y -= fs * 0.3 + 2 * mm_unit
-
-    c.setFont('Helvetica-Bold', fs)
-    code_um = f'{codigo}   UM: {um}' if um else codigo
-    y -= fs
-    c.drawCentredString(cx, y, code_um)
+    c.drawCentredString(cx, y, texto)
 
 
 def generar_pdf_etiquetas_mateti(materiales: list[dict], cfg) -> str | None:
@@ -468,38 +469,44 @@ def generar_pdf_etiquetas_mateti(materiales: list[dict], cfg) -> str | None:
     como columnas * ancho_etiqueta + separacion + margenes laterales.
     """
     try:
-        etq_w_mm = cfg.ancho_etiqueta_mateti or 100.0
-        etq_h_mm = cfg.alto_etiqueta_mateti or 150.0
-        cols = max(1, cfg.columnas_etiqueta_mateti or 1)
-        sep_mm = cfg.separacion_etiqueta_mateti or 0.0
+        etq_w_mm = cfg.ancho_etiqueta_mateti or 49.0
+        etq_h_mm = cfg.alto_etiqueta_mateti or 25.0
+        cols = max(1, cfg.columnas_etiqueta_mateti or 2)
+        sep_mm = cfg.separacion_etiqueta_mateti or 2.0
+        sep_filas_mm = getattr(cfg, 'separacion_filas_etiqueta_mateti', 2.0) or 0.0
         ml = (cfg.margen_izquierdo_etiquetas_mateti or 2.0) * mm_unit
         mr = (cfg.margen_derecho_etiquetas_mateti or 2.0) * mm_unit
         mt = (cfg.margen_superior_etiquetas_mateti or 2.0) * mm_unit
+        mb = (cfg.margen_inferior_etiquetas_mateti or 2.0) * mm_unit
 
         etq_w = etq_w_mm * mm_unit
         etq_h = etq_h_mm * mm_unit
         sep = sep_mm * mm_unit
+        sep_filas = sep_filas_mm * mm_unit
 
-        pw = ml + cols * etq_w + (cols - 1) * sep + mr
-        ph = etq_h + mt + (cfg.margen_inferior_etiquetas_mateti or 2.0) * mm_unit
-
-        filename = f'mateti_{datetime.now().strftime("%Y%m%d-%H%M%S")}.pdf'
-        filepath = os.path.join(_dir_etiquetas(), filename)
-        c = canvas.Canvas(filepath, pagesize=(pw, ph))
-
+        import math
         pendientes: list[dict] = []
         for mat in materiales:
             cantidad = max(1, int(mat.get('cantidad_etiquetas', 1)))
             for _ in range(cantidad):
                 pendientes.append(mat)
 
+        num_filas = math.ceil(len(pendientes) / cols) if pendientes else 1
+        pw = ml + cols * etq_w + (cols - 1) * sep + mr
+        ph = mt + num_filas * etq_h + max(0, num_filas - 1) * sep_filas + mb
+
+        filename = f'mateti_{datetime.now().strftime("%Y%m%d-%H%M%S")}.pdf'
+        filepath = os.path.join(_dir_etiquetas(), filename)
+        c = canvas.Canvas(filepath, pagesize=(pw, ph))
+
         for i, mat in enumerate(pendientes):
             col_idx = i % cols
+            fila_idx = i // cols
             x0 = ml + col_idx * (etq_w + sep)
-            _dibujar_etiqueta_mateti(c, mat, x0, ph, mt, etq_w, etq_h_mm)
-            if col_idx == cols - 1 or i == len(pendientes) - 1:
-                c.showPage()
+            y_top = ph - mt - fila_idx * (etq_h + sep_filas)
+            _dibujar_etiqueta_mateti(c, mat, x0, y_top, etq_w, etq_h_mm)
 
+        c.showPage()
         c.save()
         return filepath
     except Exception:
