@@ -4,7 +4,7 @@
     "server": "192.168.223.113",
     "database": "CSWMS",
     "username": "u_logimedia_app",
-    "password": "$ENC$Z0FBQUFBQnF6b3RWMnBFUFliWHBwWnQ2SmgtQnQ5cVZVOWkxcnBlTzRoX2pVaUVqajVmS29wRmpseHcxWGRsMVBaa09FOEc3bmNmTFhqVHFxaF9pME5nTjN1YVdXeDBnZ1E9PQ==",
+    "password": "$ENC$Z0FBQUFBQnEyNzdXM01fTF9VSl85RmZfVkNNa0lVLWRkNFFzN1hOTzA4RFNlSFFEUFZPcm9YeUZmYjZkcTl3NVBrVENKX0x5YmtvODE3TTBUVUlNZjNSRzRjeFBBaGUtMXc9PQ==",
     "trusted": false,
     "driver": ""
   },
@@ -13,7 +13,7 @@
     "port": 3306,
     "database": "CUSPIDE_LOG_P",
     "username": "U_ CUSPIDE_ADM",
-    "password": "$ENC$Z0FBQUFBQnF6b3RWTk5wR2lQWVpaRkpRZHlXSWNieUhoc3UxTTFhbzVPVTB3ZTFGODU1YmFGaGJ1dDVFWl9ISFFMTVNadS04Z3E1SkNDX2xVT1MzY2xmbHdnZzh1c0daMmc9PQ=="
+    "password": "$ENC$Z0FBQUFBQnEyNzdYZVlFTGpzaEFTaWw5cWxDRTJZQmllVkI3V3pvcllseENRbHBwYk5zcDlXOGxFMEJUMllNenNCcXNhazZ6ak1uZVVTVEszdGlUSUNxSm50Q3p2RVFEVlE9PQ=="
   },
   "impresoras": {
     "configs": {
@@ -40,12 +40,12 @@
         "margen_izquierdo_etiquetas": 20.0,
         "margen_derecho_etiquetas": 5.0,
         "separacion_etiquetas": 3.0,
-        "impresora_etiquetas_mateti": "Honeywell PC42t plus (203 dpi)",
+        "impresora_etiquetas_mateti": "Honeywell PC42t plus (203 dpi) (Copiar 1)",
         "ancho_etiqueta_mateti": 49.0,
         "alto_etiqueta_mateti": 25.0,
         "columnas_etiqueta_mateti": 2,
-        "separacion_etiqueta_mateti": 2.0,
-        "separacion_filas_etiqueta_mateti": 2.0,
+        "separacion_etiqueta_mateti": 3.0,
+        "separacion_filas_etiqueta_mateti": 3.0,
         "margen_superior_etiquetas_mateti": 2.0,
         "margen_inferior_etiquetas_mateti": 2.0,
         "margen_izquierdo_etiquetas_mateti": 2.0,
