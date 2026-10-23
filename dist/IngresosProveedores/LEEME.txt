@@ -1,0 +1,31 @@
+============================================
+ REGISTRO DE INGRESOS DE PROVEEDORES
+ Instrucciones de instalacion
+============================================
+
+1. REQUISITOS PREVIOS:
+   - ODBC Driver 17 for SQL Server
+     (descargar desde Microsoft)
+
+2. INSTALACION:
+   - Copiar toda esta carpeta a la PC destino
+   - No se requiere Python instalado
+
+3. CONFIGURACION:
+   - Editar "config_setup.json" con un editor de texto
+   - O ejecutar "Configurador.bat" para configuracion visual
+   - Configurar servidores SQL Server y MySQL
+   - Configurar impresoras
+
+4. USO DIARIO:
+   - Ejecutar "IngresosProveedores.bat"
+   - Login con credenciales de Cygnus
+   - Seguir los pasos del wizard
+
+5. ARCHIVOS:
+   - config_setup.json  : Configuracion de la app
+   - pdfs/              : Remitos y etiquetas generados
+   - assets/            : Logo y manual de ayuda
+   - Configurador/      : Herramienta de configuracion
+
+============================================

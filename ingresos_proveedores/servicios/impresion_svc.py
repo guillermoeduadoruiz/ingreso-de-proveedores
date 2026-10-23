@@ -106,11 +106,16 @@ class ImpresionService:
         except Exception:
             return False
 
-    def _imprimir_pdf_qt(self, pdf_source, printer_name: str) -> bool:
-        """Imprime directamente vía QPrinter. pdf_source puede ser bytes o ruta."""
+    def _imprimir_pdf_qt(self, pdf_source, printer_name: str,
+                         pagina_exacta: bool = False) -> bool:
+        """Imprime directamente vía QPrinter. pdf_source puede ser bytes o ruta.
+
+        pagina_exacta: fija en el driver el tamaño de la página del PDF (en vez
+        del papel por defecto de la cola). Necesario en impresoras de etiquetas.
+        """
         import pymupdf
-        from PyQt5.QtCore import Qt, QRect
-        from PyQt5.QtGui import QImage, QPainter
+        from PyQt5.QtCore import Qt, QRect, QSizeF
+        from PyQt5.QtGui import QImage, QPainter, QPageSize
         from PyQt5.QtPrintSupport import QPrinter, QPrinterInfo
 
         info = next(
@@ -134,6 +139,17 @@ class ImpresionService:
         with doc_ctx as doc:
             if doc.page_count == 0:
                 return False
+            if pagina_exacta:
+                # setPageSize y no setPageLayout: este último falla con márgenes
+                # 0 (menores a los mínimos del driver) y deja el papel por
+                # defecto de la cola (4x6" en la PC42t), avanzando de más.
+                r = doc[0].rect
+                ok = printer.setPageSize(QPageSize(
+                    QSizeF(r.width, r.height), QPageSize.Point,
+                    'Etiqueta', QPageSize.ExactMatch,
+                ))
+                if not ok:
+                    return False
             painter = QPainter()
             if not painter.begin(printer):
                 return False
@@ -151,9 +167,10 @@ class ImpresionService:
                 painter.end()
         return True
 
-    def _imprimir_directo(self, pdf_bytes: bytes, printer_name: str) -> bool:
+    def _imprimir_directo(self, pdf_bytes: bytes, printer_name: str,
+                          pagina_exacta: bool = False) -> bool:
         try:
-            return self._imprimir_pdf_qt(pdf_bytes, printer_name)
+            return self._imprimir_pdf_qt(pdf_bytes, printer_name, pagina_exacta)
         except Exception:
             return False
 
@@ -281,7 +298,7 @@ class ImpresionService:
                 pdf_bytes = generar_pdf_etiquetas_mateti(materiales, cfg, to_bytes=True)
                 if not pdf_bytes:
                     return None
-                if not self._imprimir_directo(pdf_bytes, printer):
+                if not self._imprimir_directo(pdf_bytes, printer, pagina_exacta=True):
                     filepath = generar_pdf_etiquetas_mateti(materiales, cfg)
                     if filepath:
                         self._abrir_pdf(filepath)

@@ -97,7 +97,7 @@
  [],
  False,
  False,
- 1791922780,
+ 1792787218,
  [('runw.exe',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\PyInstaller\\bootloader\\Windows-64bit-intel\\runw.exe',

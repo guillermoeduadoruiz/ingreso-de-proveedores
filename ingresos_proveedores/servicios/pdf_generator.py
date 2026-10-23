@@ -476,35 +476,35 @@ def _dibujar_etiqueta_mateti(c, mat, x0, y_top, etq_w, etq_h):
 def generar_pdf_etiquetas_mateti(materiales: list[dict], cfg, to_bytes: bool = False) -> str | bytes | None:
     """Genera un PDF con etiquetas de codigo de barras para materiales MATETI.
 
-    Soporta multiples columnas por pagina. El ancho de pagina se calcula
-    como columnas * ancho_etiqueta + separacion + margenes laterales.
+    Una pagina por fila de etiquetas: ancho = columnas * ancho_etiqueta +
+    separacion + margenes laterales; alto = alto_etiqueta. En rollo troquelado
+    la impresora (PC42t) sincroniza cada pagina con el gap; una pagina larga
+    con todas las filas la deja en error (LED rojo parpadeando).
+    El margen superior se aplica dentro de la etiqueta.
     """
     try:
         etq_w_mm = cfg.ancho_etiqueta_mateti or 49.0
         etq_h_mm = cfg.alto_etiqueta_mateti or 25.0
         cols = max(1, cfg.columnas_etiqueta_mateti or 2)
         sep_mm = cfg.separacion_etiqueta_mateti or 2.0
-        sep_filas_mm = getattr(cfg, 'separacion_filas_etiqueta_mateti', 2.0) or 0.0
         ml = (cfg.margen_izquierdo_etiquetas_mateti or 2.0) * mm_unit
         mr = (cfg.margen_derecho_etiquetas_mateti or 2.0) * mm_unit
         mt = (cfg.margen_superior_etiquetas_mateti or 2.0) * mm_unit
-        mb = (cfg.margen_inferior_etiquetas_mateti or 2.0) * mm_unit
 
         etq_w = etq_w_mm * mm_unit
         etq_h = etq_h_mm * mm_unit
         sep = sep_mm * mm_unit
-        sep_filas = sep_filas_mm * mm_unit
 
-        import math
         pendientes: list[dict] = []
         for mat in materiales:
             cantidad = max(1, int(mat.get('cantidad_etiquetas', 1)))
             for _ in range(cantidad):
                 pendientes.append(mat)
+        if not pendientes:
+            return None
 
-        num_filas = math.ceil(len(pendientes) / cols) if pendientes else 1
         pw = ml + cols * etq_w + (cols - 1) * sep + mr
-        ph = mt + num_filas * etq_h + max(0, num_filas - 1) * sep_filas + mb
+        ph = etq_h
 
         _buf_mat = io.BytesIO() if to_bytes else None
         filename = f'mateti_{datetime.now().strftime("%Y%m%d-%H%M%S")}.pdf'
@@ -513,12 +513,11 @@ def generar_pdf_etiquetas_mateti(materiales: list[dict], cfg, to_bytes: bool = F
 
         for i, mat in enumerate(pendientes):
             col_idx = i % cols
-            fila_idx = i // cols
             x0 = ml + col_idx * (etq_w + sep)
-            y_top = ph - mt - fila_idx * (etq_h + sep_filas)
-            _dibujar_etiqueta_mateti(c, mat, x0, y_top, etq_w, etq_h_mm)
+            _dibujar_etiqueta_mateti(c, mat, x0, ph - mt, etq_w, etq_h_mm)
+            if col_idx == cols - 1 or i == len(pendientes) - 1:
+                c.showPage()
 
-        c.showPage()
         c.save()
         if to_bytes:
             return _buf_mat.getvalue()
