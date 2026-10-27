@@ -427,7 +427,7 @@ def generar_etiquetas(
     return filepath
 
 
-def _dibujar_etiqueta_mateti(c, mat, x0, y_top, etq_w, etq_h):
+def _dibujar_etiqueta_mateti(c, mat, x0, y_top, etq_w, alto_util_mm):
     usable_w = etq_w
     cx = x0 + usable_w / 2
     ean = (mat.get('barcode', '') or '').strip()
@@ -437,7 +437,9 @@ def _dibujar_etiqueta_mateti(c, mat, x0, y_top, etq_w, etq_h):
 
     if ean:
         try:
-            bar_h = min(14.0, etq_h * 0.55) * mm_unit
+            # Debajo del codigo van 2 huecos de 1,5 mm + EAN (7pt) + descripcion (6pt)
+            textos_mm = 3.0 + 13 / mm_unit
+            bar_h = max(5.0, min(14.0, alto_util_mm - textos_mm)) * mm_unit
             bc = _bc_code128.Code128(ean, barHeight=bar_h, barWidth=0.9)
             scale = min(1.0, usable_w / bc.width) if bc.width > 0 else 1.0
             bw = bc.width * scale
@@ -480,7 +482,10 @@ def generar_pdf_etiquetas_mateti(materiales: list[dict], cfg, to_bytes: bool = F
     separacion + margenes laterales; alto = alto_etiqueta. En rollo troquelado
     la impresora (PC42t) sincroniza cada pagina con el gap; una pagina larga
     con todas las filas la deja en error (LED rojo parpadeando).
-    El margen superior se aplica dentro de la etiqueta.
+    El margen superior se aplica dentro de la etiqueta. La pagina es
+    alto_etiqueta - margen_inferior: si mide lo mismo que la etiqueta, el
+    desfase de avance se acumula y a las 2-3 etiquetas la impresora pierde el
+    gap (LED rojo). Mas corta, la PC42t se resincroniza en cada gap.
     """
     try:
         etq_w_mm = cfg.ancho_etiqueta_mateti or 49.0
@@ -489,11 +494,14 @@ def generar_pdf_etiquetas_mateti(materiales: list[dict], cfg, to_bytes: bool = F
         sep_mm = cfg.separacion_etiqueta_mateti or 2.0
         ml = (cfg.margen_izquierdo_etiquetas_mateti or 2.0) * mm_unit
         mr = (cfg.margen_derecho_etiquetas_mateti or 2.0) * mm_unit
-        mt = (cfg.margen_superior_etiquetas_mateti or 2.0) * mm_unit
+        mt_mm = cfg.margen_superior_etiquetas_mateti or 2.0
+        mb_mm = cfg.margen_inferior_etiquetas_mateti or 2.0
+        mt = mt_mm * mm_unit
 
         etq_w = etq_w_mm * mm_unit
-        etq_h = etq_h_mm * mm_unit
         sep = sep_mm * mm_unit
+        alto_pag_mm = max(10.0, etq_h_mm - mb_mm)
+        alto_util_mm = alto_pag_mm - mt_mm
 
         pendientes: list[dict] = []
         for mat in materiales:
@@ -504,7 +512,7 @@ def generar_pdf_etiquetas_mateti(materiales: list[dict], cfg, to_bytes: bool = F
             return None
 
         pw = ml + cols * etq_w + (cols - 1) * sep + mr
-        ph = etq_h
+        ph = alto_pag_mm * mm_unit
 
         _buf_mat = io.BytesIO() if to_bytes else None
         filename = f'mateti_{datetime.now().strftime("%Y%m%d-%H%M%S")}.pdf'
@@ -514,7 +522,7 @@ def generar_pdf_etiquetas_mateti(materiales: list[dict], cfg, to_bytes: bool = F
         for i, mat in enumerate(pendientes):
             col_idx = i % cols
             x0 = ml + col_idx * (etq_w + sep)
-            _dibujar_etiqueta_mateti(c, mat, x0, ph - mt, etq_w, etq_h_mm)
+            _dibujar_etiqueta_mateti(c, mat, x0, ph - mt, etq_w, alto_util_mm)
             if col_idx == cols - 1 or i == len(pendientes) - 1:
                 c.showPage()
 
