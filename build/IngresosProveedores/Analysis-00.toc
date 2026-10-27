@@ -3546,13 +3546,13 @@
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\ingresos_proveedores\\database\\__init__.py',
    'PYMODULE'),
-  ('tracemalloc',
-   'C:\\Program Files\\Python313\\Lib\\tracemalloc.py',
-   'PYMODULE'),
   ('stringprep',
    'C:\\Program Files\\Python313\\Lib\\stringprep.py',
    'PYMODULE'),
   ('_py_abc', 'C:\\Program Files\\Python313\\Lib\\_py_abc.py', 'PYMODULE'),
+  ('tracemalloc',
+   'C:\\Program Files\\Python313\\Lib\\tracemalloc.py',
+   'PYMODULE'),
   ('ui.login_dialog',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\ingresos_proveedores\\ui\\login_dialog.py',
@@ -3605,10 +3605,6 @@
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\plugins\\printsupport\\windowsprintersupport.dll',
    'BINARY'),
-  ('PyQt5\\Qt5\\plugins\\imageformats\\qwebp.dll',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\plugins\\imageformats\\qwebp.dll',
-   'BINARY'),
   ('PyQt5\\Qt5\\plugins\\generic\\qtuiotouchplugin.dll',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\plugins\\generic\\qtuiotouchplugin.dll',
@@ -3617,37 +3613,25 @@
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\plugins\\platforms\\qoffscreen.dll',
    'BINARY'),
-  ('PyQt5\\Qt5\\plugins\\imageformats\\qicns.dll',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\plugins\\imageformats\\qicns.dll',
-   'BINARY'),
-  ('PyQt5\\Qt5\\plugins\\imageformats\\qgif.dll',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\plugins\\imageformats\\qgif.dll',
-   'BINARY'),
-  ('PyQt5\\Qt5\\plugins\\platforms\\qminimal.dll',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\plugins\\platforms\\qminimal.dll',
-   'BINARY'),
   ('PyQt5\\Qt5\\plugins\\imageformats\\qwbmp.dll',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\plugins\\imageformats\\qwbmp.dll',
+   'BINARY'),
+  ('PyQt5\\Qt5\\plugins\\imageformats\\qico.dll',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\plugins\\imageformats\\qico.dll',
    'BINARY'),
   ('PyQt5\\Qt5\\plugins\\platforms\\qwebgl.dll',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\plugins\\platforms\\qwebgl.dll',
    'BINARY'),
-  ('PyQt5\\Qt5\\plugins\\iconengines\\qsvgicon.dll',
+  ('PyQt5\\Qt5\\plugins\\platforms\\qwindows.dll',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\plugins\\iconengines\\qsvgicon.dll',
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\plugins\\platforms\\qwindows.dll',
    'BINARY'),
-  ('PyQt5\\Qt5\\plugins\\imageformats\\qjpeg.dll',
+  ('PyQt5\\Qt5\\plugins\\imageformats\\qgif.dll',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\plugins\\imageformats\\qjpeg.dll',
-   'BINARY'),
-  ('PyQt5\\Qt5\\plugins\\imageformats\\qtiff.dll',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\plugins\\imageformats\\qtiff.dll',
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\plugins\\imageformats\\qgif.dll',
    'BINARY'),
   ('PyQt5\\Qt5\\plugins\\imageformats\\qsvg.dll',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
@@ -3657,17 +3641,37 @@
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\plugins\\imageformats\\qtga.dll',
    'BINARY'),
+  ('PyQt5\\Qt5\\plugins\\platforms\\qminimal.dll',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\plugins\\platforms\\qminimal.dll',
+   'BINARY'),
+  ('PyQt5\\Qt5\\plugins\\imageformats\\qwebp.dll',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\plugins\\imageformats\\qwebp.dll',
+   'BINARY'),
   ('PyQt5\\Qt5\\plugins\\platformthemes\\qxdgdesktopportal.dll',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\plugins\\platformthemes\\qxdgdesktopportal.dll',
    'BINARY'),
-  ('PyQt5\\Qt5\\plugins\\imageformats\\qico.dll',
+  ('PyQt5\\Qt5\\plugins\\imageformats\\qicns.dll',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\plugins\\imageformats\\qico.dll',
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\plugins\\imageformats\\qicns.dll',
    'BINARY'),
-  ('PyQt5\\Qt5\\plugins\\platforms\\qwindows.dll',
+  ('PyQt5\\Qt5\\plugins\\imageformats\\qtiff.dll',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\plugins\\platforms\\qwindows.dll',
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\plugins\\imageformats\\qtiff.dll',
+   'BINARY'),
+  ('PyQt5\\Qt5\\plugins\\imageformats\\qjpeg.dll',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\plugins\\imageformats\\qjpeg.dll',
+   'BINARY'),
+  ('PyQt5\\Qt5\\plugins\\iconengines\\qsvgicon.dll',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\plugins\\iconengines\\qsvgicon.dll',
+   'BINARY'),
+  ('PyQt5\\Qt5\\bin\\libEGL.dll',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\bin\\libEGL.dll',
    'BINARY'),
   ('PyQt5\\Qt5\\bin\\d3dcompiler_47.dll',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
@@ -3680,10 +3684,6 @@
   ('PyQt5\\Qt5\\bin\\libGLESv2.dll',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\bin\\libGLESv2.dll',
-   'BINARY'),
-  ('PyQt5\\Qt5\\bin\\libEGL.dll',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\bin\\libEGL.dll',
    'BINARY'),
   ('PyQt5\\Qt5\\plugins\\styles\\qwindowsvistastyle.dll',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
@@ -3920,13 +3920,13 @@
   ('VCRUNTIME140_1.dll',
    'C:\\Program Files\\Python313\\VCRUNTIME140_1.dll',
    'BINARY'),
-  ('PyQt5\\Qt5\\bin\\Qt5Gui.dll',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\bin\\Qt5Gui.dll',
-   'BINARY'),
   ('PyQt5\\Qt5\\bin\\Qt5PrintSupport.dll',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\bin\\Qt5PrintSupport.dll',
+   'BINARY'),
+  ('PyQt5\\Qt5\\bin\\Qt5Gui.dll',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\bin\\Qt5Gui.dll',
    'BINARY'),
   ('PyQt5\\Qt5\\bin\\Qt5Core.dll',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
@@ -3936,10 +3936,6 @@
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\bin\\Qt5Network.dll',
    'BINARY'),
-  ('PyQt5\\Qt5\\bin\\MSVCP140.dll',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\bin\\MSVCP140.dll',
-   'BINARY'),
   ('PyQt5\\Qt5\\bin\\Qt5Quick.dll',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\bin\\Qt5Quick.dll',
@@ -3947,6 +3943,10 @@
   ('PyQt5\\Qt5\\bin\\Qt5WebSockets.dll',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\bin\\Qt5WebSockets.dll',
+   'BINARY'),
+  ('PyQt5\\Qt5\\bin\\MSVCP140.dll',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\bin\\MSVCP140.dll',
    'BINARY'),
   ('PyQt5\\Qt5\\bin\\Qt5Svg.dll',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
@@ -3956,13 +3956,13 @@
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\bin\\Qt5DBus.dll',
    'BINARY'),
-  ('PyQt5\\Qt5\\bin\\VCRUNTIME140_1.dll',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\bin\\VCRUNTIME140_1.dll',
-   'BINARY'),
   ('PyQt5\\Qt5\\bin\\VCRUNTIME140.dll',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\bin\\VCRUNTIME140.dll',
+   'BINARY'),
+  ('PyQt5\\Qt5\\bin\\VCRUNTIME140_1.dll',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\bin\\VCRUNTIME140_1.dll',
    'BINARY'),
   ('PyQt5\\Qt5\\bin\\Qt5Widgets.dll',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
@@ -4008,492 +4008,478 @@
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\lxml\\isoschematron\\resources\\xsl\\iso-schematron-xslt1\\iso_schematron_skeleton_for_xslt1.xsl',
    'DATA'),
-  ('lxml\\isoschematron\\resources\\xsl\\RNG2Schtrn.xsl',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\lxml\\isoschematron\\resources\\xsl\\RNG2Schtrn.xsl',
-   'DATA'),
   ('lxml\\isoschematron\\resources\\xsl\\iso-schematron-xslt1\\iso_schematron_message.xsl',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\lxml\\isoschematron\\resources\\xsl\\iso-schematron-xslt1\\iso_schematron_message.xsl',
    'DATA'),
-  ('lxml\\isoschematron\\resources\\xsl\\iso-schematron-xslt1\\iso_dsdl_include.xsl',
+  ('lxml\\isoschematron\\resources\\xsl\\RNG2Schtrn.xsl',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\lxml\\isoschematron\\resources\\xsl\\iso-schematron-xslt1\\iso_dsdl_include.xsl',
-   'DATA'),
-  ('lxml\\isoschematron\\resources\\xsl\\iso-schematron-xslt1\\iso_svrl_for_xslt1.xsl',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\lxml\\isoschematron\\resources\\xsl\\iso-schematron-xslt1\\iso_svrl_for_xslt1.xsl',
-   'DATA'),
-  ('lxml\\isoschematron\\resources\\xsl\\XSD2Schtrn.xsl',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\lxml\\isoschematron\\resources\\xsl\\XSD2Schtrn.xsl',
-   'DATA'),
-  ('lxml\\isoschematron\\resources\\xsl\\iso-schematron-xslt1\\readme.txt',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\lxml\\isoschematron\\resources\\xsl\\iso-schematron-xslt1\\readme.txt',
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\isoschematron\\resources\\xsl\\RNG2Schtrn.xsl',
    'DATA'),
   ('lxml\\isoschematron\\resources\\xsl\\iso-schematron-xslt1\\iso_abstract_expand.xsl',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\lxml\\isoschematron\\resources\\xsl\\iso-schematron-xslt1\\iso_abstract_expand.xsl',
    'DATA'),
+  ('lxml\\isoschematron\\resources\\xsl\\iso-schematron-xslt1\\readme.txt',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\isoschematron\\resources\\xsl\\iso-schematron-xslt1\\readme.txt',
+   'DATA'),
+  ('lxml\\isoschematron\\resources\\xsl\\iso-schematron-xslt1\\iso_svrl_for_xslt1.xsl',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\isoschematron\\resources\\xsl\\iso-schematron-xslt1\\iso_svrl_for_xslt1.xsl',
+   'DATA'),
+  ('lxml\\isoschematron\\resources\\xsl\\iso-schematron-xslt1\\iso_dsdl_include.xsl',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\isoschematron\\resources\\xsl\\iso-schematron-xslt1\\iso_dsdl_include.xsl',
+   'DATA'),
   ('lxml\\isoschematron\\resources\\rng\\iso-schematron.rng',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\lxml\\isoschematron\\resources\\rng\\iso-schematron.rng',
    'DATA'),
-  ('cryptography-49.0.0.dist-info\\sboms\\cryptography-rust.cyclonedx.json',
+  ('lxml\\isoschematron\\resources\\xsl\\XSD2Schtrn.xsl',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\cryptography-49.0.0.dist-info\\sboms\\cryptography-rust.cyclonedx.json',
-   'DATA'),
-  ('cryptography-49.0.0.dist-info\\licenses\\LICENSE',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\cryptography-49.0.0.dist-info\\licenses\\LICENSE',
+   'proveedores\\.venv\\Lib\\site-packages\\lxml\\isoschematron\\resources\\xsl\\XSD2Schtrn.xsl',
    'DATA'),
   ('cryptography-49.0.0.dist-info\\INSTALLER',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\cryptography-49.0.0.dist-info\\INSTALLER',
    'DATA'),
-  ('cryptography-49.0.0.dist-info\\RECORD',
+  ('cryptography-49.0.0.dist-info\\licenses\\LICENSE.BSD',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\cryptography-49.0.0.dist-info\\RECORD',
+   'proveedores\\.venv\\Lib\\site-packages\\cryptography-49.0.0.dist-info\\licenses\\LICENSE.BSD',
+   'DATA'),
+  ('cryptography-49.0.0.dist-info\\sboms\\cryptography-rust.cyclonedx.json',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\cryptography-49.0.0.dist-info\\sboms\\cryptography-rust.cyclonedx.json',
    'DATA'),
   ('cryptography-49.0.0.dist-info\\REQUESTED',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\cryptography-49.0.0.dist-info\\REQUESTED',
    'DATA'),
-  ('cryptography-49.0.0.dist-info\\METADATA',
+  ('cryptography-49.0.0.dist-info\\licenses\\LICENSE',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\cryptography-49.0.0.dist-info\\METADATA',
-   'DATA'),
-  ('cryptography-49.0.0.dist-info\\licenses\\LICENSE.BSD',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\cryptography-49.0.0.dist-info\\licenses\\LICENSE.BSD',
-   'DATA'),
-  ('cryptography-49.0.0.dist-info\\WHEEL',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\cryptography-49.0.0.dist-info\\WHEEL',
+   'proveedores\\.venv\\Lib\\site-packages\\cryptography-49.0.0.dist-info\\licenses\\LICENSE',
    'DATA'),
   ('cryptography-49.0.0.dist-info\\sboms\\sbom.json',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\cryptography-49.0.0.dist-info\\sboms\\sbom.json',
    'DATA'),
+  ('cryptography-49.0.0.dist-info\\METADATA',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\cryptography-49.0.0.dist-info\\METADATA',
+   'DATA'),
+  ('cryptography-49.0.0.dist-info\\WHEEL',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\cryptography-49.0.0.dist-info\\WHEEL',
+   'DATA'),
+  ('cryptography-49.0.0.dist-info\\RECORD',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\cryptography-49.0.0.dist-info\\RECORD',
+   'DATA'),
   ('cryptography-49.0.0.dist-info\\licenses\\LICENSE.APACHE',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\cryptography-49.0.0.dist-info\\licenses\\LICENSE.APACHE',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_fi.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_fi.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qtbase_da.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_da.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_help_es.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_es.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_help_ca.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_ca.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_help_uk.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_uk.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_help_zh_TW.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_zh_TW.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_zh_CN.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_zh_CN.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_ko.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_ko.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qtbase_ca.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_ca.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qtbase_he.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_he.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_help_pl.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_pl.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_sl.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_sl.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_sk.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_sk.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_he.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_he.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_help_cs.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_cs.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_hu.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_hu.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_help_ru.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_ru.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_help_sl.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_sl.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_cs.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_cs.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_help_zh_CN.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_zh_CN.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_uk.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_uk.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_bg.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_bg.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qtbase_fr.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_fr.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_help_ko.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_ko.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_de.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_de.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_help_gl.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_gl.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_gd.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_gd.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_zh_TW.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_zh_TW.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qtbase_cs.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_cs.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_help_tr.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_tr.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_help_it.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_it.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qtbase_es.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_es.qm',
    'DATA'),
   ('PyQt5\\Qt5\\translations\\qtbase_gd.qm',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_gd.qm',
    'DATA'),
-  ('PyQt5\\Qt5\\translations\\qtbase_ja.qm',
+  ('PyQt5\\Qt5\\translations\\qtbase_ca.qm',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_ja.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qtbase_fi.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_fi.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qtbase_sk.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_sk.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_help_en.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_en.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qtbase_ar.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_ar.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qtbase_uk.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_uk.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_ar.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_ar.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_pl.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_pl.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qtbase_ru.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_ru.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qtbase_zh_TW.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_zh_TW.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_it.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_it.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_tr.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_tr.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_da.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_da.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qtbase_de.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_de.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qtbase_hu.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_hu.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qtbase_ko.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_ko.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_sv.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_sv.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_ja.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_ja.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_pt.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_pt.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_fr.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_fr.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_fa.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_fa.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_help_ar.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_ar.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_es.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_es.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qtbase_bg.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_bg.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_gl.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_gl.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_ca.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_ca.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qtbase_en.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_en.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qtbase_lv.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_lv.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_help_sk.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_sk.qm',
-   'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_help_bg.qm',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_bg.qm',
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_ca.qm',
    'DATA'),
   ('PyQt5\\Qt5\\translations\\qt_help_hu.qm',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_hu.qm',
    'DATA'),
-  ('PyQt5\\Qt5\\translations\\qtbase_tr.qm',
+  ('PyQt5\\Qt5\\translations\\qt_ar.qm',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_tr.qm',
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_ar.qm',
    'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_en.qm',
+  ('PyQt5\\Qt5\\translations\\qt_help_zh_TW.qm',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_en.qm',
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_zh_TW.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qtbase_bg.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_bg.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qtbase_es.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_es.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_help_en.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_en.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_help_uk.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_uk.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_ko.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_ko.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_he.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_he.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_help_sk.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_sk.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qtbase_ar.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_ar.qm',
    'DATA'),
   ('PyQt5\\Qt5\\translations\\qt_lv.qm',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_lv.qm',
    'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_help_de.qm',
+  ('PyQt5\\Qt5\\translations\\qt_sk.qm',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_de.qm',
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_sk.qm',
    'DATA'),
-  ('PyQt5\\Qt5\\translations\\qtbase_pl.qm',
+  ('PyQt5\\Qt5\\translations\\qt_ca.qm',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_pl.qm',
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_ca.qm',
    'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_help_fr.qm',
+  ('PyQt5\\Qt5\\translations\\qt_uk.qm',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_fr.qm',
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_uk.qm',
    'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_help_da.qm',
+  ('PyQt5\\Qt5\\translations\\qt_cs.qm',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_da.qm',
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_cs.qm',
    'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_ru.qm',
+  ('PyQt5\\Qt5\\translations\\qt_help_ko.qm',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_ru.qm',
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_ko.qm',
    'DATA'),
-  ('PyQt5\\Qt5\\translations\\qt_help_ja.qm',
+  ('PyQt5\\Qt5\\translations\\qt_pt.qm',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_ja.qm',
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_pt.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qtbase_sk.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_sk.qm',
    'DATA'),
   ('PyQt5\\Qt5\\translations\\qtbase_it.qm',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_it.qm',
    'DATA'),
+  ('PyQt5\\Qt5\\translations\\qtbase_ko.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_ko.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_help_ru.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_ru.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_pl.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_pl.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_help_de.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_de.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qtbase_he.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_he.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qtbase_fi.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_fi.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_help_es.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_es.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qtbase_hu.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_hu.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_de.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_de.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_fi.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_fi.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qtbase_fr.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_fr.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qtbase_cs.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_cs.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_help_it.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_it.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_zh_CN.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_zh_CN.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_help_cs.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_cs.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qtbase_da.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_da.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qtbase_uk.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_uk.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_help_fr.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_fr.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_help_gl.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_gl.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_help_bg.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_bg.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_tr.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_tr.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_hu.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_hu.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_gd.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_gd.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_es.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_es.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_it.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_it.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_help_tr.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_tr.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qtbase_ja.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_ja.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_da.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_da.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_help_sl.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_sl.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_help_ca.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_ca.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_fa.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_fa.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qtbase_zh_TW.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_zh_TW.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_en.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_en.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_gl.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_gl.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_ja.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_ja.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qtbase_lv.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_lv.qm',
+   'DATA'),
   ('PyQt5\\Qt5\\translations\\qt_lt.qm',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_lt.qm',
    'DATA'),
-  ('numpy-2.5.1.dist-info\\licenses\\numpy\\fft\\pocketfft\\LICENSE.md',
+  ('PyQt5\\Qt5\\translations\\qt_help_pl.qm',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\licenses\\numpy\\fft\\pocketfft\\LICENSE.md',
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_pl.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qtbase_de.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_de.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_sv.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_sv.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_sl.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_sl.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qtbase_ru.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_ru.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_help_ar.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_ar.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_help_ja.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_ja.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qtbase_en.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_en.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qtbase_tr.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_tr.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_help_zh_CN.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_zh_CN.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_ru.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_ru.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_fr.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_fr.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qtbase_pl.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qtbase_pl.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_bg.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_bg.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_help_da.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_help_da.qm',
+   'DATA'),
+  ('PyQt5\\Qt5\\translations\\qt_zh_TW.qm',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\PyQt5\\Qt5\\translations\\qt_zh_TW.qm',
    'DATA'),
   ('numpy-2.5.1.dist-info\\licenses\\numpy\\_core\\src\\highway\\LICENSE',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\licenses\\numpy\\_core\\src\\highway\\LICENSE',
    'DATA'),
-  ('numpy-2.5.1.dist-info\\licenses\\numpy\\_core\\src\\multiarray\\dragon4_LICENSE.txt',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\licenses\\numpy\\_core\\src\\multiarray\\dragon4_LICENSE.txt',
-   'DATA'),
-  ('numpy-2.5.1.dist-info\\licenses\\numpy\\random\\LICENSE.md',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\licenses\\numpy\\random\\LICENSE.md',
-   'DATA'),
-  ('numpy-2.5.1.dist-info\\METADATA',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\METADATA',
-   'DATA'),
-  ('numpy-2.5.1.dist-info\\INSTALLER',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\INSTALLER',
-   'DATA'),
-  ('numpy-2.5.1.dist-info\\WHEEL',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\WHEEL',
-   'DATA'),
-  ('numpy-2.5.1.dist-info\\RECORD',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\RECORD',
-   'DATA'),
   ('numpy-2.5.1.dist-info\\licenses\\numpy\\linalg\\lapack_lite\\LICENSE.txt',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\licenses\\numpy\\linalg\\lapack_lite\\LICENSE.txt',
-   'DATA'),
-  ('numpy-2.5.1.dist-info\\DELVEWHEEL',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\DELVEWHEEL',
-   'DATA'),
-  ('numpy-2.5.1.dist-info\\licenses\\numpy\\_core\\src\\npysort\\x86-simd-sort\\LICENSE.md',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\licenses\\numpy\\_core\\src\\npysort\\x86-simd-sort\\LICENSE.md',
-   'DATA'),
-  ('numpy-2.5.1.dist-info\\entry_points.txt',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\entry_points.txt',
-   'DATA'),
-  ('numpy-2.5.1.dist-info\\licenses\\numpy\\random\\src\\pcg64\\LICENSE.md',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\licenses\\numpy\\random\\src\\pcg64\\LICENSE.md',
-   'DATA'),
-  ('numpy-2.5.1.dist-info\\licenses\\numpy\\ma\\LICENSE',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\licenses\\numpy\\ma\\LICENSE',
-   'DATA'),
-  ('numpy-2.5.1.dist-info\\licenses\\LICENSE.txt',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\licenses\\LICENSE.txt',
-   'DATA'),
-  ('numpy-2.5.1.dist-info\\licenses\\numpy\\random\\src\\distributions\\LICENSE.md',
-   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\licenses\\numpy\\random\\src\\distributions\\LICENSE.md',
    'DATA'),
   ('numpy-2.5.1.dist-info\\licenses\\numpy\\_core\\include\\numpy\\libdivide\\LICENSE.txt',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\licenses\\numpy\\_core\\include\\numpy\\libdivide\\LICENSE.txt',
    'DATA'),
+  ('numpy-2.5.1.dist-info\\licenses\\numpy\\_core\\src\\multiarray\\dragon4_LICENSE.txt',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\licenses\\numpy\\_core\\src\\multiarray\\dragon4_LICENSE.txt',
+   'DATA'),
+  ('numpy-2.5.1.dist-info\\licenses\\numpy\\random\\src\\distributions\\LICENSE.md',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\licenses\\numpy\\random\\src\\distributions\\LICENSE.md',
+   'DATA'),
+  ('numpy-2.5.1.dist-info\\entry_points.txt',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\entry_points.txt',
+   'DATA'),
   ('numpy-2.5.1.dist-info\\licenses\\numpy\\random\\src\\sfc64\\LICENSE.md',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\licenses\\numpy\\random\\src\\sfc64\\LICENSE.md',
    'DATA'),
-  ('numpy-2.5.1.dist-info\\licenses\\numpy\\random\\src\\mt19937\\LICENSE.md',
+  ('numpy-2.5.1.dist-info\\licenses\\numpy\\ma\\LICENSE',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\licenses\\numpy\\random\\src\\mt19937\\LICENSE.md',
+   'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\licenses\\numpy\\ma\\LICENSE',
    'DATA'),
-  ('numpy-2.5.1.dist-info\\licenses\\numpy\\_core\\src\\umath\\svml\\LICENSE',
+  ('numpy-2.5.1.dist-info\\METADATA',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
-   'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\licenses\\numpy\\_core\\src\\umath\\svml\\LICENSE',
+   'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\METADATA',
    'DATA'),
   ('numpy-2.5.1.dist-info\\licenses\\numpy\\random\\src\\philox\\LICENSE.md',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\licenses\\numpy\\random\\src\\philox\\LICENSE.md',
    'DATA'),
+  ('numpy-2.5.1.dist-info\\WHEEL',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\WHEEL',
+   'DATA'),
+  ('numpy-2.5.1.dist-info\\licenses\\numpy\\fft\\pocketfft\\LICENSE.md',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\licenses\\numpy\\fft\\pocketfft\\LICENSE.md',
+   'DATA'),
+  ('numpy-2.5.1.dist-info\\RECORD',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\RECORD',
+   'DATA'),
   ('numpy-2.5.1.dist-info\\licenses\\numpy\\random\\src\\splitmix64\\LICENSE.md',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\licenses\\numpy\\random\\src\\splitmix64\\LICENSE.md',
+   'DATA'),
+  ('numpy-2.5.1.dist-info\\licenses\\numpy\\random\\LICENSE.md',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\licenses\\numpy\\random\\LICENSE.md',
+   'DATA'),
+  ('numpy-2.5.1.dist-info\\licenses\\LICENSE.txt',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\licenses\\LICENSE.txt',
+   'DATA'),
+  ('numpy-2.5.1.dist-info\\licenses\\numpy\\_core\\src\\umath\\svml\\LICENSE',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\licenses\\numpy\\_core\\src\\umath\\svml\\LICENSE',
+   'DATA'),
+  ('numpy-2.5.1.dist-info\\licenses\\numpy\\random\\src\\pcg64\\LICENSE.md',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\licenses\\numpy\\random\\src\\pcg64\\LICENSE.md',
    'DATA'),
   ('numpy-2.5.1.dist-info\\licenses\\numpy\\_core\\src\\common\\pythoncapi-compat\\COPYING',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\licenses\\numpy\\_core\\src\\common\\pythoncapi-compat\\COPYING',
    'DATA'),
+  ('numpy-2.5.1.dist-info\\licenses\\numpy\\random\\src\\mt19937\\LICENSE.md',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\licenses\\numpy\\random\\src\\mt19937\\LICENSE.md',
+   'DATA'),
+  ('numpy-2.5.1.dist-info\\licenses\\numpy\\_core\\src\\npysort\\x86-simd-sort\\LICENSE.md',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\licenses\\numpy\\_core\\src\\npysort\\x86-simd-sort\\LICENSE.md',
+   'DATA'),
+  ('numpy-2.5.1.dist-info\\INSTALLER',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\INSTALLER',
+   'DATA'),
+  ('numpy-2.5.1.dist-info\\DELVEWHEEL',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\.venv\\Lib\\site-packages\\numpy-2.5.1.dist-info\\DELVEWHEEL',
+   'DATA'),
   ('base_library.zip',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\build\\IngresosProveedores\\base_library.zip',
    'DATA')],
- [('heapq', 'C:\\Program Files\\Python313\\Lib\\heapq.py', 'PYMODULE'),
-  ('warnings', 'C:\\Program Files\\Python313\\Lib\\warnings.py', 'PYMODULE'),
-  ('sre_constants',
-   'C:\\Program Files\\Python313\\Lib\\sre_constants.py',
-   'PYMODULE'),
-  ('locale', 'C:\\Program Files\\Python313\\Lib\\locale.py', 'PYMODULE'),
-  ('functools', 'C:\\Program Files\\Python313\\Lib\\functools.py', 'PYMODULE'),
-  ('sre_compile',
-   'C:\\Program Files\\Python313\\Lib\\sre_compile.py',
-   'PYMODULE'),
-  ('types', 'C:\\Program Files\\Python313\\Lib\\types.py', 'PYMODULE'),
-  ('genericpath',
-   'C:\\Program Files\\Python313\\Lib\\genericpath.py',
-   'PYMODULE'),
+ [('weakref', 'C:\\Program Files\\Python313\\Lib\\weakref.py', 'PYMODULE'),
+  ('operator', 'C:\\Program Files\\Python313\\Lib\\operator.py', 'PYMODULE'),
   ('linecache', 'C:\\Program Files\\Python313\\Lib\\linecache.py', 'PYMODULE'),
-  ('collections',
-   'C:\\Program Files\\Python313\\Lib\\collections\\__init__.py',
-   'PYMODULE'),
+  ('stat', 'C:\\Program Files\\Python313\\Lib\\stat.py', 'PYMODULE'),
   ('re._parser',
    'C:\\Program Files\\Python313\\Lib\\re\\_parser.py',
    'PYMODULE'),
@@ -4507,7 +4493,12 @@
    'C:\\Program Files\\Python313\\Lib\\re\\_casefix.py',
    'PYMODULE'),
   ('re', 'C:\\Program Files\\Python313\\Lib\\re\\__init__.py', 'PYMODULE'),
-  ('reprlib', 'C:\\Program Files\\Python313\\Lib\\reprlib.py', 'PYMODULE'),
+  ('_collections_abc',
+   'C:\\Program Files\\Python313\\Lib\\_collections_abc.py',
+   'PYMODULE'),
+  ('sre_compile',
+   'C:\\Program Files\\Python313\\Lib\\sre_compile.py',
+   'PYMODULE'),
   ('encodings.zlib_codec',
    'C:\\Program Files\\Python313\\Lib\\encodings\\zlib_codec.py',
    'PYMODULE'),
@@ -4874,23 +4865,32 @@
   ('encodings',
    'C:\\Program Files\\Python313\\Lib\\encodings\\__init__.py',
    'PYMODULE'),
-  ('abc', 'C:\\Program Files\\Python313\\Lib\\abc.py', 'PYMODULE'),
-  ('weakref', 'C:\\Program Files\\Python313\\Lib\\weakref.py', 'PYMODULE'),
+  ('genericpath',
+   'C:\\Program Files\\Python313\\Lib\\genericpath.py',
+   'PYMODULE'),
   ('enum', 'C:\\Program Files\\Python313\\Lib\\enum.py', 'PYMODULE'),
+  ('abc', 'C:\\Program Files\\Python313\\Lib\\abc.py', 'PYMODULE'),
+  ('io', 'C:\\Program Files\\Python313\\Lib\\io.py', 'PYMODULE'),
+  ('ntpath', 'C:\\Program Files\\Python313\\Lib\\ntpath.py', 'PYMODULE'),
+  ('traceback', 'C:\\Program Files\\Python313\\Lib\\traceback.py', 'PYMODULE'),
   ('keyword', 'C:\\Program Files\\Python313\\Lib\\keyword.py', 'PYMODULE'),
-  ('operator', 'C:\\Program Files\\Python313\\Lib\\operator.py', 'PYMODULE'),
+  ('functools', 'C:\\Program Files\\Python313\\Lib\\functools.py', 'PYMODULE'),
+  ('codecs', 'C:\\Program Files\\Python313\\Lib\\codecs.py', 'PYMODULE'),
+  ('warnings', 'C:\\Program Files\\Python313\\Lib\\warnings.py', 'PYMODULE'),
+  ('locale', 'C:\\Program Files\\Python313\\Lib\\locale.py', 'PYMODULE'),
+  ('types', 'C:\\Program Files\\Python313\\Lib\\types.py', 'PYMODULE'),
+  ('collections',
+   'C:\\Program Files\\Python313\\Lib\\collections\\__init__.py',
+   'PYMODULE'),
   ('_weakrefset',
    'C:\\Program Files\\Python313\\Lib\\_weakrefset.py',
    'PYMODULE'),
-  ('traceback', 'C:\\Program Files\\Python313\\Lib\\traceback.py', 'PYMODULE'),
-  ('sre_parse', 'C:\\Program Files\\Python313\\Lib\\sre_parse.py', 'PYMODULE'),
-  ('codecs', 'C:\\Program Files\\Python313\\Lib\\codecs.py', 'PYMODULE'),
-  ('stat', 'C:\\Program Files\\Python313\\Lib\\stat.py', 'PYMODULE'),
-  ('io', 'C:\\Program Files\\Python313\\Lib\\io.py', 'PYMODULE'),
   ('posixpath', 'C:\\Program Files\\Python313\\Lib\\posixpath.py', 'PYMODULE'),
-  ('ntpath', 'C:\\Program Files\\Python313\\Lib\\ntpath.py', 'PYMODULE'),
+  ('heapq', 'C:\\Program Files\\Python313\\Lib\\heapq.py', 'PYMODULE'),
+  ('sre_parse', 'C:\\Program Files\\Python313\\Lib\\sre_parse.py', 'PYMODULE'),
   ('copyreg', 'C:\\Program Files\\Python313\\Lib\\copyreg.py', 'PYMODULE'),
-  ('_collections_abc',
-   'C:\\Program Files\\Python313\\Lib\\_collections_abc.py',
+  ('sre_constants',
+   'C:\\Program Files\\Python313\\Lib\\sre_constants.py',
    'PYMODULE'),
+  ('reprlib', 'C:\\Program Files\\Python313\\Lib\\reprlib.py', 'PYMODULE'),
   ('os', 'C:\\Program Files\\Python313\\Lib\\os.py', 'PYMODULE')])
