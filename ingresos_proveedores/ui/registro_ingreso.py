@@ -108,7 +108,7 @@ class RegistroIngresoWidget(QWidget):
         for i, r in enumerate(self._remitos):
             self.tabla_remitos.setItem(i, 0, QTableWidgetItem(r.num_remito))
             self.tabla_remitos.setItem(i, 1, QTableWidgetItem(r.fecha_remito.strftime('%d/%m/%Y')))
-            self.tabla_remitos.setItem(i, 2, QTableWidgetItem(str(r.cantidad_bultos)))
+            self.tabla_remitos.setItem(i, 2, QTableWidgetItem(r.texto_bultos))
             self.tabla_remitos.setItem(i, 3, QTableWidgetItem(str(r.cantidad_unidades)))
             total_vd = r.valor_declarado_total
             item_vd = QTableWidgetItem(f'${total_vd:,.2f}' if total_vd > 0 else '-')

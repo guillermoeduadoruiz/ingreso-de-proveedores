@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtCore import Qt, QDate, QEvent, QRegExp
 from PyQt5.QtGui import QFontMetrics, QRegExpValidator
 from modelos.proveedor import Proveedor
-from modelos.remito import Remito
+from modelos.remito import Remito, destinos_sin_bultos
 from modelos.recepcion import RecepcionPrevista
 from servicios.ingreso_svc import IngresoService
 
@@ -77,10 +77,17 @@ class IngresoRemitosWidget(QWidget):
         fila2 = QHBoxLayout()
         fila2.addWidget(QLabel('Bultos:'))
         self.spn_bultos = QSpinBox()
-        self.spn_bultos.setMinimum(1)
+        self.spn_bultos.setMinimum(0)
         self.spn_bultos.setMaximum(99999)
         self.spn_bultos.setValue(1)
-        self.spn_bultos.setMinimumWidth(80)
+        self.spn_bultos.setMinimumWidth(130)
+        # 0 = el remito viaja dentro del bulto de otro remito del mismo proveedor/destino.
+        self.spn_bultos.setSpecialValueText('0 (en otro bulto)')
+        self.spn_bultos.setToolTip(
+            'Cantidad de bultos físicos de este remito.\n'
+            'Usar 0 si el remito viaja dentro del bulto de otro remito\n'
+            '(los remitos de un mismo bulto deben ir al mismo destino).'
+        )
         fila2.addWidget(self.spn_bultos)
         fila2.addWidget(QLabel('Unidades:'))
         self.spn_unidades = QSpinBox()
@@ -300,7 +307,7 @@ class IngresoRemitosWidget(QWidget):
         for i, r in enumerate(self._remitos):
             self.tabla_remitos.setItem(i, 0, QTableWidgetItem(r.num_remito))
             self.tabla_remitos.setItem(i, 1, QTableWidgetItem(r.fecha_remito.strftime('%d/%m/%Y')))
-            self.tabla_remitos.setItem(i, 2, QTableWidgetItem(str(r.cantidad_bultos)))
+            self.tabla_remitos.setItem(i, 2, QTableWidgetItem(r.texto_bultos))
             self.tabla_remitos.setItem(i, 3, QTableWidgetItem(str(r.cantidad_unidades)))
             total_vd = r.valor_declarado_total
             item_vd = QTableWidgetItem(f'${total_vd:,.2f}' if total_vd > 0 else '-')
@@ -374,6 +381,16 @@ class IngresoRemitosWidget(QWidget):
         if fecha_ingreso_cd > date.today():
             QMessageBox.warning(self, 'Validación', 'La fecha de ingreso al CD no puede ser futura.')
             self.dte_fecha_ingreso.setFocus()
+            return
+        sin_bultos = destinos_sin_bultos(self._remitos)
+        if sin_bultos:
+            QMessageBox.warning(
+                self, 'Validación',
+                'Los siguientes destinos tienen todos sus remitos con 0 bultos:\n\n'
+                + '\n'.join(f'  • {d}' for d in sin_bultos)
+                + '\n\nAl menos un remito de cada destino debe indicar los bultos físicos '
+                '(los demás remitos del mismo bulto se cargan con 0).'
+            )
             return
         self._on_continuar_callback(self._remitos, fecha_ingreso_cd)
 
