@@ -92,6 +92,18 @@ Dos scripts (ambos borran `build/` y `dist/` primero):
 - **LED rojo, 2ª prueba (2026-09-24):** con `ETQ_TOPE_SUP_MM = 1.0` (máx. 149 mm) una reimpresión de 3 etiquetas imprimió las 3, pero la impresora entró en error justo después de la 3/3. Se interpreta como desfase acumulado: la zona útil real es menor a 150 mm, así que cada etiqueta se pasa 1-2 mm y en la 3ª ya no encuentra el gap. Se subió `ETQ_TOPE_SUP_MM` a 5.0 (máx. 145 mm) y la regla bajo el título se bajó 1,5 mm para no tocar el título, que ahora queda más abajo. Si el error persiste (aunque sea más tarde), probar calibrar el medio en la PC42t o subir más el tope; si vuelve igual, descartar la hipótesis con un job de 3 etiquetas con un solo texto centrado.
 - **MATETI: LED rojo tras 2-3 etiquetas (2026-10-27).** Mismo patrón que el anterior pero por driver Windows (PDF → QPrinter): cada página medía exactamente `alto_etiqueta_mateti` (25 mm), así que cualquier avance de más se acumulaba y la PC42t perdía el gap a las 2-3 filas (al azar). Fix en `generar_pdf_etiquetas_mateti`: la página ahora mide `alto_etiqueta_mateti - margen_inferior_etiquetas_mateti` (23 mm con WorkConfig) y la altura del código de barras se calcula para que el contenido entre en ese alto. Si el error persiste, subir `margen_inferior_etiquetas_mateti` (3-4 mm) y/o recalibrar el medio en la PC42t. **✅ Validado en impresora real (2026-10-27): 8 etiquetas OK.** Medidas reales del rollo confirmadas con lupa: etiqueta 49 × 25 mm, 3 mm entre columnas, 2,5 mm entre filas.
 
+## 7b. Carga de remitos — varios remitos en un mismo bulto (2026-11-13)
+
+- **Caso:** un mismo proveedor envía **más de un remito dentro de un solo bulto físico**. Antes, cada remito exigía ≥1 bulto (`spn_bultos.setMinimum(1)`), y como el total de bultos por destino es la **suma** de `cantidad_bultos` de sus remitos (`ImpresionService._agrupar_por_destino`), 3 remitos en 1 caja daban "Total Bultos: 3" en el remito generado y 3 etiquetas (1/3, 2/3, 3/3).
+- **Solución elegida:** el remito que "lleva" el bulto se carga con los bultos reales y los demás remitos de esa caja con **0 bultos** (ej. 1, 0, 0 → 1 bulto, 1 etiqueta 1/1). También cubre casos mixtos (3 remitos en 2 cajas → 1, 1, 0). Se descartó modelar el bulto como entidad propia (tabla bulto ↔ remitos N:M): no hacía falta saber qué remito va en qué caja y requería cambiar esquema, UI e impresión.
+- **Supuesto confirmado por el usuario:** los remitos que comparten un bulto **siempre van al mismo destino**.
+- **Cambios (`fbb528c`):**
+  - `ui/ingreso_remitos.py`: `spn_bultos` acepta 0 (valor por defecto sigue en 1) y lo muestra como `"0 (en otro bulto)"` (`setSpecialValueText`), con tooltip explicativo; ancho mínimo 130 px para que entre el texto.
+  - `modelos/remito.py`: propiedad `Remito.texto_bultos` (grillas de `ingreso_remitos.py` y `registro_ingreso.py` muestran "0 (en otro bulto)") y función `destinos_sin_bultos(remitos)`.
+  - **Validación** en `IngresoRemitosWidget._continuar`: si algún destino (`sucursal_destino` de las recepciones) suma 0 bultos entre todos sus remitos, se bloquea con un aviso que lista los destinos. Así nunca se genera un remito con "Total Bultos: 0" ni un job de etiquetas vacío.
+- **Sin cambios necesarios:** MySQL (`cantidad_bultos INT NOT NULL` acepta 0), sumas de `impresion_svc`, PDF de remito (el remito con 0 aparece igual en su fila, con 0 en la columna Bultos), etiquetas DP/PDF (usan `total_bultos` del destino), consultas.
+- **Pendiente:** validar en uso real (cargar 1, 0, 0 a un destino y verificar 1 etiqueta y "Total Bultos: 1").
+
 ## 8. Estado actual del trabajo
 
 - Un solo commit en git: `aff527c Primer commit: versión inicial del proyecto`.
