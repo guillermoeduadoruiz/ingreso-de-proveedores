@@ -13,6 +13,7 @@ mkdir "%DIST%\pdfs\remitos"
 mkdir "%DIST%\pdfs\etiquetas"
 mkdir "%DIST%\pdfs\hojas_ruta"
 mkdir "%DIST%\ingresos_proveedores"
+mkdir "%DIST%\ingresos_proveedores\assets"
 mkdir "%DIST%\ingresos_proveedores\config"
 mkdir "%DIST%\ingresos_proveedores\database"
 mkdir "%DIST%\ingresos_proveedores\modelos"
@@ -23,10 +24,14 @@ mkdir "%DIST%\configurador"
 
 echo === Copiando archivos raiz ===
 copy "%ROOT%requirements.txt" "%DIST%\" >nul
+copy "%ROOT%config_setup.json" "%DIST%\" >nul
 
 echo === Copiando assets ===
 copy "%ROOT%ingresos_proveedores\assets\logo-cuspide.jpg" "%DIST%\assets\" >nul
 copy "%ROOT%ingresos_proveedores\assets\manual.html" "%DIST%\assets\" >nul
+rem Desde codigo fuente la app busca los assets en ingresos_proveedores\assets (utils\paths.py)
+copy "%ROOT%ingresos_proveedores\assets\logo-cuspide.jpg" "%DIST%\ingresos_proveedores\assets\" >nul
+copy "%ROOT%ingresos_proveedores\assets\manual.html" "%DIST%\ingresos_proveedores\assets\" >nul
 
 echo === Copiando package principal ===
 copy "%ROOT%ingresos_proveedores\__init__.py" "%DIST%\ingresos_proveedores\" >nul
@@ -86,12 +91,12 @@ echo === Creando Lanzador.bat ===
 echo @echo off
 echo cd /d "%%~dp0"
 echo python ingresos_proveedores\main.py
-echo if errorlevel 1 (
+echo if errorlevel 1 ^(
 echo     echo.
 echo     echo Error al iniciar la aplicacion.
 echo     echo Verifique que Python y las dependencias esten instaladas.
 echo     pause
-echo )
+echo ^)
 ) > "%DIST%\IngresosProveedores.bat"
 
 echo === Creando Lanzador Configurador.bat ===
@@ -99,11 +104,11 @@ echo === Creando Lanzador Configurador.bat ===
 echo @echo off
 echo cd /d "%%~dp0"
 echo python configurador\main.py
-echo if errorlevel 1 (
+echo if errorlevel 1 ^(
 echo     echo.
 echo     echo Error al iniciar el configurador.
 echo     pause
-echo )
+echo ^)
 ) > "%DIST%\Configurador.bat"
 
 echo === Creando Instalar Dependencias.bat ===
@@ -131,8 +136,8 @@ echo.
 echo 1. REQUISITOS PREVIOS:
 echo    - Python 3.10 o superior instalado
 echo    - ODBC Driver 17 for SQL Server
-echo      (descargar desde Microsoft)
-echo    - MySQL Connector (se instala con pip)
+echo      ^(descargar desde Microsoft^)
+echo    - MySQL Connector ^(se instala con pip^)
 echo.
 echo 2. INSTALACION:
 echo    - Ejecutar "Instalar Dependencias.bat"
