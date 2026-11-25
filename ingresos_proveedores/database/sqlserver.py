@@ -323,6 +323,28 @@ class SQLServerConnection:
             'distrito': row[4] or '',
         }
 
+    def get_transportes_clientes(self, nums_cliente: list[str]) -> dict[str, str]:
+        """Descripción del transporte por defecto de cada cliente (NumCliente → ctTransporte.Descripcion)."""
+        nums = sorted({n for n in nums_cliente if n})
+        if not nums:
+            return {}
+        conn = self.connect()
+        cursor = conn.cursor()
+        result: dict[str, str] = {}
+        for i in range(0, len(nums), 500):
+            lote = nums[i:i + 500]
+            cursor.execute(
+                'SELECT C.NumCliente, T.Descripcion '
+                'FROM clientes C WITH(NOLOCK) '
+                'LEFT JOIN ctTransporte T WITH(NOLOCK) ON T.IdTransporte = C.TransporteDefault '
+                f'WHERE C.NumCliente IN ({",".join("?" * len(lote))})',
+                lote,
+            )
+            for num, desc in cursor.fetchall():
+                result[str(num).strip()] = (desc or '').strip()
+        cursor.close()
+        return result
+
     def buscar_material_por_codigo(self, codigo: str) -> dict | None:
         conn = self.connect()
         cursor = conn.cursor()

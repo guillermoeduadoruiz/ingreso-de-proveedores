@@ -12,12 +12,14 @@ from database.mysql import MySQLConnection
 from servicios.recepcion_svc import RecepcionService
 from servicios.ingreso_svc import IngresoService
 from servicios.impresion_svc import ImpresionService
+from servicios.hoja_ruta_svc import HojaRutaService
 from ui.seleccion_proveedor import SeleccionProveedorWidget
 from ui.ingreso_remitos import IngresoRemitosWidget
 from ui.registro_ingreso import RegistroIngresoWidget
 from ui.consulta_ingresos import ConsultaIngresosWidget
 from ui.consulta_destinatarios import ConsultaDestinatariosWidget
 from ui.mateti import MatetiWidget
+from ui.hoja_ruta import HojaRutaWidget
 from ui.estilos import QSS_GLOBAL
 from ui.login_dialog import LoginDialog
 from ui.ui_config import ConfigDialog
@@ -36,6 +38,7 @@ class VentanaPrincipal(QMainWindow):
     PAG_CONSULTA = 3
     PAG_CONSULTA_DEST = 4
     PAG_MATETI = 5
+    PAG_HOJA_RUTA = 6
 
     def __init__(self, config_manager: ConfigManager):
         super().__init__()
@@ -47,6 +50,7 @@ class VentanaPrincipal(QMainWindow):
         self._recepcion_svc = RecepcionService(self._sqlserver_conn)
         self._ingreso_svc = IngresoService(self._mysql_conn)
         self._impresion_svc = ImpresionService(self._cm, self._ingreso_svc)
+        self._hoja_ruta_svc = HojaRutaService(self._mysql_conn, self._sqlserver_conn)
 
         self._setup_ui()
         self._recrear_servicios()
@@ -93,6 +97,11 @@ class VentanaPrincipal(QMainWindow):
         acc_mateti.triggered.connect(self._ir_a_mateti)
         menu_mateti.addAction(acc_mateti)
 
+        menu_despacho = menubar.addMenu('Despacho')
+        acc_hojas_ruta = QAction('Hojas de Ruta', self)
+        acc_hojas_ruta.triggered.connect(self._ir_a_hojas_ruta)
+        menu_despacho.addAction(acc_hojas_ruta)
+
         menu_consulta = menubar.addMenu('Consultas / Ajustar')
         acc_ver_ingresos = QAction('Ver Ingresos Realizados', self)
         acc_ver_ingresos.triggered.connect(self._ir_a_consulta)
@@ -135,6 +144,7 @@ class VentanaPrincipal(QMainWindow):
         )
         self.pag_consulta_dest = ConsultaDestinatariosWidget(self._ingreso_svc)
         self.pag_mateti = MatetiWidget(self._sqlserver_conn, self._impresion_svc)
+        self.pag_hoja_ruta = HojaRutaWidget(self._hoja_ruta_svc, self._cm.clave_anulacion)
 
         self.stack.addWidget(self.pag_seleccion)
         self.stack.addWidget(self.pag_remitos)
@@ -142,6 +152,7 @@ class VentanaPrincipal(QMainWindow):
         self.stack.addWidget(self.pag_consulta)
         self.stack.addWidget(self.pag_consulta_dest)
         self.stack.addWidget(self.pag_mateti)
+        self.stack.addWidget(self.pag_hoja_ruta)
 
         self.pag_seleccion.set_on_confirmar(self._ir_a_remitos)
         self.pag_seleccion.set_on_volver_sin_cambios(self._volver_a_remitos_sin_cambios)
@@ -153,6 +164,7 @@ class VentanaPrincipal(QMainWindow):
         self.pag_consulta.set_on_volver(self._ir_a_seleccion)
         self.pag_consulta_dest.set_on_volver(self._ir_a_seleccion)
         self.pag_mateti.set_on_volver(self._ir_a_seleccion)
+        self.pag_hoja_ruta.set_on_volver(self._ir_a_seleccion)
 
     def _recrear_servicios(self):
         ss_config = self._cm.sqlserver
@@ -173,6 +185,7 @@ class VentanaPrincipal(QMainWindow):
         self._recepcion_svc = RecepcionService(self._sqlserver_conn)
         self._ingreso_svc = IngresoService(self._mysql_conn)
         self._impresion_svc = ImpresionService(self._cm, self._ingreso_svc)
+        self._hoja_ruta_svc = HojaRutaService(self._mysql_conn, self._sqlserver_conn)
 
         for _ in range(self.stack.count()):
             w = self.stack.widget(0)
@@ -258,6 +271,13 @@ class VentanaPrincipal(QMainWindow):
     def _ir_a_mateti(self):
         self.stack.setCurrentIndex(self.PAG_MATETI)
         self.statusBar().showMessage('MATETI — Etiquetas de Materiales')
+
+    def _ir_a_hojas_ruta(self):
+        self._remitos_pendientes = []
+        self._proveedor_pendiente = None
+        self.pag_hoja_ruta.cargar_datos()
+        self.stack.setCurrentIndex(self.PAG_HOJA_RUTA)
+        self.statusBar().showMessage('Despacho — Hojas de Ruta')
 
     def _ir_a_consulta_destinatarios(self):
         self._remitos_pendientes = []

@@ -11,6 +11,7 @@ mkdir "%DIST%"
 mkdir "%DIST%\assets"
 mkdir "%DIST%\pdfs\remitos"
 mkdir "%DIST%\pdfs\etiquetas"
+mkdir "%DIST%\pdfs\hojas_ruta"
 mkdir "%DIST%\ingresos_proveedores"
 mkdir "%DIST%\ingresos_proveedores\config"
 mkdir "%DIST%\ingresos_proveedores\database"
@@ -44,6 +45,7 @@ copy "%ROOT%ingresos_proveedores\modelos\proveedor.py" "%DIST%\ingresos_proveedo
 copy "%ROOT%ingresos_proveedores\modelos\recepcion.py" "%DIST%\ingresos_proveedores\modelos\" >nul
 copy "%ROOT%ingresos_proveedores\modelos\remito.py" "%DIST%\ingresos_proveedores\modelos\" >nul
 copy "%ROOT%ingresos_proveedores\modelos\ingreso.py" "%DIST%\ingresos_proveedores\modelos\" >nul
+copy "%ROOT%ingresos_proveedores\modelos\hoja_ruta.py" "%DIST%\ingresos_proveedores\modelos\" >nul
 
 copy "%ROOT%ingresos_proveedores\servicios\__init__.py" "%DIST%\ingresos_proveedores\servicios\" >nul
 copy "%ROOT%ingresos_proveedores\servicios\generador_id.py" "%DIST%\ingresos_proveedores\servicios\" >nul
@@ -52,6 +54,8 @@ copy "%ROOT%ingresos_proveedores\servicios\ingreso_svc.py" "%DIST%\ingresos_prov
 copy "%ROOT%ingresos_proveedores\servicios\impresion_svc.py" "%DIST%\ingresos_proveedores\servicios\" >nul
 copy "%ROOT%ingresos_proveedores\servicios\pdf_generator.py" "%DIST%\ingresos_proveedores\servicios\" >nul
 copy "%ROOT%ingresos_proveedores\servicios\dp_generator.py" "%DIST%\ingresos_proveedores\servicios\" >nul
+copy "%ROOT%ingresos_proveedores\servicios\hoja_ruta_svc.py" "%DIST%\ingresos_proveedores\servicios\" >nul
+copy "%ROOT%ingresos_proveedores\servicios\pdf_hoja_ruta.py" "%DIST%\ingresos_proveedores\servicios\" >nul
 
 copy "%ROOT%ingresos_proveedores\ui\__init__.py" "%DIST%\ingresos_proveedores\ui\" >nul
 copy "%ROOT%ingresos_proveedores\ui\estilos.py" "%DIST%\ingresos_proveedores\ui\" >nul
@@ -60,6 +64,9 @@ copy "%ROOT%ingresos_proveedores\ui\seleccion_proveedor.py" "%DIST%\ingresos_pro
 copy "%ROOT%ingresos_proveedores\ui\ingreso_remitos.py" "%DIST%\ingresos_proveedores\ui\" >nul
 copy "%ROOT%ingresos_proveedores\ui\registro_ingreso.py" "%DIST%\ingresos_proveedores\ui\" >nul
 copy "%ROOT%ingresos_proveedores\ui\consulta_ingresos.py" "%DIST%\ingresos_proveedores\ui\" >nul
+copy "%ROOT%ingresos_proveedores\ui\consulta_destinatarios.py" "%DIST%\ingresos_proveedores\ui\" >nul
+copy "%ROOT%ingresos_proveedores\ui\mateti.py" "%DIST%\ingresos_proveedores\ui\" >nul
+copy "%ROOT%ingresos_proveedores\ui\hoja_ruta.py" "%DIST%\ingresos_proveedores\ui\" >nul
 copy "%ROOT%ingresos_proveedores\ui\ui_config.py" "%DIST%\ingresos_proveedores\ui\" >nul
 copy "%ROOT%ingresos_proveedores\ui\config_impresion_dialog.py" "%DIST%\ingresos_proveedores\ui\" >nul
 copy "%ROOT%ingresos_proveedores\ui\dialogo_materiales.py" "%DIST%\ingresos_proveedores\ui\" >nul
