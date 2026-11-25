@@ -1030,6 +1030,10 @@
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\ingresos_proveedores\\modelos\\__init__.py',
    'PYMODULE'),
+  ('modelos.hoja_ruta',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\ingresos_proveedores\\modelos\\hoja_ruta.py',
+   'PYMODULE'),
   ('modelos.ingreso',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\ingresos_proveedores\\modelos\\ingreso.py',
@@ -3108,6 +3112,10 @@
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\ingresos_proveedores\\servicios\\generador_id.py',
    'PYMODULE'),
+  ('servicios.hoja_ruta_svc',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\ingresos_proveedores\\servicios\\hoja_ruta_svc.py',
+   'PYMODULE'),
   ('servicios.impresion_svc',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\ingresos_proveedores\\servicios\\impresion_svc.py',
@@ -3119,6 +3127,10 @@
   ('servicios.pdf_generator',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\ingresos_proveedores\\servicios\\pdf_generator.py',
+   'PYMODULE'),
+  ('servicios.pdf_hoja_ruta',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\ingresos_proveedores\\servicios\\pdf_hoja_ruta.py',
    'PYMODULE'),
   ('servicios.recepcion_svc',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
@@ -3187,6 +3199,10 @@
   ('ui.estilos',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
    'proveedores\\ingresos_proveedores\\ui\\estilos.py',
+   'PYMODULE'),
+  ('ui.hoja_ruta',
+   'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
+   'proveedores\\ingresos_proveedores\\ui\\hoja_ruta.py',
    'PYMODULE'),
   ('ui.ingreso_remitos',
    'C:\\gruiz\\cuspide\\Programacion\\Estantedesarrollo\\ingresos de '
