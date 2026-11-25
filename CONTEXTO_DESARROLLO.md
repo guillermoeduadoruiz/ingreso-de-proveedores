@@ -58,9 +58,9 @@ Hay DOS bases y la app necesita AMBAS alcanzables:
 
 ## 6. Compilación / distribución
 
-Dos scripts (ambos borran `build/` y `dist/` primero):
-- `build_dist.bat` → copia portable de fuente con `.bat` lanzadores.
-- `build_exe.bat` → PyInstaller desde `IngresosProveedores.spec` + `Configurador.spec`.
+Dos scripts:
+- `build_dist.bat` → copia portable de fuente con `.bat` lanzadores. Borra y recrea `dist_portable/` (salida en `dist_portable\IngresosProveedores`); no toca `dist/`, donde está el `.exe`.
+- `build_exe.bat` → borra `build/` y `dist/` primero, luego PyInstaller desde `IngresosProveedores.spec` + `Configurador.spec`.
 
 **Si se agrega un módulo nuevo hay que registrarlo en AMBOS**: lista `copy` de `build_dist.bat` Y `hiddenimports` del `.spec` correspondiente, o faltará en el build.
 

@@ -1,10 +1,11 @@
 @echo off
 setlocal
 set ROOT=%~dp0
-set DIST=%ROOT%dist\IngresosProveedores
+set DIST=%ROOT%dist_portable\IngresosProveedores
 
-echo === Limpiando dist anterior ===
-if exist "%ROOT%dist" rmdir /S /Q "%ROOT%dist"
+echo === Limpiando dist_portable anterior ===
+rem Solo se limpia dist_portable: dist\ tiene el .exe generado por build_exe.bat
+if exist "%ROOT%dist_portable" rmdir /S /Q "%ROOT%dist_portable"
 
 echo === Creando estructura ===
 mkdir "%DIST%"

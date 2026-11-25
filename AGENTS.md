@@ -24,9 +24,9 @@ Both entrypoints insert the package dir into `sys.path`, so modules import flatl
 - The app needs BOTH databases reachable: SQL Server via pyodbc (ODBC Driver 17/18 must be installed; driver auto-resolved by `DRIVER_PRIORITY` in `database/conexiones.py`) and MySQL via pymysql.
 
 ## Distribution / builds
-Two build scripts, both DELETE `build/` and `dist/` first:
-- `build_dist.bat` — portable source-copy dist with launcher `.bat` files.
-- `build_exe.bat` — PyInstaller from `IngresosProveedores.spec` + `Configurador.spec` (requires `pip install pyinstaller`).
+Two build scripts:
+- `build_dist.bat` — portable source-copy dist with launcher `.bat` files. DELETES and recreates `dist_portable/` (output in `dist_portable\IngresosProveedores`); leaves `dist/` and the `.exe` untouched.
+- `build_exe.bat` — DELETES `build/` and `dist/` first, then PyInstaller from `IngresosProveedores.spec` + `Configurador.spec` (requires `pip install pyinstaller`).
 
 If you add a new module, it must be registered in BOTH the `copy` list in `build_dist.bat` AND the `hiddenimports` list in the matching `.spec`, or it will be missing from the built app.
 
