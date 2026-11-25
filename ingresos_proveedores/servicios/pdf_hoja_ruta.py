@@ -17,7 +17,7 @@ from reportlab.platypus import (
     SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image, KeepTogether,
 )
 
-from modelos.hoja_ruta import HojaRuta, agrupar_por_transporte
+from modelos.hoja_ruta import HojaRuta, HR_ANULADA, agrupar_por_transporte
 from utils.paths import pdfs_dir, assets_dir
 
 AZUL = colors.HexColor('#1565C0')
@@ -219,6 +219,14 @@ def generar_pdf_hoja_ruta(hoja: HojaRuta) -> str:
         canv.setFillColor(colors.HexColor('#616161'))
         canv.drawString(15 * mm, 9 * mm, f'Hoja de Ruta N° {hoja.numero} — generada {generado}')
         canv.drawRightString(A4[0] - 15 * mm, 9 * mm, f'Página {doc.page}')
+        if hoja.estado == HR_ANULADA:
+            # Re-impresión de una hoja anulada: marca de agua para que no circule como válida.
+            canv.setFont('Helvetica-Bold', 90)
+            canv.setFillColor(colors.HexColor('#D32F2F'))
+            canv.setFillAlpha(0.18)
+            canv.translate(A4[0] / 2, A4[1] / 2)
+            canv.rotate(45)
+            canv.drawCentredString(0, -30, 'ANULADA')
         canv.restoreState()
 
     doc = SimpleDocTemplate(

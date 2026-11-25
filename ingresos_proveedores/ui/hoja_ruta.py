@@ -469,7 +469,7 @@ class HojaRutaWidget(QWidget):
         en_prep = bool(h) and h.estado == HR_EN_PREPARACION
         self.btn_editar.setEnabled(en_prep)
         self.btn_confirmar.setEnabled(en_prep)
-        self.btn_imprimir.setEnabled(bool(h) and h.estado != HR_ANULADA)
+        self.btn_imprimir.setEnabled(bool(h))
         self.btn_anular.setEnabled(bool(h) and h.estado != HR_ANULADA)
 
     # ---- Acciones ----
