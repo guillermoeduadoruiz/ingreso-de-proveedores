@@ -1,0 +1,32 @@
+============================================
+ REGISTRO DE INGRESOS DE PROVEEDORES
+ Instrucciones de instalacion
+============================================
+
+1. REQUISITOS PREVIOS:
+   - Python 3.10 o superior instalado
+   - ODBC Driver 17 for SQL Server
+     (descargar desde Microsoft)
+   - MySQL Connector (se instala con pip)
+
+2. INSTALACION:
+   - Ejecutar "Instalar Dependencias.bat"
+   - Copiar la carpeta a la PC destino
+
+3. CONFIGURACION:
+   - Editar "config_setup.json" con un editor de texto
+   - Configurar servidores SQL Server y MySQL
+   - Configurar impresoras
+   - Ejecutar "Configurador.bat" para configuracion visual
+
+4. USO DIARIO:
+   - Ejecutar "IngresosProveedores.bat"
+   - Login con credenciales de Cygnus
+   - Seguir los pasos del wizard
+
+5. ARCHIVOS:
+   - config_setup.json : Configuracion de la app
+   - pdfs/             : Remitos y etiquetas generados
+   - assets/           : Logo y manual de ayuda
+
+============================================
